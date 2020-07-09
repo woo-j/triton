@@ -47,6 +47,8 @@
 #include <SFML/Graphics.hpp>
 #include "8080.hpp"
 #include <iostream>
+#include <fstream>
+using namespace std;
 
 class IOState {
 public:
@@ -60,6 +62,14 @@ public:
     
     void vdu_strobe(State8080* state);
     void key_press(int key, int shifted, int ctrl);
+};
+
+class UARTState {
+public:
+    int in_buffer;
+    int out_buffer;
+    int status_word;
+    
 };
 
 void IOState::vdu_strobe(State8080* state) {
@@ -247,7 +257,7 @@ void IOState::key_press(int key, int shifted, int ctrl) {
     }
 }
 
-void MachineIN(State8080* state, int port, IOState* io) {
+void MachineIN(State8080* state, int port, IOState* io, UARTState* uart, fstream &tape) {
     // Handles port input (CPU IN)
     switch(port) {
         case 0:
@@ -255,12 +265,32 @@ void MachineIN(State8080* state, int port, IOState* io) {
             state->a = io->key_buffer;
             io->key_buffer = 0;
             break;
+        case 1:
+            // Get UART status
+            state->a = uart->status_word;
+            break;
+        case 4:
+            // Input data from UART
+            state->a = uart->in_buffer;
+            uart->in_buffer = 0;
+            break;
     }
 }
 
-void MachineOUT(State8080* state, int port, IOState* io) {
+void MachineOUT(State8080* state, int port, IOState* io, UARTState* uart, fstream &tape) {
     // Handles port output (CPU OUT)
     switch(port) {
+        case 2:
+            // Output data to UART
+            uart->out_buffer = state->a;
+            if ((io->tape_relay) && tape.is_open()) {
+                char * outbyte;
+                outbyte = new char [2];
+                outbyte[0] = (char) uart->out_buffer;
+                tape.write(outbyte, 1);
+            }
+            //std::cout << std::hex << uart->out_buffer << " ";
+            break;
         case 3:
             // LED buffer (IC 50)
             io->led_buffer = state->a;
@@ -279,7 +309,18 @@ void MachineOUT(State8080* state, int port, IOState* io) {
         case 7:
             // Port 7 latches (IC 52) and tape power switch (RLY 1)
             io->port7 = ((state->a & 0x40) != 0);
-            io->tape_relay = ((state->a & 0x80) != 0);
+            
+            if (((state->a & 0x80) != 0) && (io->tape_relay == 0)) {
+                //std::cout << "START TAPE\n";
+                tape.open ("TAPE", ios::out | ios::binary);
+                io->tape_relay = 1;
+            }
+            
+            if (((state->a & 0x80) == 0) && (io->tape_relay == 1)) {
+                //std::cout << "\nSTOP TAPE\n";
+                tape.close();
+                io->tape_relay = 0;
+            }
             break;
     }
 }
@@ -309,6 +350,10 @@ int main() {
     operations_per_frame = 800000 / framerate;
     
     State8080 state;
+    UARTState uart;
+    fstream tape;
+    
+    uart.status_word = 0x10;
     
     // Load Monitor 'A'
     rom = fopen("MONA72.ROM", "r");
@@ -460,11 +505,11 @@ int main() {
                 port = get_memory(&state, state.pc + 1);
 
                 if (opcode == 0xdb) { // IN
-                    MachineIN(&state, port, &io);
+                    MachineIN(&state, port, &io, &uart, tape);
                     state.pc += 2;
                     time = 10;
                 } else if (opcode == 0xd3) { // OUT
-                    MachineOUT(&state, port, &io);
+                    MachineOUT(&state, port, &io, &uart, tape);
                     state.pc += 2;
                     time = 10;
                 } else { // All other operands
@@ -483,7 +528,6 @@ int main() {
                 ypos = ((glyph / 16) * 24);
                 sprite[i].setTextureRect(sf::IntRect(xpos, ypos, 8, 24));
                 window.draw(sprite[i]);
-                //std::cout << std::hex << glyph << " ";
             }
             for (i = 0; i < 8; i++) {
                 if ((io.led_buffer & (0xf0 >> i)) == 0) {
@@ -495,7 +539,6 @@ int main() {
                 window.draw(led[i]);
             }
             window.display();
-            //std::cout << "\n";
         }
     }
 

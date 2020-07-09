@@ -80,10 +80,6 @@ void set_memory(State8080 *state, int address, int data) {
     if ((address >= 0x1000) && (address < 0x2000)) {
         state->memory[address] = data;
     }
-    
-    if ((address >= 0x1000) && (address < 0x1400)) {
-        std::cout << "Video DMA push " << data << " to " << address << "\n";
-    }
 }
 
 int get_memory(State8080* state, int address) {
@@ -98,10 +94,6 @@ int get_memory(State8080* state, int address) {
     
     if ((address >= 0x2000) && (address < 0xe000)) {
         return 0xff; // No expansion or TRAP
-    }
-    
-    if ((address >= 0xc000) && (address < 0xe000)) {
-        std::cout << "Attempt to read TRAP at " << address << "\n";
     }
     
     return state->memory[address];

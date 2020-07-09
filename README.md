@@ -54,6 +54,7 @@ Things which currently work:
 * Most of the functions of the Monitor
 * Entering programs using the Monitor and running them (options P and G)
 * Push buttons PB1-PB4 mapped to F1-F4
+* Monitor will output to a file TAPE with option O
 
 Things which kind of work:
 * Keyboard emulation has only been tested with UK keyboard
@@ -62,7 +63,7 @@ Things which kind of work:
 * Fixed memory map based on L7.1 ROM documentation
 
 Things which don't work yet:
-* Tape I/O
+* Tape input
 * BASIC gets stuck in an endless loop
 * Printer emulation
 * No Transam documentation included
