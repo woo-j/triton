@@ -8,13 +8,15 @@ Electronics Today International in 1978.
 This code is developed for Linux and displays to screen using the SFML
 library.
 
-Also required are a set of L7.1 ROM images, which are currently available at
+Also required are a set of L7.2 ROM images, which are currently available at
 https://sites.google.com/site/patrickbwarren/electronics/transam-triton
 
 These need to be renamed as below and placed in working directory:
 
 mon1  > MONA72.ROM
+
 mon2  > MONB72.ROM
+
 basic > BASIC72.ROM
 
 Compile with the following command:
@@ -32,11 +34,11 @@ supported. Control keys work as expected, but shift lock is not available.
 
 Other keyboard funcions provided are:
 
-F1 - Hard reset (Reset signal sent directly to CPU)
-F2 - Clear screen (Interrupt 1)
-F3 - Initialise (Interrupt 2)
-F4 - Pause/Unpause
-F9 - Exit emulator
+* F1 - Hard reset (Reset signal sent directly to CPU)
+* F2 - Clear screen (Interrupt 1)
+* F3 - Initialise (Interrupt 2)
+* F4 - Pause/Unpause
+* F9 - Exit emulator
 
 More information about the history of this machine available from Happy Little
 Diodes at:
