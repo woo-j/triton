@@ -107,9 +107,6 @@ int Emulate8080Op(State8080* state)
     int offset;
     int temp;
     
-    //std::cout << state->pc << "\n";
-    //state->tracker[state->pc]++;
-    
     switch(*opcode)
     {
         case 0x00: // NOP - No-operation

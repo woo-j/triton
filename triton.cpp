@@ -393,10 +393,16 @@ int main() {
         std::cout << "Error loading font file";
     }
     
+    sf::Texture tapemap;
+    if (!tapemap.loadFromFile("tape.png")) {
+        std::cout << "Error loading tape image";
+    }
+    
     sf::Sprite sprite[1024];
     sf::CircleShape led[8];
     sf::Color ledoff = sf::Color(50,0,0);
     sf::Color ledon = sf::Color(250,0,0);
+    sf::Sprite tape_indicator;
     
     for (i = 0; i < 1024; i++) {
         sprite[i].setTexture(fontmap);
@@ -409,6 +415,8 @@ int main() {
         led[i].setRadius(7.0f);
         led[i].setPosition(15.0f + (i * 15), 386.0f);
     }
+    tape_indicator.setTexture(tapemap);
+    tape_indicator.setPosition(sf::Vector2f(462.0f, 386.0f));
 
     while (window.isOpen())
     {
@@ -536,6 +544,24 @@ int main() {
                 }
                 window.draw(led[i]);
             }
+            
+            if (io.tape_relay == false) {
+                tape_indicator.setTextureRect(sf::IntRect(0, 0, 45, 30));
+            } else {
+                switch (io.tape_status) {
+                    case ' ':
+                        tape_indicator.setTextureRect(sf::IntRect(45, 0, 45, 30));
+                        break;
+                    case 'r':
+                        tape_indicator.setTextureRect(sf::IntRect(90, 0, 45, 30));
+                        break;
+                    case 'w':
+                        tape_indicator.setTextureRect(sf::IntRect(135, 0, 45, 30));
+                        break;
+                }
+            }
+            window.draw(tape_indicator);
+            
             window.display();
         }
     }
