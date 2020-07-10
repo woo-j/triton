@@ -45,23 +45,18 @@ using namespace std;
 
 class IOState {
 public:
-    int key_buffer;
-    int led_buffer;
-    int vdu_buffer;
-    int port6;
-    int port7;
-    int tape_relay;
-    int cursor_position;
-    int tape_status;
-    int uart_status;
+    int  key_buffer;
+    int  led_buffer;
+    int  vdu_buffer;
+    int  port6;
+    int  port7;
+    bool tape_relay;
+    int  cursor_position;
+    int  tape_status;
+    int  uart_status;
     
     void vdu_strobe(State8080* state);
-    void key_press(int key, int shifted, int ctrl);
-};
-
-class UARTState {
-public:
-    int status_word;
+    void key_press(int key, bool shifted, bool ctrl);
 };
 
 void IOState::vdu_strobe(State8080* state) {
@@ -170,13 +165,11 @@ void IOState::vdu_strobe(State8080* state) {
     
 }
 
-void IOState::key_press(int key, int shifted, int ctrl) {
+void IOState::key_press(int key, bool shifted, bool ctrl) {
     // Handles keyboard input, placing data in port 0 (IC 49)
     // Assumes PC has UK keyboard - because that's all I have to test it with!
     
-    //std::cout << "Key " << key << "\n";
-    
-    if (ctrl == 0) {
+    if (ctrl == false) {
     
         if ((key >= 0) && (key <= 25)) {
             // Letters A - Z
@@ -192,7 +185,7 @@ void IOState::key_press(int key, int shifted, int ctrl) {
             case 59: key_buffer = 136; break; // backspace
         }
         
-        if (shifted == 0) {
+        if (shifted == false) {
             // No shift
             if ((key >= 26) && (key <= 35)) {
                 // Numbers 0 to 9
@@ -314,11 +307,11 @@ void MachineOUT(State8080* state, int port, IOState* io, fstream &tape) {
             // Port 7 latches (IC 52) and tape power switch (RLY 1)
             io->port7 = ((state->a & 0x40) != 0);
             
-            if (((state->a & 0x80) != 0) && (io->tape_relay == 0)) {
+            if (((state->a & 0x80) != 0) && (io->tape_relay == false)) {
                 io->tape_relay = 1;
             }
             
-            if (((state->a & 0x80) == 0) && (io->tape_relay == 1)) {
+            if (((state->a & 0x80) == 0) && (io->tape_relay == true)) {
                 if ((io->tape_status == 'w') || (io->tape_status == 'r')) {
                     tape.close();
                     io->tape_status = ' ';
@@ -345,10 +338,11 @@ int main() {
     int operations_per_frame;
     int opcount;
     int glyph;
-    int inFocus = 1;
-    int shifted = 0;
-    int ctrl = 0;
-    int pause = 0;
+    
+    bool inFocus = true;
+    bool shifted = false;
+    bool ctrl = false;
+    bool pause = false;
     
     // One microcycle is 1.25uS = effective clock rate of 800kHz
     operations_per_frame = 800000 / framerate;
@@ -429,26 +423,26 @@ int main() {
             
             // Don't react to keyboard input when not in focus
             if (event.type == sf::Event::LostFocus)
-                inFocus = 0;
+                inFocus = false;
             
             if (event.type == sf::Event::GainedFocus)
-                inFocus = 1;
+                inFocus = true;
             
             // Keep track of shift and control keys
             if (event.type == sf::Event::KeyPressed) {
                 if ((event.key.code == sf::Keyboard::LShift) || (event.key.code == sf::Keyboard::RShift))
-                    shifted = 1;
+                    shifted = true;
                 
                 if ((event.key.code == sf::Keyboard::LControl) || (event.key.code == sf::Keyboard::RControl))
-                    ctrl = 1;
+                    ctrl = true;
             }
             
             if (event.type == sf::Event::KeyReleased) {
                 if ((event.key.code == sf::Keyboard::LShift) || (event.key.code == sf::Keyboard::RShift))
-                    shifted = 0;
+                    shifted = false;
                 
                 if ((event.key.code == sf::Keyboard::LControl) || (event.key.code == sf::Keyboard::RControl))
-                    ctrl = 0;
+                    ctrl = false;
             }
                 
             if (inFocus != 0) {
@@ -459,11 +453,11 @@ int main() {
                         case sf::Keyboard::F1:
                             // Reset button (PB 1)
                             state.pc = 0x0000;
-                            state.int_enable = 0;
+                            state.int_enable = false;
                             break;
                         case sf::Keyboard::F2:
                             // Clear Screen button (PB 2)
-                            if (state.int_enable == 1) {
+                            if (state.int_enable == true) {
                                 state.int_enable = 0;
                                 main_memory[state.sp - 2] = state.pc & 0xff;
                                 main_memory[state.sp - 1] = state.pc >> 8;
@@ -473,7 +467,7 @@ int main() {
                             break;
                         case sf::Keyboard::F3:
                             // Initialise button (PB 3)
-                            if (state.int_enable == 1) {
+                            if (state.int_enable == false) {
                                 state.int_enable = 0;
                                 main_memory[state.sp - 2] = state.pc & 0xff;
                                 main_memory[state.sp - 1] = state.pc >> 8;
@@ -483,10 +477,10 @@ int main() {
                             break;
                         case sf::Keyboard::F4:
                             // Pause button (PB 4)
-                            if (pause == 1) {
-                                pause = 0;
+                            if (pause == true) {
+                                pause = false;
                             } else {
-                                pause = 1;
+                                pause = true;
                             }
                             break;
                         case sf::Keyboard::F9:
@@ -500,7 +494,7 @@ int main() {
             }
         }
         
-        if (pause == 0) {
+        if (pause == false) {
             // Send as many clock pulses to the CPU as would happen
             // between screen frames
             running_time = 0;

@@ -29,11 +29,11 @@
  */
 
 typedef struct ConditionCodes {
-    int     z;
-    int     s;
-    int     p;
-    int     cy;
-    int     ac;
+    bool    z;
+    bool    s;
+    bool    p;
+    bool    cy;
+    bool    ac;
 } ConditionCodes;
 
 typedef struct State8080 {
@@ -44,12 +44,11 @@ typedef struct State8080 {
     int     e;
     int     h;
     int     l;
-    int    sp;
-    int    pc;
+    int     sp;
+    int     pc;
     int     *memory;
-    struct ConditionCodes cc;
-    int     int_enable;
-    //int  *tracker;
+    struct  ConditionCodes   cc;
+    bool    int_enable;
 } State8080;
 
 void set_memory(State8080 *state, int address, int data);
