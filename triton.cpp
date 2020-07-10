@@ -35,13 +35,6 @@
  * Most of the rest of the machine is 74 logic ICs
  * 
  * Only available ROMS (version 7.2) are currently hard-wired
- * ROM images thanks to Patrick B Warren at
- * https://sites.google.com/site/patrickbwarren/electronics/transam-triton
- * 
- * Developed for Linux using SFML library for I/O
- * 
- * Compile with:
- *      g++ -o triton ./triton.cpp 8080.cpp -lsfml-graphics -lsfml-window -lsfml-system
  */
 
 #include <SFML/Graphics.hpp>
@@ -59,6 +52,8 @@ public:
     int port7;
     int tape_relay;
     int cursor_position;
+    int tape_status;
+    int uart_status;
     
     void vdu_strobe(State8080* state);
     void key_press(int key, int shifted, int ctrl);
@@ -66,10 +61,7 @@ public:
 
 class UARTState {
 public:
-    int in_buffer;
-    int out_buffer;
     int status_word;
-    
 };
 
 void IOState::vdu_strobe(State8080* state) {
@@ -78,8 +70,6 @@ void IOState::vdu_strobe(State8080* state) {
 
     int i;
     int input = vdu_buffer & 0x7f;
-    
-    //std::cout << "VDU " << input << " cursor " << cursor_position << "\n";
     
     if (input == 0x08) {
         // Backspace
@@ -257,7 +247,7 @@ void IOState::key_press(int key, int shifted, int ctrl) {
     }
 }
 
-void MachineIN(State8080* state, int port, IOState* io, UARTState* uart, fstream &tape) {
+void MachineIN(State8080* state, int port, IOState* io, fstream &tape) {
     // Handles port input (CPU IN)
     switch(port) {
         case 0:
@@ -267,29 +257,43 @@ void MachineIN(State8080* state, int port, IOState* io, UARTState* uart, fstream
             break;
         case 1:
             // Get UART status
-            state->a = uart->status_word;
+            state->a = io->uart_status;
             break;
         case 4:
-            // Input data from UART
-            state->a = uart->in_buffer;
-            uart->in_buffer = 0;
+            // Input data from tape
+            if (io->tape_relay) {
+                if (io->tape_status == ' ') {
+                    tape.open ("TAPE", ios::in | ios::binary);
+                    io->tape_status = 'r';
+                }
+                if ((io->tape_status == 'r') && (tape.eof() == false)) {
+                    char * inbyte;
+                    inbyte = new char [2];
+                    tape.read (inbyte, 1);
+                    state->a = (int) inbyte[0];
+                }
+            }
             break;
     }
 }
 
-void MachineOUT(State8080* state, int port, IOState* io, UARTState* uart, fstream &tape) {
+void MachineOUT(State8080* state, int port, IOState* io, fstream &tape) {
     // Handles port output (CPU OUT)
     switch(port) {
         case 2:
-            // Output data to UART
-            uart->out_buffer = state->a;
-            if ((io->tape_relay) && tape.is_open()) {
-                char * outbyte;
-                outbyte = new char [2];
-                outbyte[0] = (char) uart->out_buffer;
-                tape.write(outbyte, 1);
+            // Output data to tape
+            if (io->tape_relay) {
+                if (io->tape_status == ' ') {
+                    tape.open ("TAPE", ios::out | ios::binary);
+                    io->tape_status = 'w';
+                }
+                if (io->tape_status == 'w') {
+                    char * outbyte;
+                    outbyte = new char [2];
+                    outbyte[0] = (char) state->a;
+                    tape.write(outbyte, 1);
+                }
             }
-            //std::cout << std::hex << uart->out_buffer << " ";
             break;
         case 3:
             // LED buffer (IC 50)
@@ -311,14 +315,14 @@ void MachineOUT(State8080* state, int port, IOState* io, UARTState* uart, fstrea
             io->port7 = ((state->a & 0x40) != 0);
             
             if (((state->a & 0x80) != 0) && (io->tape_relay == 0)) {
-                //std::cout << "START TAPE\n";
-                tape.open ("TAPE", ios::out | ios::binary);
                 io->tape_relay = 1;
             }
             
             if (((state->a & 0x80) == 0) && (io->tape_relay == 1)) {
-                //std::cout << "\nSTOP TAPE\n";
-                tape.close();
+                if ((io->tape_status == 'w') || (io->tape_status == 'r')) {
+                    tape.close();
+                    io->tape_status = ' ';
+                }
                 io->tape_relay = 0;
             }
             break;
@@ -350,10 +354,10 @@ int main() {
     operations_per_frame = 800000 / framerate;
     
     State8080 state;
-    UARTState uart;
     fstream tape;
     
-    uart.status_word = 0x10;
+    io.uart_status = 0x11;
+    io.tape_status = ' ';
     
     // Load Monitor 'A'
     rom = fopen("MONA72.ROM", "r");
@@ -505,11 +509,11 @@ int main() {
                 port = get_memory(&state, state.pc + 1);
 
                 if (opcode == 0xdb) { // IN
-                    MachineIN(&state, port, &io, &uart, tape);
+                    MachineIN(&state, port, &io, tape);
                     state.pc += 2;
                     time = 10;
                 } else if (opcode == 0xd3) { // OUT
-                    MachineOUT(&state, port, &io, &uart, tape);
+                    MachineOUT(&state, port, &io, tape);
                     state.pc += 2;
                     time = 10;
                 } else { // All other operands
