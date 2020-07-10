@@ -277,7 +277,7 @@ void MachineOUT(State8080* state, int port, IOState* io, fstream &tape) {
             // Output data to tape
             if (io->tape_relay) {
                 if (io->tape_status == ' ') {
-                    tape.open ("TAPE", ios::out | ios::binary);
+                    tape.open ("TAPE", ios::out | ios::app | ios::binary);
                     io->tape_status = 'w';
                 }
                 if (io->tape_status == 'w') {

@@ -99,6 +99,20 @@ int get_memory(State8080* state, int address) {
     return state->memory[address];
 }
 
+void printStatus(State8080* state) {
+    std::cout << std::hex << "PC " << state->pc << " I " << state->memory[state->pc] << " SP " << state->sp;
+    std::cout << " A " << state->a << " B " << state->b << " C " << state->c << " D " << state->d << " E " << state->e;
+    std::cout << " H " << state-> h << " L " << state->l << " ";
+    
+    if (state->cc.z) std::cout << "Z"; else std::cout << " ";
+    if (state->cc.s) std::cout << "S"; else std::cout << " ";
+    if (state->cc.p) std::cout << "P"; else std::cout << " ";
+    if (state->cc.cy) std::cout << "C"; else std::cout << " ";
+    if (state->cc.ac) std::cout << "A"; else std::cout << " ";
+    
+    std::cout << "\n";
+}
+
 int Emulate8080Op(State8080* state)
 {
     int *opcode = &state->memory[state->pc];
@@ -106,6 +120,8 @@ int Emulate8080Op(State8080* state)
     int answer;
     int offset;
     int temp;
+    
+    //printStatus(state);
     
     switch(*opcode)
     {
@@ -425,7 +441,7 @@ int Emulate8080Op(State8080* state)
             cycles = 7;
             break;
         case 0x2f: // CMA - Complement accumulator
-            state->a = ~state->a;
+            state->a = ~state->a & 0xff;
             cycles = 4;
             break;
         //case 0x30: Duplicate of NOP

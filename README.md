@@ -51,8 +51,7 @@ Things which currently work:
 * Emulation of 8080
 * Output to screen using port 5 and correct fonts
 * Output to LEDs using port 3
-* Most of the functions of the Monitor
-* Entering programs using the Monitor and running them (options P and G)
+* Monitor options P J E R G A D H L I O W M V N
 * Push buttons PB1-PB4 mapped to F1-F4
 * Tape I/O to static file "TAPE"
 
@@ -62,8 +61,9 @@ Things which kind of work:
 * Accuracy is based on documentation rather than physical machine
 * Fixed memory map based on L7.1 ROM documentation
 
-Things which don't work yet:
-* BASIC gets stuck in an endless loop
+Things which don't work (or haven't been tested) yet:
+* BASIC loads but not yet properly tested for functionality
+* Monitor options C U F T X Z K
 * Printer emulation
 * No Transam documentation included
 * Requires a Makefile
