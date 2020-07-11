@@ -58,6 +58,19 @@ int Parity(int data) {
     return (t % 2) - 1;
 }
 
+void printStatus(State8080* state) {
+    std::cout << std::hex << "PC " << state->pc << " I " << state->memory[state->pc] << " SP " << state->sp;
+    std::cout << " A " << state->a << " B " << state->b << " C " << state->c << " D " << state->d << " E " << state->e;
+    std::cout << " H " << state-> h << " L " << state->l << " ";
+    
+    if (state->cc.z) std::cout << "Z"; else std::cout << " ";
+    if (state->cc.s) std::cout << "S"; else std::cout << " ";
+    if (state->cc.p) std::cout << "P"; else std::cout << " ";
+    if (state->cc.cy) std::cout << "C"; else std::cout << " ";
+    if (state->cc.ac) std::cout << "A"; else std::cout << " ";
+    
+    std::cout << "\n";
+}
 
 /* Memory map for L7.1:
  * 0000 - 03FF = Monitor 'A'
@@ -97,20 +110,6 @@ int get_memory(State8080* state, int address) {
     }
     
     return state->memory[address];
-}
-
-void printStatus(State8080* state) {
-    std::cout << std::hex << "PC " << state->pc << " I " << state->memory[state->pc] << " SP " << state->sp;
-    std::cout << " A " << state->a << " B " << state->b << " C " << state->c << " D " << state->d << " E " << state->e;
-    std::cout << " H " << state-> h << " L " << state->l << " ";
-    
-    if (state->cc.z) std::cout << "Z"; else std::cout << " ";
-    if (state->cc.s) std::cout << "S"; else std::cout << " ";
-    if (state->cc.p) std::cout << "P"; else std::cout << " ";
-    if (state->cc.cy) std::cout << "C"; else std::cout << " ";
-    if (state->cc.ac) std::cout << "A"; else std::cout << " ";
-    
-    std::cout << "\n";
 }
 
 int Emulate8080Op(State8080* state)
@@ -1770,12 +1769,12 @@ int Emulate8080Op(State8080* state)
             cycles = 11;
             break;
         case 0xf1: // POP PSW - Pop data off stack
-            state->cc.s = ((get_memory(state, state->sp + 1) & 0x80) > 0);
-            state->cc.z = ((get_memory(state, state->sp + 1) & 0x40) > 0);
-            state->cc.ac = ((get_memory(state, state->sp + 1) & 0x10) > 0);
-            state->cc.p = ((get_memory(state, state->sp + 1) & 0x04) > 0);
-            state->cc.cy = ((get_memory(state, state->sp + 1) & 0x01) > 0);
-            state->a = get_memory(state, state->sp);
+            state->cc.s = ((get_memory(state, state->sp) & 0x80) > 0);
+            state->cc.z = ((get_memory(state, state->sp) & 0x40) > 0);
+            state->cc.ac = ((get_memory(state, state->sp) & 0x10) > 0);
+            state->cc.p = ((get_memory(state, state->sp) & 0x04) > 0);
+            state->cc.cy = ((get_memory(state, state->sp) & 0x01) > 0);
+            state->a = get_memory(state, state->sp + 1);
             state->sp += 2;
             cycles = 10;
             break;
@@ -1809,8 +1808,8 @@ int Emulate8080Op(State8080* state)
             answer += state->cc.ac << 4;
             answer += state->cc.z << 6;
             answer += state->cc.s << 7;
-            set_memory(state, state->sp - 1, answer & 0xff);
-            set_memory(state, state->sp - 2, state->a);
+            set_memory(state, state->sp - 2, answer & 0xff);
+            set_memory(state, state->sp - 1, state->a);
             state->sp -= 2;
             cycles = 11;
             break;
