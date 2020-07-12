@@ -66,100 +66,102 @@ void IOState::vdu_strobe(State8080* state) {
     int i;
     int input = vdu_buffer & 0x7f;
     
-    if (input == 0x08) {
-        // Backspace
-        if ((cursor_position % 64) != 0) {
-            cursor_position--;
-        }
-    }
-    
-    if (input == 0x09) {
-        // Step cursor RIGHT
-        if ((cursor_position % 64) < 63)
-            cursor_position++;
-    }
-    
-    if (input == 0x0a) {
-        // Line feed - not sure what this does! (possibly just for printer support?)
-    }
-    
-    if (input == 0x0b) {
-        // Step cursor UP
-        if (cursor_position >= 64) {
-            cursor_position -= 64;
-        }
-    }
-    
-    if (input == 0x0c) {
-        // Clear screen/reset cursor
-        for (i = 0; i < 1024; i++) {
-            state->memory[0x1000 + i] = 32;
-        }
-        cursor_position = 0;
-    }
-    
-    if (input == 0x0d) {
-        // Carriage return/clear line
-        if (cursor_position % 64 == 0) {
-            state->memory[0x1000 + cursor_position] = 32;
-            cursor_position++;
-        }
-        
-        while(cursor_position % 64 != 0) {
-            state->memory[0x1000 + cursor_position] = 32;
-            cursor_position++;
-        }
-        
-        if (cursor_position >= 1024) {
-            for (i = 0; i < 960; i++) {
-                state->memory[0x1000 + i] = state->memory[0x1000 + i + 64];
+    switch(input) {
+        case 0x00:
+            // NUL
+            break;
+        case 0x04:
+            // EOT (End of Text)
+            break;
+        case 0x08:
+            // Backspace
+            if ((cursor_position % 64) != 0) {
+                cursor_position--;
             }
-            for (i = 960; i < 1024; i++) {
+            break;
+        case 0x09:
+            // Step cursor RIGHT
+            if ((cursor_position % 64) < 63)
+                cursor_position++;
+            break;
+        case 0x0a:
+            // Line feed - not sure what this does! (possibly just for printer support?)
+            break;
+        case 0x0b:
+            // Step cursor UP
+            if (cursor_position >= 64) {
+                cursor_position -= 64;
+            }
+            break;
+        case 0x0c:
+            // Clear screen/reset cursor
+            for (i = 0; i < 1024; i++) {
                 state->memory[0x1000 + i] = 32;
             }
-            
-            cursor_position -= 64;
-        }
-    }
-    
-    if (input == 0x1c) {
-        // Reset cursor
-        cursor_position = 0;
-    }
-    
-    if (input == 0x1d) {
-        // Carriage return (no clear)
-        cursor_position += 64;
-        cursor_position -= (cursor_position % 64);
-        
-        if (cursor_position >= 1024) {
-            for (i = 0; i < 960; i++) {
-                state->memory[0x1000 + i] = state->memory[0x1000 + i + 64];
-            }
-            for (i = 960; i < 1024; i++) {
-                state->memory[0x1000 + i] = 32;
+            cursor_position = 0;
+            break;
+        case 0x0d:
+            // Carriage return/clear line
+            if (cursor_position % 64 == 0) {
+                state->memory[0x1000 + cursor_position] = 32;
+                cursor_position++;
             }
             
-            cursor_position -= 64;
-        }
-    }
-    
-    if ((input >= 0x20) && (input <= 0x5f)) {
-        // Alphanumeric characters
-        cursor_position++;
-        
-        if (cursor_position >= 1024) {
-            for (i = 0; i < 960; i++) {
-                state->memory[0x1000 + i] = state->memory[0x1000 + i + 64];
-            }
-            for (i = 960; i < 1024; i++) {
-                state->memory[0x1000 + i] = 32;
+            while(cursor_position % 64 != 0) {
+                state->memory[0x1000 + cursor_position] = 32;
+                cursor_position++;
             }
             
-            cursor_position -= 64;
-        }
+            if (cursor_position >= 1024) {
+                for (i = 0; i < 960; i++) {
+                    state->memory[0x1000 + i] = state->memory[0x1000 + i + 64];
+                }
+                for (i = 960; i < 1024; i++) {
+                    state->memory[0x1000 + i] = 32;
+                }
+                
+                cursor_position -= 64;
+            }
+            break;
+        case 0x1b:
+            // Roll screen?
+            break;
+        case 0x1c:
+            // Reset cursor
+            cursor_position = 0;
+            break;
+        case 0x1d:
+            // Carriage return (no clear)
+            cursor_position += 64;
+            cursor_position -= (cursor_position % 64);
+            
+            if (cursor_position >= 1024) {
+                for (i = 0; i < 960; i++) {
+                    state->memory[0x1000 + i] = state->memory[0x1000 + i + 64];
+                }
+                for (i = 960; i < 1024; i++) {
+                    state->memory[0x1000 + i] = 32;
+                }
+                
+                cursor_position -= 64;
+            }
+            break;
+        default:
+            cursor_position++;
+            
+            if (cursor_position >= 1024) {
+                for (i = 0; i < 960; i++) {
+                    state->memory[0x1000 + i] = state->memory[0x1000 + i + 64];
+                }
+                for (i = 960; i < 1024; i++) {
+                    state->memory[0x1000 + i] = 32;
+                }
+                
+                cursor_position -= 64;
+            }
         
-        state->memory[0x1000 + cursor_position - 1] = input;
+            state->memory[0x1000 + cursor_position - 1] = input;
+            break;
     }
     
 }
@@ -169,16 +171,9 @@ void IOState::key_press(int key, bool shifted, bool ctrl) {
     // Assumes PC has UK keyboard - because that's all I have to test it with!
     
     if (ctrl == false) {
-    
-        if ((key >= 0) && (key <= 25)) {
-            // Letters A - Z
-            key_buffer = key + 225;
-        }
         
         switch(key) {
             case 36: key_buffer = 155; break; // escape
-            case 46: key_buffer = 219; break; // left bracket
-            case 47: key_buffer = 221; break; // right bracket
             case 57: key_buffer = 160; break; // space
             case 58: key_buffer = 141; break; // carriage return
             case 59: key_buffer = 136; break; // backspace
@@ -186,12 +181,20 @@ void IOState::key_press(int key, bool shifted, bool ctrl) {
         
         if (shifted == false) {
             // No shift
+            
+            if ((key >= 0) && (key <= 25)) {
+                // Letters A - Z
+                key_buffer = key + 225;
+            }
+        
             if ((key >= 26) && (key <= 35)) {
                 // Numbers 0 to 9
                 key_buffer = key + 150;
             }
             
             switch (key) {
+                case 46: key_buffer = 219; break; // left bracket
+                case 47: key_buffer = 221; break; // right bracket
                 case 48: key_buffer = 187; break; // semicolon
                 case 49: key_buffer = 172; break; // comma
                 case 50: key_buffer = 174; break; // stop
@@ -203,6 +206,12 @@ void IOState::key_press(int key, bool shifted, bool ctrl) {
             }
         } else {
             // Shift key pressed
+            
+            if ((key >= 0) && (key <= 25)) {
+                // Graphic 34-59
+                key_buffer = key + 193;
+            }
+            
             switch (key) {
                 case 26: key_buffer = 169; break; // close brace
                 case 27: key_buffer = 161; break; // exclamation
@@ -214,12 +223,14 @@ void IOState::key_press(int key, bool shifted, bool ctrl) {
                 case 33: key_buffer = 166; break; // ampusand
                 case 34: key_buffer = 170; break; // asterisk
                 case 35: key_buffer = 168; break; // open brace
+                case 46: key_buffer = 251; break; // graphic 60 - arrow up
+                case 47: key_buffer = 253; break; // graphic 62 - arrow left
                 case 48: key_buffer = 186; break; // colon
                 case 49: key_buffer = 188; break; // less than
                 case 50: key_buffer = 190; break; // greater than
                 case 51: key_buffer = 192; break; // at
                 case 52: key_buffer = 191; break; // question
-                case 53: key_buffer = 252; break; // bar
+                case 53: key_buffer = 252; break; // graphic 61 - arrow down
                 case 55: key_buffer = 171; break; // plus
                 case 56: key_buffer = 223; break; // underscore
             }
@@ -232,10 +243,12 @@ void IOState::key_press(int key, bool shifted, bool ctrl) {
             key_buffer = key + 129;
         }
         
-        if (key == 51) key_buffer = 128; // control + at
-        if (key == 53) key_buffer = 156; // control + backslash
-        if (key == 46) key_buffer = 155; // control + left bracket
-        if (key == 47) key_buffer = 157; // control + right bracket
+        switch (key) {
+            case 51: key_buffer = 128; break; // control + at
+            case 53: key_buffer = 156; break; // control + backslash
+            case 46: key_buffer = 155; break; // control + left bracket
+            case 47: key_buffer = 157; break; // control + right bracket
+        }
     }
 }
 
@@ -533,7 +546,7 @@ int main() {
             // Font texture acts as ROMs (IC 69 and 70)
             window.clear();
             for (i = 0; i < 1024; i++) {
-                glyph = main_memory[0x1000 + i];
+                glyph = main_memory[0x1000 + i] & 0x7f;
                 xpos = (glyph % 16) * 8;
                 ypos = ((glyph / 16) * 24);
                 sprite[i].setTextureRect(sf::IntRect(xpos, ypos, 8, 24));
