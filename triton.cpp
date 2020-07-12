@@ -70,7 +70,6 @@ void IOState::vdu_strobe(State8080* state) {
         // Backspace
         if ((cursor_position % 64) != 0) {
             cursor_position--;
-            state->memory[0x1000 + cursor_position] = 32;
         }
     }
     
@@ -328,6 +327,7 @@ int main() {
     FILE *rom;
     int time;
     int running_time;
+    int cursor_count = 0;
     int i;
     IOState io;
     int xpos, ypos;
@@ -343,6 +343,7 @@ int main() {
     bool shifted = false;
     bool ctrl = false;
     bool pause = false;
+    bool cursor_on = true;
     
     // One microcycle is 1.25uS = effective clock rate of 800kHz
     operations_per_frame = 800000 / framerate;
@@ -403,6 +404,7 @@ int main() {
     sf::Color ledoff = sf::Color(50,0,0);
     sf::Color ledon = sf::Color(250,0,0);
     sf::Sprite tape_indicator;
+    sf::RectangleShape cursor(sf::Vector2f(8.0f, 2.0f));
     
     for (i = 0; i < 1024; i++) {
         sprite[i].setTexture(fontmap);
@@ -525,6 +527,8 @@ int main() {
                 running_time += time;
             }
             
+            cursor_count++;
+            
             // Draw screen from VDU memory
             // Font texture acts as ROMs (IC 69 and 70)
             window.clear();
@@ -561,6 +565,22 @@ int main() {
                 }
             }
             window.draw(tape_indicator);
+            
+            if (cursor_count > (framerate / 2)) {
+                if (cursor_on) {
+                    cursor.setFillColor(sf::Color(0, 0, 0));
+                    cursor_on = false;
+                } else {
+                    cursor.setFillColor(sf::Color(255, 255, 255));
+                    cursor_on = true;
+                }
+                cursor_count = 0;
+            }
+            i = io.cursor_position;
+            ypos = (((i - (i % 8)) / 64) * 24) + 18;
+            xpos = (i % 64) * 8;
+            cursor.setPosition(sf::Vector2f((float) xpos,(float) ypos));
+            window.draw(cursor);
             
             window.display();
         }
