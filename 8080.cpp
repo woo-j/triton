@@ -46,7 +46,7 @@ void UnimplementedInstruction(State8080* state)
     exit(1);
 }
 
-int Parity(int data) {
+bool Parity(int data) {
     int i, t;
     
     t = 0;
@@ -55,7 +55,10 @@ int Parity(int data) {
         if (data & (0x01 << i)) { t++; }
     }
     
-    return (t % 2) - 1;
+    if ((t % 2) - 1)
+        return true;
+    else
+        return false;
 }
 
 void printStatus(State8080* state) {
@@ -329,7 +332,7 @@ int Emulate8080Op(State8080* state)
         case 0x1f: // RAR - Rotate accumulator right through carry
             answer = (int) state->a >> 1;
             answer += state->cc.cy << 7;
-            state->cc.cy = state->a & 0x01;
+            state->cc.cy = ((state->a & 0x01) != 0);
             state->a = answer & 0xff;
             cycles = 4;
             break;
@@ -380,12 +383,12 @@ int Emulate8080Op(State8080* state)
         case 0x27: // DAA - Decimal adjust accumulator
             if (((state->a & 0x0f) > 0x09) | (state->cc.ac != 0)) {
                 state->a += 0x06;
-                state->cc.ac = 0x01;
+                state->cc.ac = true;
             } else
-                state->cc.ac = 0x00;
+                state->cc.ac = false;
             if (((state->a & 0xf0) > 0x90) | (state->cc.cy != 0)) {
                 state->a = (state->a + 0x60) & 0xff;
-                state->cc.cy = 0x01;
+                state->cc.cy = true;
             }
             state->cc.z = ((state->a & 0xff) == 0);
             state->cc.s = ((state->a & 0x80) != 0);
@@ -486,7 +489,7 @@ int Emulate8080Op(State8080* state)
             cycles = 10;
             break;
         case 0x37: // STC - Set Carry
-            state->cc.cy = 0x01;
+            state->cc.cy = true;
             cycles = 4;
             break;
         //case 0x38: Duplicate of NOP
@@ -533,7 +536,7 @@ int Emulate8080Op(State8080* state)
             cycles = 7;
             break;
         case 0x3f: // CMC - Complement Carry
-            state->cc.cy = ~state->cc.cy & 0x01;
+            state->cc.cy = !(state->cc.cy);
             cycles = 4;
             break;
         case 0x40: // MOV B,B = NOP
@@ -1134,8 +1137,8 @@ int Emulate8080Op(State8080* state)
             state->cc.z = ((state->a & 0xff) == 0);
             state->cc.s = ((state->a & 0x80) != 0);
             state->cc.p = Parity(state->a & 0xff);
-            state->cc.cy = 0x00;
-            state->cc.ac = 0x00;
+            state->cc.cy = false;
+            state->cc.ac = false;
             cycles = 4;
             break;
         case 0xa1: // ANA C - Logical AND register with accumulator
@@ -1143,8 +1146,8 @@ int Emulate8080Op(State8080* state)
             state->cc.z = ((state->a & 0xff) == 0);
             state->cc.s = ((state->a & 0x80) != 0);
             state->cc.p = Parity(state->a & 0xff);
-            state->cc.cy = 0x00;
-            state->cc.ac = 0x00;
+            state->cc.cy = false;
+            state->cc.ac = false;
             cycles = 4;
             break;
         case 0xa2:  // ANA D - Logical AND register with accumulator
@@ -1152,8 +1155,8 @@ int Emulate8080Op(State8080* state)
             state->cc.z = ((state->a & 0xff) == 0);
             state->cc.s = ((state->a & 0x80) != 0);
             state->cc.p = Parity(state->a & 0xff);
-            state->cc.cy = 0x00;
-            state->cc.ac = 0x00;
+            state->cc.cy = false;
+            state->cc.ac = false;
             cycles = 4;
             break;
         case 0xa3:  // ANA E - Logical AND register with accumulator
@@ -1161,8 +1164,8 @@ int Emulate8080Op(State8080* state)
             state->cc.z = ((state->a & 0xff) == 0);
             state->cc.s = ((state->a & 0x80) != 0);
             state->cc.p = Parity(state->a & 0xff);
-            state->cc.cy = 0x00;
-            state->cc.ac = 0x00;
+            state->cc.cy = false;
+            state->cc.ac = false;
             cycles = 4;
             break;
         case 0xa4:  // ANA H - Logical AND register with accumulator
@@ -1170,8 +1173,8 @@ int Emulate8080Op(State8080* state)
             state->cc.z = ((state->a & 0xff) == 0);
             state->cc.s = ((state->a & 0x80) != 0);
             state->cc.p = Parity(state->a & 0xff);
-            state->cc.cy = 0x00;
-            state->cc.ac = 0x00;
+            state->cc.cy = false;
+            state->cc.ac = false;
             cycles = 4;
             break;
         case 0xa5:  // ANA L - Logical AND register with accumulator
@@ -1179,8 +1182,8 @@ int Emulate8080Op(State8080* state)
             state->cc.z = ((state->a & 0xff) == 0);
             state->cc.s = ((state->a & 0x80) != 0);
             state->cc.p = Parity(state->a & 0xff);
-            state->cc.cy = 0x00;
-            state->cc.ac = 0x00;
+            state->cc.cy = false;
+            state->cc.ac = false;
             cycles = 4;
             break;
         case 0xa6: // ANA M - Logical AND memory with accumulator
@@ -1189,16 +1192,16 @@ int Emulate8080Op(State8080* state)
             state->cc.z = ((state->a & 0xff) == 0);
             state->cc.s = ((state->a & 0x80) != 0);
             state->cc.p = Parity(state->a & 0xff);
-            state->cc.cy = 0x00;
-            state->cc.ac = 0x00;
+            state->cc.cy = false;
+            state->cc.ac = false;
             cycles = 7;
             break;
         case 0xa7: // ANA A - Logical AND register with accumulator
             state->cc.z = ((state->a & 0xff) == 0);
             state->cc.s = ((state->a & 0x80) != 0);
             state->cc.p = Parity(state->a & 0xff);
-            state->cc.cy = 0x00;
-            state->cc.ac = 0x00;
+            state->cc.cy = false;
+            state->cc.ac = false;
             cycles = 4;
             break;
         case 0xa8: // XRA B - Logical exclusive-OR register with accumulator
@@ -1206,8 +1209,8 @@ int Emulate8080Op(State8080* state)
             state->cc.z = ((state->a & 0xff) == 0);
             state->cc.s = ((state->a & 0x80) != 0);
             state->cc.p = Parity(state->a & 0xff);
-            state->cc.cy = 0x00;
-            state->cc.ac = 0x00;
+            state->cc.cy = false;
+            state->cc.ac = false;
             cycles = 4;
             break;
         case 0xa9: // XRA C - Logical exclusive-OR register with accumulator
@@ -1215,8 +1218,8 @@ int Emulate8080Op(State8080* state)
             state->cc.z = ((state->a & 0xff) == 0);
             state->cc.s = ((state->a & 0x80) != 0);
             state->cc.p = Parity(state->a & 0xff);
-            state->cc.cy = 0x00;
-            state->cc.ac = 0x00;
+            state->cc.cy = false;
+            state->cc.ac = false;
             cycles = 4;
             break;
         case 0xaa: // XRA D - Logical exclusive-OR register with accumulator
@@ -1224,8 +1227,8 @@ int Emulate8080Op(State8080* state)
             state->cc.z = ((state->a & 0xff) == 0);
             state->cc.s = ((state->a & 0x80) != 0);
             state->cc.p = Parity(state->a & 0xff);
-            state->cc.cy = 0x00;
-            state->cc.ac = 0x00;
+            state->cc.cy = false;
+            state->cc.ac = false;
             cycles = 4;
             break;
         case 0xab: // XRA E - Logical exclusive-OR register with accumulator
@@ -1233,8 +1236,8 @@ int Emulate8080Op(State8080* state)
             state->cc.z = ((state->a & 0xff) == 0);
             state->cc.s = ((state->a & 0x80) != 0);
             state->cc.p = Parity(state->a & 0xff);
-            state->cc.cy = 0x00;
-            state->cc.ac = 0x00;
+            state->cc.cy = false;
+            state->cc.ac = false;
             cycles = 4;
             break;
         case 0xac: // XRA H - Logical exclusive-OR register with accumulator
@@ -1242,8 +1245,8 @@ int Emulate8080Op(State8080* state)
             state->cc.z = ((state->a & 0xff) == 0);
             state->cc.s = ((state->a & 0x80) != 0);
             state->cc.p = Parity(state->a & 0xff);
-            state->cc.cy = 0x00;
-            state->cc.ac = 0x00;
+            state->cc.cy = false;
+            state->cc.ac = false;
             cycles = 4;
             break;
         case 0xad: // XRA L - Logical exclusive-OR register with accumulator
@@ -1251,8 +1254,8 @@ int Emulate8080Op(State8080* state)
             state->cc.z = ((state->a & 0xff) == 0);
             state->cc.s = ((state->a & 0x80) != 0);
             state->cc.p = Parity(state->a & 0xff);
-            state->cc.cy = 0x00;
-            state->cc.ac = 0x00;
+            state->cc.cy = false;
+            state->cc.ac = false;
             cycles = 4;
             break;
         case 0xae: // XRA M - Logical exclusive-OR register with memory
@@ -1261,8 +1264,8 @@ int Emulate8080Op(State8080* state)
             state->cc.z = ((state->a & 0xff) == 0);
             state->cc.s = ((state->a & 0x80) != 0);
             state->cc.p = Parity(state->a & 0xff);
-            state->cc.cy = 0x00;
-            state->cc.ac = 0x00;
+            state->cc.cy = false;
+            state->cc.ac = false;
             cycles = 7;
             break;
         case 0xaf: // XRA A - Logical exclusive-OR register with accumulator
@@ -1270,8 +1273,8 @@ int Emulate8080Op(State8080* state)
             state->cc.z = ((state->a & 0xff) == 0);
             state->cc.s = ((state->a & 0x80) != 0);
             state->cc.p = Parity(state->a & 0xff);
-            state->cc.cy = 0x00;
-            state->cc.ac = 0x00;
+            state->cc.cy = false;
+            state->cc.ac = false;
             cycles = 4;
             break;
         case 0xb0: // ORA B - Logical OR register with accumulator
@@ -1279,8 +1282,8 @@ int Emulate8080Op(State8080* state)
             state->cc.z = ((state->a & 0xff) == 0);
             state->cc.s = ((state->a & 0x80) != 0);
             state->cc.p = Parity(state->a & 0xff);
-            state->cc.cy = 0x00;
-            state->cc.ac = 0x00;
+            state->cc.cy = false;
+            state->cc.ac = false;
             cycles = 4;
             break;
         case 0xb1: // ORA C - Logical OR register with accumulator
@@ -1288,8 +1291,8 @@ int Emulate8080Op(State8080* state)
             state->cc.z = ((state->a & 0xff) == 0);
             state->cc.s = ((state->a & 0x80) != 0);
             state->cc.p = Parity(state->a & 0xff);
-            state->cc.cy = 0x00;
-            state->cc.ac = 0x00;
+            state->cc.cy = false;
+            state->cc.ac = false;
             cycles = 4;
             break;
         case 0xb2: // ORA D - Logical OR register with accumulator
@@ -1297,8 +1300,8 @@ int Emulate8080Op(State8080* state)
             state->cc.z = ((state->a & 0xff) == 0);
             state->cc.s = ((state->a & 0x80) != 0);
             state->cc.p = Parity(state->a & 0xff);
-            state->cc.cy = 0x00;
-            state->cc.ac = 0x00;
+            state->cc.cy = false;
+            state->cc.ac = false;
             cycles = 4;
             break;
         case 0xb3: // ORA E - Logical OR register with accumulator
@@ -1306,8 +1309,8 @@ int Emulate8080Op(State8080* state)
             state->cc.z = ((state->a & 0xff) == 0);
             state->cc.s = ((state->a & 0x80) != 0);
             state->cc.p = Parity(state->a & 0xff);
-            state->cc.cy = 0x00;
-            state->cc.ac = 0x00;
+            state->cc.cy = false;
+            state->cc.ac = false;
             cycles = 4;
             break;
         case 0xb4: // ORA H - Logical OR register with accumulator
@@ -1315,8 +1318,8 @@ int Emulate8080Op(State8080* state)
             state->cc.z = ((state->a & 0xff) == 0);
             state->cc.s = ((state->a & 0x80) != 0);
             state->cc.p = Parity(state->a & 0xff);
-            state->cc.cy = 0x00;
-            state->cc.ac = 0x00;
+            state->cc.cy = false;
+            state->cc.ac = false;
             cycles = 4;
             break;
         case 0xb5: // ORA L - Logical OR register with accumulator
@@ -1324,8 +1327,8 @@ int Emulate8080Op(State8080* state)
             state->cc.z = ((state->a & 0xff) == 0);
             state->cc.s = ((state->a & 0x80) != 0);
             state->cc.p = Parity(state->a & 0xff);
-            state->cc.cy = 0x00;
-            state->cc.ac = 0x00;
+            state->cc.cy = false;
+            state->cc.ac = false;
             cycles = 4;
             break;
         case 0xb6: // ORA M - Logical OR register with memory
@@ -1334,16 +1337,16 @@ int Emulate8080Op(State8080* state)
             state->cc.z = ((state->a & 0xff) == 0);
             state->cc.s = ((state->a & 0x80) != 0);
             state->cc.p = Parity(state->a & 0xff);
-            state->cc.cy = 0x00;
-            state->cc.ac = 0x00;
+            state->cc.cy = false;
+            state->cc.ac = false;
             cycles = 7;
             break;
         case 0xb7: // ORA A - Logical OR register with accumulator
             state->cc.z = ((state->a & 0xff) == 0);
             state->cc.s = ((state->a & 0x80) != 0);
             state->cc.p = Parity(state->a & 0xff);
-            state->cc.cy = 0x00;
-            state->cc.ac = 0x00;
+            state->cc.cy = false;
+            state->cc.ac = false;
             cycles = 4;
             break;
         case 0xb8: // CMP B - Compare register with accumulator
@@ -1411,15 +1414,15 @@ int Emulate8080Op(State8080* state)
             cycles = 4;
             break;
         case 0xbf: // CMP A - Compare register with accumulator
-            state->cc.z = 0x01;
-            state->cc.s = 0x00;
+            state->cc.z = true;
+            state->cc.s = false;
             state->cc.ac = ((state->a & 0x0f) + (~state->a & 0x0f) + 1 > 0x0f);
-            state->cc.cy = 0x01;
+            state->cc.cy = true;
             state->cc.p = Parity(0x00);
             cycles = 4;
             break;
         case 0xc0: // RNZ - Return if not zero
-            if (state->cc.z == 0) {
+            if (state->cc.z == false) {
                 state->pc = get_memory(state, state->sp) | (get_memory(state, state->sp + 1) << 8);
                 state->pc--;
                 state->sp += 2;
@@ -1433,7 +1436,7 @@ int Emulate8080Op(State8080* state)
             cycles = 10;
             break;
         case 0xc2: // JNZ - Jump if not zero
-            if (state->cc.z == 0) {
+            if (state->cc.z == false) {
                 state->pc = (opcode[2] << 8) | opcode[1];
                 state->pc--;
             } else
@@ -1447,7 +1450,7 @@ int Emulate8080Op(State8080* state)
             cycles = 10;
             break;
         case 0xc4: // CNZ - Call if no zero
-            if (state->cc.z == 0) {
+            if (state->cc.z == false) {
                 offset = state->pc + 3;
                 set_memory(state, state->sp - 1, (offset >> 8) & 0xff);
                 set_memory(state, state->sp - 2, (offset & 0xff));
@@ -1492,7 +1495,7 @@ int Emulate8080Op(State8080* state)
             cycles = 11;
             break;
         case 0xc8: // RZ - Return if zero
-            if (state->cc.z != 0) {
+            if (state->cc.z) {
                 state->pc = get_memory(state, state->sp) | (get_memory(state, state->sp + 1) << 8);
                 state->pc--;
                 state->sp += 2;
@@ -1507,7 +1510,7 @@ int Emulate8080Op(State8080* state)
             cycles = 10;
             break;
         case 0xca: // JZ - Jump if zero
-            if (state->cc.z != 0) {
+            if (state->cc.z) {
                 state->pc = (opcode[2] << 8) | opcode[1];
                 state->pc--;
             } else
@@ -1516,7 +1519,7 @@ int Emulate8080Op(State8080* state)
             break;
         //case 0xcb: Duplicate of JMP
         case 0xcc: // CZ - Call on zero
-            if (state->cc.z != 0) {
+            if (state->cc.z) {
                 offset = state->pc + 3;
                 set_memory(state, state->sp - 1, (offset >> 8) & 0xff);
                 set_memory(state, state->sp - 2, (offset & 0xff));
@@ -1552,7 +1555,7 @@ int Emulate8080Op(State8080* state)
             break;
         //case 0xcf: Restart
         case 0xd0: // RC - Return if no carry
-            if (state->cc.cy == 0) {
+            if (state->cc.cy == false) {
                 state->pc = get_memory(state, state->sp) | (get_memory(state, state->sp + 1) << 8);
                 state->pc--;
                 state->sp += 2;
@@ -1566,7 +1569,7 @@ int Emulate8080Op(State8080* state)
             cycles = 10;
             break;
         case 0xd2: // JNC - Jump if no carry
-             if (state->cc.cy == 0) {
+             if (state->cc.cy == false) {
                  state->pc = (opcode[2] << 8) | opcode[1];
                  state->pc--;
              } else
@@ -1576,7 +1579,7 @@ int Emulate8080Op(State8080* state)
         case 0xd3: // IN - Input
             UnimplementedInstruction(state); break;
         case 0xd4: // CNC - Call if no carry
-            if (state->cc.cy == 0) {
+            if (state->cc.cy == false) {
                 offset = state->pc + 3;
                 set_memory(state, state->sp - 1, (offset >> 8) & 0xff);
                 set_memory(state, state->sp - 2, (offset & 0xff));
@@ -1606,7 +1609,7 @@ int Emulate8080Op(State8080* state)
             break;
         //case 0xd7: Restart
         case 0xd8: // RC - Return if carry
-            if (state->cc.cy != 0) {
+            if (state->cc.cy) {
                 state->pc = get_memory(state, state->sp) | (get_memory(state, state->sp + 1) << 8);
                 state->pc--;
                 state->sp += 2;
@@ -1615,7 +1618,7 @@ int Emulate8080Op(State8080* state)
             break;
         //case 0xd9: Duplication of RET
         case 0xda: // JC - Jump if carry
-             if (state->cc.cy != 0) {
+             if (state->cc.cy) {
                  state->pc = (opcode[2] << 8) | opcode[1];
                  state->pc--;
              } else
@@ -1625,7 +1628,7 @@ int Emulate8080Op(State8080* state)
         case 0xdb: // OUT - Output
             UnimplementedInstruction(state); break;
         case 0xdc: // CC - Call if carry
-            if (state->cc.cy != 0) {
+            if (state->cc.cy) {
                 offset = state->pc + 3;
                 set_memory(state, state->sp - 1, (offset >> 8) & 0xff);
                 set_memory(state, state->sp - 2, (offset & 0xff));
@@ -1651,7 +1654,7 @@ int Emulate8080Op(State8080* state)
             break;
         //case 0xdf: Restart
         case 0xe0: // RPO - Return if parity odd
-            if (state->cc.p == 0) {
+            if (state->cc.p == false) {
                 state->pc = get_memory(state, state->sp) | (get_memory(state, state->sp + 1) << 8);
                 state->pc--;
                 state->sp += 2;
@@ -1665,7 +1668,7 @@ int Emulate8080Op(State8080* state)
             cycles = 10;
             break;
         case 0xe2: // JPO - Jump if parity odd
-             if (state->cc.p == 0) {
+             if (state->cc.p == false) {
                  state->pc = (opcode[2] << 8) | opcode[1];
                  state->pc--;
              } else
@@ -1681,7 +1684,7 @@ int Emulate8080Op(State8080* state)
             cycles = 18;
             break;
         case 0xe4: // CPO - Call if parity odd
-            if (state->cc.p == 0) {
+            if (state->cc.p == false) {
                 offset = state->pc + 3;
                 set_memory(state, state->sp - 1, (offset >> 8) & 0xff);
                 set_memory(state, state->sp - 2, (offset & 0xff));
@@ -1700,7 +1703,7 @@ int Emulate8080Op(State8080* state)
             break;
         case 0xe6: // ANI - AND immediate with accumulator
             state->a &= opcode[1];
-            state->cc.cy = 0x00;
+            state->cc.cy = false;
             state->cc.z = (state->a == 0x00);
             state->cc.s = ((state->a & 0x80) != 0x00);
             state->cc.p = Parity(state->a);
@@ -1709,7 +1712,7 @@ int Emulate8080Op(State8080* state)
             break;
         //case 0xe7: Restart
         case 0xe8: // RPE - Return if parity even
-            if (state->cc.p != 0) {
+            if (state->cc.p) {
                 state->pc = get_memory(state, state->sp) | (get_memory(state, state->sp + 1) << 8);
                 state->pc--;
                 state->sp += 2;
@@ -1722,7 +1725,7 @@ int Emulate8080Op(State8080* state)
             cycles = 5;
             break;
         case 0xea: // JPE - Jump if parity even
-             if (state->cc.p != 0) {
+             if (state->cc.p) {
                  state->pc = (opcode[2] << 8) | opcode[1];
                  state->pc--;
              } else
@@ -1738,7 +1741,7 @@ int Emulate8080Op(State8080* state)
             cycles = 4;
             break;
         case 0xec: // CPC - Call if parity even
-            if (state->cc.p != 0) {
+            if (state->cc.p) {
                 offset = state->pc + 3;
                 set_memory(state, state->sp - 1, (offset >> 8) & 0xff);
                 set_memory(state, state->sp - 2, (offset & 0xff));
@@ -1752,7 +1755,7 @@ int Emulate8080Op(State8080* state)
         //case 0xed: Duplicate of CALL
         case 0xee: // XRI - Exclusive-OR immediate with accumulator
             state->a ^= opcode[1];
-            state->cc.cy = 0x00;
+            state->cc.cy = false;
             state->cc.z = (state->a == 0x00);
             state->cc.s = ((state->a & 0x80) != 0x00);
             state->cc.p = Parity(state->a);
@@ -1761,7 +1764,7 @@ int Emulate8080Op(State8080* state)
             break;
         //case 0xef: Restart
         case 0xf0: // RP - Return if plus
-            if (state->cc.s == 0) {
+            if (state->cc.s == false) {
                 state->pc = get_memory(state, state->sp) | (get_memory(state, state->sp + 1) << 8);
                 state->pc--;
                 state->sp += 2;
@@ -1779,7 +1782,7 @@ int Emulate8080Op(State8080* state)
             cycles = 10;
             break;
         case 0xf2: // JP - Jump if positive
-             if (state->cc.s == 0) {
+             if (state->cc.s == false) {
                  state->pc = (opcode[2] << 8) | opcode[1];
                  state->pc--;
              } else
@@ -1787,11 +1790,11 @@ int Emulate8080Op(State8080* state)
              cycles = 10;
              break;
         case 0xf3: // DI - Disable interrupts
-            state->int_enable = 0;
+            state->int_enable = false;
             cycles = 4;
             break;
         case 0xf4: // CP - Call if plus
-            if (state->cc.s == 0) {
+            if (state->cc.s == false) {
                 offset = state->pc + 3;
                 set_memory(state, state->sp - 1, (offset >> 8) & 0xff);
                 set_memory(state, state->sp - 2, (offset & 0xff));
@@ -1815,7 +1818,7 @@ int Emulate8080Op(State8080* state)
             break;
         case 0xf6: // ORI - OR immediate with accumulator
             state->a |= opcode[1];
-            state->cc.cy = 0x00;
+            state->cc.cy = false;
             state->cc.z = (state->a == 0x00);
             state->cc.s = ((state->a & 0x80) != 0x00);
             state->cc.p = Parity(state->a);
@@ -1824,7 +1827,7 @@ int Emulate8080Op(State8080* state)
             break;
         //case 0xf7: Restart
         case 0xf8: // RM - Return if minus
-            if (state->cc.s != 0) {
+            if (state->cc.s) {
                 state->pc = get_memory(state, state->sp) | (get_memory(state, state->sp + 1) << 8);
                 state->pc--;
                 state->sp += 2;
@@ -1836,7 +1839,7 @@ int Emulate8080Op(State8080* state)
             cycles = 5;
             break;
         case 0xfa: // JM - Jump if minus
-             if (state->cc.s != 0) {
+             if (state->cc.s) {
                  state->pc = (opcode[2] << 8) | opcode[1];
                  state->pc--;
              } else
@@ -1844,11 +1847,11 @@ int Emulate8080Op(State8080* state)
              cycles = 10;
              break;
         case 0xfb: // EI - Enable interrupts
-            state->int_enable = 1;
+            state->int_enable = true;
             cycles = 4;
             break;
         case 0xfc: // CM - Call if minus
-            if (state->cc.s != 0) {
+            if (state->cc.s) {
                 offset = state->pc + 3;
                 set_memory(state, state->sp - 1, (offset >> 8) & 0xff);
                 set_memory(state, state->sp - 2, (offset & 0xff));

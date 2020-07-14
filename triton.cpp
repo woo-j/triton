@@ -320,15 +320,15 @@ void MachineOUT(State8080* state, int port, IOState* io, fstream &tape) {
             io->port7 = ((state->a & 0x40) != 0);
             
             if (((state->a & 0x80) != 0) && (io->tape_relay == false)) {
-                io->tape_relay = 1;
+                io->tape_relay = true;
             }
             
-            if (((state->a & 0x80) == 0) && (io->tape_relay == true)) {
+            if (((state->a & 0x80) == 0) && io->tape_relay) {
                 if ((io->tape_status == 'w') || (io->tape_status == 'r')) {
                     tape.close();
                     io->tape_status = ' ';
                 }
-                io->tape_relay = 0;
+                io->tape_relay = false;
             }
             break;
     }
@@ -468,7 +468,7 @@ int main() {
                     ctrl = false;
             }
                 
-            if (inFocus != 0) {
+            if (inFocus) {
                 // Respond to key presses
                 if (event.type == sf::Event::KeyPressed)
                 {
@@ -480,8 +480,8 @@ int main() {
                             break;
                         case sf::Keyboard::F2:
                             // Clear Screen button (PB 2)
-                            if (state.int_enable == true) {
-                                state.int_enable = 0;
+                            if (state.int_enable) {
+                                state.int_enable = false;
                                 main_memory[state.sp - 2] = state.pc & 0xff;
                                 main_memory[state.sp - 1] = state.pc >> 8;
                                 state.sp -= 2;
@@ -490,8 +490,8 @@ int main() {
                             break;
                         case sf::Keyboard::F3:
                             // Initialise button (PB 3)
-                            if (state.int_enable == false) {
-                                state.int_enable = 0;
+                            if (state.int_enable) {
+                                state.int_enable = false;
                                 main_memory[state.sp - 2] = state.pc & 0xff;
                                 main_memory[state.sp - 1] = state.pc >> 8;
                                 state.sp -= 2;
@@ -500,7 +500,7 @@ int main() {
                             break;
                         case sf::Keyboard::F4:
                             // Pause button (PB 4)
-                            if (pause == true) {
+                            if (pause) {
                                 pause = false;
                             } else {
                                 pause = true;
