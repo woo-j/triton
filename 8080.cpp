@@ -87,7 +87,7 @@ void printStatus(State8080* state) {
  * E000 - FFFF = BASIC 7.1
  */
  
-void set_memory(State8080 *state, int address, int data) {
+void set_memory(State8080 *state, int address, unsigned char data) {
     if ((address < 0x00) || (address > 0xffff)) {
         std::cout << "Error writing to memory location " << address << "\n";
         address = address % 0xffff;
@@ -98,7 +98,7 @@ void set_memory(State8080 *state, int address, int data) {
     }
 }
 
-int get_memory(State8080* state, int address) {
+unsigned char get_memory(State8080* state, int address) {
     if ((address < 0x00) || (address > 0xffff)) {
         std::cout << "Error reading from memory location " <<  address << "\n";
         address = address % 0xffff;
@@ -117,7 +117,7 @@ int get_memory(State8080* state, int address) {
 
 int Emulate8080Op(State8080* state)
 {
-    int *opcode = &state->memory[state->pc];
+    unsigned char *opcode = &state->memory[state->pc];
     int cycles;
     int answer;
     int offset;

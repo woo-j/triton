@@ -46,11 +46,11 @@ typedef struct State8080 {
     unsigned char     l;
     int     sp;
     int     pc;
-    int     *memory;
+    unsigned char     *memory;
     struct  ConditionCodes   cc;
     bool    int_enable;
 } State8080;
 
-void set_memory(State8080 *state, int address, int data);
-int get_memory(State8080* state, int address);
+void set_memory(State8080 *state, int address, unsigned char data);
+unsigned char get_memory(State8080* state, int address);
 int Emulate8080Op(State8080* state);

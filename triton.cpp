@@ -335,9 +335,8 @@ void MachineOUT(State8080* state, int port, IOState* io, fstream &tape) {
 }
 
 int main() {
-    int main_memory[0xffff];
-    
-    FILE *rom;
+    unsigned char main_memory[0xffff];
+
     int time;
     int running_time;
     int cursor_count = 0;
@@ -363,36 +362,40 @@ int main() {
     
     State8080 state;
     fstream tape;
+    ifstream rom;
     
     io.uart_status = 0x11;
     io.tape_status = ' ';
     
     // Load Monitor 'A'
-    rom = fopen("MONA72.ROM", "r");
-    
-    for (i = 0; i < 0x400; i++) {
-        main_memory[i] = getc(rom);
+    rom.open("MONA72.ROM", ios::in | ios::binary);
+    if (rom.is_open()) {
+        rom.read ((char *) &main_memory[0], 0x400);
+        rom.close();
+    } else {
+        std::cout << "Unable to load Monitor A\n";
+        exit(1);
     }
-    
-    fclose(rom);
     
     // Load Monitor 'B'
-    rom = fopen("MONB72.ROM", "r");
-    
-    for (i = 0; i < 0x400; i++) {
-        main_memory[i + 0xc00] = getc(rom);
+    rom.open("MONB72.ROM", ios::in | ios::binary);
+    if (rom.is_open()) {
+        rom.read ((char *) &main_memory[0xc00], 0x400);
+        rom.close();
+    } else {
+        std::cout << "Unable to load Monitor B\n";
+        exit(1);
     }
-    
-    fclose(rom);
     
     // Load BASIC 7.2
-    rom = fopen("BASIC72.ROM", "r");
-    
-    for(i = 0; i < 0x2000; i++) {
-        main_memory[i + 0xe000] = getc(rom);
+    rom.open("BASIC72.ROM", ios::in | ios::binary);
+    if (rom.is_open()) {
+        rom.read ((char *) &main_memory[0xe000], 0x2000);
+        rom.close();
+    } else {
+        std::cout << "Unable to load BASIC ROM\n");
+        exit(1);
     }
-    
-    fclose(rom);
     
     state.a = 0;
     state.pc = 0x00;
@@ -405,11 +408,13 @@ int main() {
     sf::Texture fontmap;
     if (!fontmap.loadFromFile("font.png")) {
         std::cout << "Error loading font file";
+        exit(1);
     }
     
     sf::Texture tapemap;
     if (!tapemap.loadFromFile("tape.png")) {
         std::cout << "Error loading tape image";
+        exit(1);
     }
     
     sf::Sprite sprite[1024];
