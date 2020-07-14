@@ -21,7 +21,7 @@ basic > BASIC72.ROM
 
 Compile with the following command:
 
-g++ -o triton ./triton.cpp 8080.cpp -lsfml-graphics -lsfml-window -lsfml-system
+g++ -o triton ./triton.cpp 8080.cpp -lsfml-graphics -lsfml-window -lsfml-audio -lsfml-system
 
 Keyboard Input:
 
@@ -51,9 +51,11 @@ Things which currently work:
 * Emulation of 8080
 * Output to screen using port 5 and correct fonts
 * Output to LEDs using port 3
-* Monitor options P J E R G A D H L I O W M V N
+* Monitor options P J E R G A D H L I O W M V N X
 * Push buttons PB1-PB4 mapped to F1-F4
 * Tape I/O to static file "TAPE"
+* Writing/Running/Saving/Loading BASIC programs
+* Audio 'Beep' on error
 
 Things which kind of work:
 * Keyboard emulation has only been tested with UK keyboard
@@ -62,11 +64,17 @@ Things which kind of work:
 * Fixed memory map based on L7.1 ROM documentation
 
 Things which don't work (or haven't been tested) yet:
-* BASIC loads but not yet properly tested for functionality
-* Monitor options C U F T X Z K
+* Monitor options C U F T Z K untested
 * Printer emulation
 * No Transam documentation included
 * Requires a Makefile
+
+Also included are the following tapes:
+
+MANUAL_MC_TAPE - All of the machine code program samples from the manual
+MANUAL_BASIC_TAPE - All of the BASIC program samples from the manual
+
+Program versions on these "tapes" have been adapted to operate with L7.2
 
 Any feedback welcome - just email me:
 

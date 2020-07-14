@@ -38,9 +38,11 @@
  */
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include "8080.hpp"
 #include <iostream>
 #include <fstream>
+#include <cmath>
 using namespace std;
 
 class IOState {
@@ -49,7 +51,7 @@ public:
     int  led_buffer;
     int  vdu_buffer;
     int  port6;
-    int  port7;
+    bool oscillator;
     bool tape_relay;
     int  cursor_position;
     int  tape_status;
@@ -317,7 +319,7 @@ void MachineOUT(State8080* state, int port, IOState* io, fstream &tape) {
             break;
         case 7:
             // Port 7 latches (IC 52) and tape power switch (RLY 1)
-            io->port7 = ((state->a & 0x40) != 0);
+            io->oscillator = ((state->a & 0x40) != 0);
             
             if (((state->a & 0x80) != 0) && (io->tape_relay == false)) {
                 io->tape_relay = true;
@@ -364,6 +366,22 @@ int main() {
     fstream tape;
     ifstream rom;
     
+    sf::Int16 wave[11025]; // Quarter of a second at 44.1kHz
+    const double increment = 1000./44100;
+    double x = 0;
+    
+    for (i = 0; i < 11025; i++) {
+        wave[i] = 10000 * sin(x * 6.28318);
+        x += increment;
+    }
+    
+    sf::SoundBuffer Buffer;
+    Buffer.loadFromSamples(wave, 11025, 1, 44100);
+    
+    sf::Sound beep;
+    beep.setBuffer(Buffer);
+    beep.setLoop(true);
+    
     io.uart_status = 0x11;
     io.tape_status = ' ';
     
@@ -393,7 +411,7 @@ int main() {
         rom.read ((char *) &main_memory[0xe000], 0x2000);
         rom.close();
     } else {
-        std::cout << "Unable to load BASIC ROM\n");
+        std::cout << "Unable to load BASIC ROM\n";
         exit(1);
     }
     
@@ -601,6 +619,15 @@ int main() {
             window.draw(cursor);
             
             window.display();
+            
+            if (io.oscillator) {
+                beep.play();
+            } else {
+                beep.pause();
+            }
+            
+        } else {
+            beep.pause();
         }
     }
 
