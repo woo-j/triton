@@ -37,13 +37,13 @@ typedef struct ConditionCodes {
 } ConditionCodes;
 
 typedef struct State8080 {
-    int     a;
-    int     b;
-    int     c;
-    int     d;
-    int     e;
-    int     h;
-    int     l;
+    unsigned char     a;
+    unsigned char     b;
+    unsigned char     c;
+    unsigned char     d;
+    unsigned char     e;
+    unsigned char     h;
+    unsigned char     l;
     int     sp;
     int     pc;
     int     *memory;

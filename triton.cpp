@@ -272,10 +272,11 @@ void MachineIN(State8080* state, int port, IOState* io, fstream &tape) {
                     io->tape_status = 'r';
                 }
                 if ((io->tape_status == 'r') && (tape.eof() == false)) {
-                    char * inbyte;
-                    inbyte = new char [2];
-                    tape.read (inbyte, 1);
-                    state->a = (int) inbyte[0];
+                    char c;
+                    tape.get(c);
+                    state->a = (unsigned char) c;
+                } else {
+                    state->a = 0x00;
                 }
             }
             break;
@@ -293,10 +294,9 @@ void MachineOUT(State8080* state, int port, IOState* io, fstream &tape) {
                     io->tape_status = 'w';
                 }
                 if (io->tape_status == 'w') {
-                    char * outbyte;
-                    outbyte = new char [2];
-                    outbyte[0] = (char) state->a;
-                    tape.write(outbyte, 1);
+                    char c;
+                    c = (char) state->a;
+                    tape.put(c);
                 }
             }
             break;
