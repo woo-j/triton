@@ -1,0 +1,303 @@
+<html><head><title>The Triton Manual</title></head>
+
+<body>
+<h1>ONE BOARD HOME COMPUTER</h1>
+<p><b>ETI, Transam and Mike Hughes, who designed the system, present the Triton - a one board computer that includes all the features expected in a machine providing the basis of a really powerful home system.</b></p>
+
+<img src="man_fig1.png">
+
+<h2>INTRODUCTION</h2>
+
+<p>Personal computing to date has been beyond the budget of many, and beyond the capabilities of many more. The dual skills of being able to construct one's own hardware and being able to create one's own meaningful software programs has, until now, limited the use of personal computers in this country.</p>
+
+<p>The development of the TRITON computer now means that anyone can own, construct and use his own personal computer, no matter in which direction his particular skills may lie.</p>
+
+<p>The TRITON Manual is designed in such a way as to remove the cloak of mystery surrounding the various aspects of computing - hardware, firmware and software - by explaining every aspect of the overall system in great detail, giving worked and documented examples of programs, both in machine code and in Basic wherever possible, and a clear and concise description as to exactly what is happening and why.</p>
+
+<p>The TRITON project was conceived from the obvious demand for a single-board computer that was easy for the enthusiast to construct and that actually was "a computer" as opposed to a microprocessor evaluation kit. It was to be capable of being programmed in a high-level language, Basic, as well as machine code, having a full keyboard, graphics capability, output to UK domestic TV set and tape recorder for visual display and storage, and to incorporate as many of the most recent advances in microcircuitry as possible to make it compact, portable and inexpensive.</p>
+
+<p>In conjunction with Electronics Today International and ourselves, Mike Hughes, the designer of the project, has achieved this and more, the overall system being a very versatile and powerful computer with tremendous potential in homes, schools, colleges and industrial control and monitoring as well as business.</p>
+
+<p>We hope that your interest in the TRITON will be well rewarded and that this Manual will help you and other enthusiasts to build, enjoy and learn more about personal computing, computers, how they work and how to use them.</p>
+
+<p>TRANSAM COMPONENTS LTD<br>
+12 CHAPEL STREET<br>
+LONDON NW1<br>
+Tel 01-402 8137</p>
+
+<h2>SPECIFICATION</h2>
+
+<ul>
+<li>SINGLE-BOARD CONSTRUCTION</li>
+<li>8080A BASED SYSTEM</li>
+<li>BOARD HOLDS UP TO 4K ROM</li>
+<li>POWERFUL 1K MONITOR IN ROM</li>
+<li>POWERFUL 2K TINY BASIC IN ROM</li>
+<li>UP TO 3K USER RAM ONBOARD</li>
+<li>64 GRAPHICS CHARACTERS</li>
+<li>AUDIO (STANDARD TTL) OUTPUTS</li>
+<li>COMPLETE POWER SUPPLY</li>
+<li>1K VDU RAM ONBOARD</li>
+<li>8 LEVELS OF INTERRUPT</li>
+<li>TAPE I/O AUTO START STOP</li>
+<li>2 MODE VISUAL DISPLAY I/O OR MEMORY MAPPED</li>
+<li>FULL ALPHA NUMERICS</li>
+<li>UHF OUTPUT TO UK TV SET</li>
+<li>FULL 56 STATION KEYBOARD</li>
+<li>42 LINE EXPANSION BUSBAR</li>
+<li>FULLY BUFFERED OUTPUT LINES FOR UP TO 64K MEMORY +256 I/O PORTS</li>
+<li>SPECIALLY DESIGNED CASE WITH ROOM FOR EXPANSION</li>
+<li>USES ALL LOW POWER SCHOTTKY TTL</li>
+<li>SPEED<ul><li>Master Clock 7.2MHz</li>
+<li>Microcycle 1.25uS</li>
+<li>Instruction execution 6 to 13.75uS</li>
+<li>Tape I/O 300 Baud</li>
+<li>Print rate I/O Mode VDU 100 C.P.S.</li>
+<li>Display format 64 characters &times; 16 lines</li></ul></li>
+<li>FIRMWARE RESIDENT IN ROM</li>
+</ul>
+
+<p><b>1K MONITOR</b> &mdash; 2 front panel interrupts allowing "Screen Clear/Cursor Reset" and reinitialisation without clearing memory. User machine code programming, memory check and modifications running of programs in machine code, listing, tape I/O for machine code or basic programs. Tape input with named file search facilities, clear and precise prompts and default statements &mdash; vectored jump to basic.</p>
+
+<p><b>2K BASIC</b> &mdash; provides the following commands and functions ABS IF NEW RETURN STEP FOR INPUT NEXT RND STOP GOSUB LET PRINT RUN TO GOTO LIST REM SIZE VDU ARITHMETIC AND LOGIC OPERATIONS (INTEGER ONLY) DIVIDE MULTIPLY SUBTRACT ADD GREATER THAN LESS THAN EQUAL TO NOT EQUAL TO GREATER THAN OR EQUAL TO LESS THAN OR EQUAL TO</p>
+
+<p>A VERY VERSATILE POWERFUL COMPACT PERSONAL COMPUTER</P>
+
+<h2>DESCRIPTION OF THE SYSTEM</h2>
+
+<p>Constructing a computer can be both challenging and educational. It certainly helps if you understand some of the terms and practicalities already but our aim has been to make TRITON a problem free and relatively easy to build computer.</p>
+
+<p>Whether you are an electronics expert, a software specialist or a newcomer, you MUST know in general terms what the TRITON computer comprises otherwise you will not be able to get the best use from it when it is finally built. This manual is split up into different sections, each of which can be read independently and we suggest that you try the ones which sound most interesting first. You can then return to the constructional details.</p>
+
+<p>The system itself is shown in Illustration A in block diagram form. For clarity, some of the single wire interconnections have been left out but nothing of significance has been omitted. The choice of this central processing unit was based on several major considerations.</p>
+
+<p>It has a very easily understood instruction set which is remarkably versatile for working at machine code level. There is also a great variety of software freely available to use with it. Last but not least, it is one of the cheapest CPUs available today.</p>
+
+<p>The 8080 sequences through a list of instructions held in memory in 8 bit bytes and on receipt of each instruction, will carry out an operation which ranges from getting another byte of data from somewhere else in memory to carrying out simple logical or arithmetical operations on that data. It is not within the scope of this Manual to cover the inner workings of the MPU itself or for that matter, to explain every operation that the 8080 can offer. You
+can learn these when you have built the instrument and a further reading list is included in the reference section at the end of the Manual.</p>
+
+<p>As it operates sequentially, the CPU needs a clock. In this case the master frequency is 7.20 MHz which is divided down to clock the CPU every 1.25 uS. This time is the duration of a microcycle and it takes from 4 to 11 microcycles for the CPU to complete an instruction.</p>
+
+<p>The CPU has quite a large number of lines leading to it. The most significant are those carrying data to and from it. These number eight and are in the form of a bi-directional busbar (ie. can carry data to or from the CPU). To cut down on the number of wires coming from the CPU the data busbar serves a secondary purpose. It carries what is called 'STATUS' information at a certain point in time within an instruction cycle.</p>
+
+<img src="man_fig2.png">
+
+<p>This Status information is in the form of an 8 bit byte, decoded by a device called a System Controller. When decoded, the Status byte feeds one of 5 lines with a logical '0' which tells the whole of the computer what sort of instruction the CPU is executing during that cycle. These lines are designated <SPAN STYLE="text-decoration:overline">INTA</SPAN> (meaning that the computer has just been interrupted by an external 'Interrupt Request'), <SPAN STYLE="text-decoration:overline">MEMR</SPAN> (reading data from a memory location), <SPAN STYLE="text-decoration:overline">MEMW</SPAN> (writing - or storing - data into an internal memory location), <SPAN STYLE="text-decoration:overline">I/OR</SPAN> (reading data from an external source - such as a keyboard or a tape system) and <SPAN STYLE="text-decoration:overline">I/OW</SPAN> (writing or outputting data to an external destination such as a VDU or a tape system). The computer can only do one thing at a time so only one status line on the control bus will be active with '0' at any point in time.</p>
+
+<p>Of equal importance to the data bus are the 16 lines which carry a 2 byte WORD which is used to ADDRESS a specific byte of memory. These form the uni-directional ADDRESS BUSBAR. Using 16 binary lines, one can therefore address up to 65,536 (decimal) memory locations. This figure is used to describe the maximum capacity of a complete system and is abbreviated as '64k'. A machine having this maximum memory capacity would be too large for domestic applications but it might be necessary to go to this extent for business or scientific purposes.</p>
+
+<p>For this reason we have limited the capacity of our single-board computer to 8k of memory but the address busbar (in common with the data and control buses) are buffered and can be fed to the outside world through a multiway connector, thus allowing easy expansion to maximum capacity with add on boards.</p>
+
+<p>The address bus also serves a multiplicity of roles, depending on whether the instruction cycle is a memory addressing or an I/O addressing cycle. As already stated, all sixteen lines are used to address memory locations, but during an I/O read or write cycle the CPU is limited to providing address data on the eight least significant address lines. These eight lines are decoded at the correct point in time to activate any one of 256 possible external devices through what are called PORTS.</p>
+
+<p>It should now be clear that the address bus works in conjunction with the status lines of the control bus to let all the memory locations and I/O ports know what is going on.</p>
+
+<p>Before moving on from the heart of the system, it is worth mentioning some of the single lines depicted on the illustration. When the computer is initially switched on, it is necessary to give it the right instruction to start with so that it can sequence on from there to complete the program in a sane manner. For this reason it is usual to have the first instruction at address location zero. This is logical and it is easy to make sure that the CPU looks at this location first by resetting the program counter to 0000H (this means zero written as a four digit hexadecimal number). We can reset the program counter of the CPU by depressing a push button or as built into this machine, POWER ON RESET.</p>
+
+<p>The line marked HOLD may be used for very special applications involving DMA (Direct Memory Access). Basically, this means that by making this line go to logic '1' it is possible to isolate the internal CPU from all three busbars (using the tristate facility of the buffers) and allow an external device to do what it will with the internal memory. We have strapped this line to '0' with a removable link so the facility is there if required. RDYIN is used if any memory or peripheral is incapable of responding as fast as the computer desires. The external device can make this line go to '0' for any period of time (usually set by a monostable) and when this happens the computer goes into a WAIT state and simply stops operating as long as this line is low. When the RDYIN signal is removed, it carries on as if nothing had happened.</p>
+
+<p>The signal WAIT is issued during this time and the WAIT line can be seen designated as one of the unbuffered outputs. The RDYIN line provides a very useful option for those who do not wish to use it for its primary purpose. By connecting it via a push button switch to ground, the computer can be halted in the middle of any operation. This is particularly useful for stopping a BASIC LIST operation for cursory inspection. Facility for bringing this out to a push button is not made on the board but it is a simple matter to pick up the right point on the top side and take it via a single wire to the front panel - see the circuit diagram in this section.</p>
+
+<p>The RESET output goes high mementarily when the reset button is pressed and can be used to carry out a synchronous reset on external equipment. The HDLA output indicates that the computer has gone into a HOLD (or DMA) state - if anyone takes the HOLD line high. The INTE line (Interrupt Enabled) indicates that the computer may be interrupted and the DBIN line indicates which way the computer expects data to be flowing on the bi-directional data bus. It goes high when CPU is expecting data to flow INTO it.</p>
+
+<p>We are using the <SPAN STYLE="text-decoration:overline">STSTRB</SPAN> (STATUS STROBE) signal for a very special purpose - to synchronise the memory mapping of the VDU - more is said about this in the relevant section.</p>
+
+<p>As already inplied, the 8080 will allow itself to be interrupted in mid program provided that the program sets the Interrupt Enable flag. This provides the possibility of breaking into a program that is running to do something totally different. There is facility for 8 possible interrupts but only 7 can really be used on this machine (Interrupt 0 is redundant as it duplicates RESET).</p>
+
+<p>An interrupt is entered into the machine on a single interrupt request line. Of the seven usable lines we are using, two within the machine to do a clearing operation on the VDU screen and to do a re-initialisation without clearing all the memory (which would otherwise happen if the reset button was pressed). There are five remaining lines, one of which is brought out to a spare push button on the front panel and the rest piped down the multiway socket along with the busbars. The interrupt request lines have to be encoded and formatted into an 8 bit date byte. When this is done the interrupt encoder tells the CPU with the INT signal that an interrupt has been received. When the CPU is ready to be interrupted, it issues an 'Interrupt Acknowledge signal <SPAN STYLE="text-decoration:overline">INTA</SPAN> which is used to place the encoded byte onto the data bus. This byte enters the CPU and directs the computer to operate the desired subroutine. At the end of the routine the computer reverts to the main program continuing at the point at which it was interrupted.</p>
+
+<p>The memory of TRITON is split into three types on the main board. There are locations for up to 4k of Read Only Memory (ROM) which is split between four 2708 Erasable ROMs. These occupy address locations 0000H to 0FFFH. The standard TRITON uses the first 1k to hold Monitor and Utility routines necessary to initialise the machine and re-vector interrupts. The next 2k holds a BASIC INTERPRETER and the fourth 1k block is left spare for future expansion or user designation.</p>
+
+<p>There is 1k of Random Access Memory dedicated to the VDU. This starts immediately above the ROM area starting at 1000H. Normally this RAM is addressed in synchronism with the VDU line scan by the VDU control circuitry but the CPU can take over addressing under program control (in effect interrupting the VDU). This way the VDU can be built into the memory architecture of the main computer allowing quite spectacular animated visual displays. The VDU RAM can be written into only by the computer.</p>
+
+<p>The rest of the memory is made up of RAM which is both read and write. This area is used to hold the stacks and tables of the MONITOR and BASIC INTERPRETER (512 bytes) and the main work area starts at 1600H for a further 2&frac12;k ending at 1FFFH. This represents the full capacity of the on board memory. There is no reason however, why further read write memory should not be added externally starting from location 2000H. 
+
+<p>The ROM and VDU RAM areas are blocked into units of 1k - to fall into line with the types of integrated circuits used. However the stack and work area RAMs are laid out in blocks of 256 bytes. The reason for the smaller blocks for the latter is to allow the user to choose to what extent he wishes to build up the on board memory. Those on a limited budget can extend the memory in fairly gentle stages, although to achieve any realistic use from the Basic Interpreter, it is essential to have at least five of these blocks.</p>
+
+<p>The high order bits of the address busbar are used to decode which block is being addressed - this is done by the Chip Select decoder. Four lines can be seen going from this to the ROMs, the single line to the VDU 'Memory Mapping Changeover' logic and the remaining twelve lines to the Read Write blocks. Note that the ROM chip selects are gated with the <SPAN STYLE="text-decoration:overline">MEMR</SPAN> signal from the Control Bus whereas this control signal and <SPAN STYLE="text-decoration:overline">MEMW</SPAN> go straight to the RAM chips. This is because the 2111 Random Access Memory ICs used have internal chip select gating and output enables.</p>
+
+<p>With the exception of the VDU which is 'hybrid' the rest of the system is made up from a variety of I/O stages. The most important of the latter is the Keyboard Input. The keyboard data and strobe lines are fed onto the data busbar via tri-state buffers which form the keyboard input port. Only when the computer's software addresses this port (by decoding the least significant 8 bits of the address bus) through the Port Select logic and issues a <SPAN STYLE="text-decoration:overline">I/OR</SPAN> control signal will data from the keyboard be placed on the data busbar. Working in the opposite direction, the Output Port driving a bank of eight on board LEDs is a set of eight latches which catch and hold whatever data is on the busbar when they receive a coincident pair of signals from the port selector and the <SPAN STYLE="text-decoration:overline">I/OW</SPAN> line of the control bus. These onboard LEDs do help to make the TRITON system more versatile and can be used for test purposes or in specialised development applications. The LEDs themselves could be discarded and the eight lines made available as a spare general purpose output port.</p>
+
+<p>By making use of two redundant latches on the board it was possible to provide two spare output lines on one port and a spare line on the port which also feeds the tape recorder power control relay.</p>
+
+<p>The UART (Universal Asynchronous Receiver/Transmitter) is the device which converts the 8 bit wide parallel data on the busbar to a specially formatted serial stream to feed the tape recorder modulator. It also carries out the complementary function of converting a received serial stream into parallel data bytes. The device operates as if it were two input ports and one output port. One of each sort of port would be obvious for a device which receives and transmits but the requirement for a second input port may not be so obvious. Because the device operates asynchronously from the main computer (it has its own clock operating a 300 baud) it is necessary to make the computer wait from time to time to allow the slower operating UART to complete a transmission cycle. This is indicated by the UART activating a flag which is regularly monitored by the second input port.</p>
+
+<p>The VDU portion of the computer is based on the Thomson-CSF Control chip and operates in a unique manner for this integrated circuit. Not only is it possible to output to the VDU through an output port (in a similar manner to using a teletype) but the computer may also be used to inject data directly in the VDU's memory at extremely high speeds. This is most dramatically illustrated by programs written in low level Assembler when a character can be placed onto the screen in under 30 microseconds. A complete screen full of characters will appear as if the characters had all been outputted simultaneously. When used in conjunction with the special VDU function of the Basic interpreter the speed is greatly reduced but in many instances is faster than the I/O mode with the advantage that characters can be placed anywhere on the screen without having to manipulate the cursor.</p>
+
+<p>A further extension is the way the control chip is used to handle Graphics. Instead of the usual 6 bit wide RAM, 7 bits are used in this VDU application to enable the use of the complete set of ASCII codes. 64 extra character codes are therefore available by using those normally associated with lower case 'alpha' characters and all the control codes. Within the overall context of the computer, some of the control codes serve dual purposes and care has been taken in programming the VDU control ROM to inhibit printing a graphic when a control code is used for genuine control purposes.</p>
+
+<p>The graphic select logic looks at the two most significant bits of the ASCII code and via an EXCLUSIVE OR function determines whether or not the symbol is graphic or alpha-numeric and then proceeds to select the standard alpha-numeric ROM or the specially programmed graphics ROM. There is a great deal of extra logic associates with this operation as well as the Memory Map/IO changeover which is dealt with in the section describing the circuit in detail.</p>
+
+<p>For simplicity and reliability, the TRITON uses an ASTEC UHF modulator as a pre-assembled module. This operates on channel 36 with British modulation standards. For the benefit of those overseas we should mention that the television line and field standards used in this VDU are 50 Hz field rate with random interlace and 312&frac12; lines per field (ie. 625 lines per randomly interlaced frame). The line and field rates are set by the crystal-controlled Thomson-CSF chip.<p>
+
+<h2>CONSTRUCTION</h2>
+
+<p>As the TRITON has been specially designed to work on a single printed circuit board, its construction is relatively easy.</p>
+
+<p>Firstly, it is essential to use a top quality double-sided plated through board for the project. This, together with the complete kit of approved parts for the computer, is supplied exclusively by Transam Components Ltd (who retain full copyright). Unlike many other types of project, the PCB is likely to be the most expensive single item you have to invest in, but it is this component which brings the whole project into scope for the average constructor with no significant theoretical knowledge. You should notice the high quality surface of this board, due to the through hole plating process. Avoid finger contact and certainly keep it free from grease.</p>
+
+<p>There are a large number of plated through holes, (approx. 2,500) and some of these are located beneath components. It would be wise to check the integrity of the through hole plating BEFORE any construction is started. It will probably be sufficient to check point to point with a continuity meter that the power address and data busbars are continuous throughout the board. This can be done by referring to the pin numbers of ICs on the schematic drawings and then picking these up on the topside illustration. An hour or two spent on this exercise is an invaluable insurance that the board has not been damaged in transit. Ideally, you should check the busbar integrity on the UNDERSIDE of the board as it is this side that you will be soldering.</p>
+
+<p>The board has been designed to keep all the most intricate wiring on the top side - in particular the connections that run between IC pins. These are the most vulnerable to a heavy hand on the soldering iron, but this is not to say that any carelessness can be afforded underneath. Use the smallest soldering iron you have available - the bit must certainly be no greater than 3/32" diameter. As stated, ALL soldering operations should be carried out on the underside of the board - the through hole plating will route all necessary connections to the topside.</p>
+
+<img src="man_fig3.png">
+
+<p>Wherever possible, try to reinforce the through hole plating by allowing molten solder to creep through the hole by capilliary action. To do this, hold the soldering iron in place long enough for the heat to flow through the hole and take the solder with it. A couple of seconds longer then your usual soldering time should suffice. You will notice that on the underside of the board there are hundreds of IC pin lands that do not appear to be connected to anything. These lands must be soldered in ALL positions because nearly all of them go somewhere on the top side.</p>
+
+<p>Take your time with the soldering - even at a slow pace you can complete this project in a couple of evenings - because it is very easy to miss a connection or produce a dry joint. We recommend that you insert one component at a time and solder it in completely before moving on to the next - a visual check of each joint is essential and if you have any doubt, check with a magnifying glass. A few seconds taken up doing this can save hours trying to find a single missed connection. Insert IC sockets in descending order of size - ie. 40 pin, then 28 pin, etc, by which way you will avoid soldering the wrong socket in the wrong hole.</p>
+
+<p>All the holes on the board have been pre-drilled to the correct diameters, but in the event of your having a device which will not quite go through the hole, do NOT under any circumstances attempt to drill out to size - you will ruin the through hole plating. The ONLY holes you are permitted to drill out are the fixing holes for the board and the mounting holes for the extender socket. If you have a stubborn component, for example the modulator, try scraping down the diameter of its lead with a sharp knife or use a needle file to reduce its dimensions slightly.</p>
+
+<p>You MUST use sockets for all the integrated circuits as it is virtually impossible to remove ICs from a double-sided THP board. Transam Components Ltd will not replace components or be able to test your kit if the above instructions are not followed. You should, however, find that all the specified components slide into place with no trouble whatsoever.</p>
+
+<p>Start construction by soldering in all the DIL sockets while the board is flat - it makes life much easier - and then insert all resistors and diodes. In many cases you will find that topside connections run underneath resistors so you should take care to see that there is no possibility of the bare resistor wire shorting onto these tracks. Where you feel this to be a hazard, use a piece of sleeving over the wire.</p>
+
+<p>Next, insert the nine board pins which connect to the transformer and IC1 (the off-board voltage regulator). If these protrude underneath the board by more than 1/16" crop them off short to avoid them shorting to the cabinet when the final board is mounted in its case. Proceed to solder in the in line strip sockets and the extender socket. When the latter is firmly soldered, CAREFULLY drill out the board mounting holes with a drill, using the connector's holes as a guide, and then bolt it firmly into place.</p>
+
+<p>Insert the three transistors for the tape I/O. These have self-locking lugs on their legs and some careful manoeuvring is required to get them through the board. Move on to the capacitors and LEDs.</p>
+
+<p>Leave the three large smoothing capacitors until last and take care to insert the LEDs the right way round - you will have to look very carefully at the solid tantalum capacitors to find their polarity. Then insert and solder in the three pre-set potentiometers.</p>
+
+<p>Before progressing further, check the polarity of all the diodes and electrolytic capacitors you have inserted. It is often difficult to see the marking on 1N4148 devices so if in any doubt, use a test meter on them. Also make absolutely sure that you have put the zener diode in its correct position.</p>
+
+<p>You can now insert and solder in the three crystals, making sure you have them correctly positioned. The crystals have their frequencies stamped on them (usually in kilohertz). Ideally, it is preferable to use sockets for the crystals, but as space is at a premium on the board, do be careful not to overheat them. This is the only instance where you are advised to use the minimum amount of time with the soldering iron and not to worry about capillary action.</p>
+
+<p>Continue with construction by putting in the modulator and the two onboard regulators. Make sure you have the right regulator in the right position. One is for positive regulation, the other for negative and you can check their type numbers against the parts list and their designations on the board. Also ensure that you insert them the right way round - the metal fin should be on the face of them furthest away from the main smoothing capacitors.</p>
+
+<p>Temporarily mount IC1 on its heatsink and run flying leads to the three pins allocated to it. Be very careful that you observe the correct sense of its two pins which are offset from the lateral centre line of the package. Hold your device against the layout drawing and turn it so that the pins are nearer the top than the bottom and you will then have the same sense as the drawing.</p>
+
+<p>Before inserting any integrated circuits, give the power supply a dry run. Connect up the remaining six board pins to their corresponding terminals of the transformer and apply power. Use a voltmeter to ensure that you have the correct voltage rails present. You should get +5V and +12V at the output pins of ICs 1 and 2 respectively, and -12V at the output of IC3. You should read -5V at the junction between R1 and the zener diode. If all is well here, systematically check that you have the correct voltages at the sockets of EVERY integrated circuit. Use the schematic diagrams to help you identify the pin numbers. Finally, check that you have inserted the single wire link to the right of the extender socket.</p>
+
+<p>Insert all the integrated circuits making ABSOLUTELY SURE that you have them orientated correctly and that they are in the correct locations. Again use a magnifying glass to read their type numbers as some of them look similar at a quick glance. Use the dot on the UART to locate pin 1 as the notch can be misleading. Note that the orientation of ICs varies a lot on the board and you must check each one individually. Insert the 2708 EROM chip that is marked MONITOR V4.1 into the socket for IC21, the one marked BASIC L4.1 'A' into the socket for IC22 and BASIC L4.1 'B' into IC23. The standard kit includes eight TMS 2111-2 devices (some may have different manufacturer's marks owing to availability from the standard suppliers). These should be inserted into IC locations 25 to 32 inclusive. The only gaps you should have on the board are for IC24 and ICs 33 to 48.</p>
+
+<p>Do not install the keyboard at the moment but simply make up a coaxial lead linking the modulator to the aerial socket of a standard 625 line television set. Switch on the TV and allow it time to warm up, check that a rastor is just visible and tune it to approximately channel 36.</p>
+
+<p>Set the three onboard potentiometers to their midway positions and apply power to the computer. You should see some change on the television screen even though you may not be spot on tune. Try adjusting the tuning over the whole range until a strong signal is locked in. You should now see the welcome message:<p>
+
+<pre>TRITON READY
+FUNCTION? P G I O L W T</pre>
+
+<p>Once you can read this signal, you can rest assured that your computer is working. Switch the computer off, wait a few seconds and switch it on again. For a fraction of second you will see some garble on the screen which will rapidly clear and the previous message will be repeated.</p>
+
+<p>If you do not get this reaction you have made a mistake somewhere down the line which is almost certainly going to be one of the following:</p>
+
+<ul><li>Dry joints</li>
+<li>Missed connections</li>
+<li>Components in the wrong place</li>
+<li>Solder splashes across tracks</li>
+<li>EROMS plugged into the wrong sockets</li>
+<li>RAMS plugged into the wrong locations</li>
+<li>Faulty components</li>
+<li>Faulty PCB</li></ul>
+
+<p>The last two possibilities are most unlikely - particularly the latter, if you carried out the recommended tests. Faulty components are a possibility if you use any from a doubtful source or if you try to use standard TTL instead of the low power devices specified. Avoid this problem altogether by buying best quality devices exactly as specified - they are much cheaper in the long run. If you purchased your components from Transam Components Ltd and can verify that you have checked all the other possibilities of failure, you should immediately contact Transam who will be operating a 'get it going' service for all customers. This will not apply to boards which are returned with careless soldering, soldered-in ICs or non-specified components used as substitutes.</p>
+
+<p>We guarantee that the circuit board is correct and that the design works. Both the board and the resident firmware have been tried and tested over several months and, apart from soldering mistakes on the part of the constructor, no other faults were experienced during the period.</p>
+
+<p>Presuming that all has gone well, you now have a nearly finished computer. Switch off and make up an umbilical cord of wires to go from the keyboard socket on the board to the keyboard and associated push switches. Use colour-coded wire and ensure that you make no mistake when connecting the relevant leads to the keyboard Cinch connector. It is double-sided and you must make sure to hold it with the correct orientation or you may have disastrous consequences with the power lines. Different types of keyboards have different connections - our drawing refers to the George Risk Model 756. We refer you also to the connection details supplied with the keyboard. The only comment we should make is that the specified keyboard, and some others, give you an option for bit 6 of the data. One option gives upper case characters (capitals) only, while the other gives both upper and lower case. This application needs the latter. The strobe is the static strobe which goes to '1' as long as a key is depressed.</p>
+
+<p>The specified keyboard does not have any built-in direct function keys so these have to be provided by separate push buttons. These must be mounted on the front panel and are used to provide RESET, INT1 (Clear Screen), INT2 (Reset without clearing memory), and TAPE MANUAL OVERRIDE - ganged with PAUSE (see descriptions elsewhere). The first three push switches all have a common ground and are 'push to make' with a spring return. Use the Common lead and the respective signal leads to go to each of these switches. The fourth switch must be double pole 'push to make - push to break'. One pair of contacts should take the special 'PAUSE' line to ground when it is on. This line does not exist in the umbilical cord coming from the board socket but must be soldered to the end of R3 going to pin 3 of IC4. The other pair of contacts is connected across the tape power control pins of the respective DIN socket.</p>
+
+<p>You can make up all the above on flying leads to test the unit fully before putting it into its cabinet. Power up again and get the initialisation message. Try pressing any key on the keyboard EXCEPT P G I O L W or T and the computer should respond by saying INVALID. Press CONTROL C and the screen should clear and re-initialise. Press RESET. When the button is released the same should happen. Try INT2 and the machine should, again, re-initialise. When you try INT1 the screen should clear without the message appearing. To get something back on the screen, press any keyboard key except those in the 'key character' message (P G I O L W T). You should once more get INVALID. Depress CONTROL C once more and your computer is re-initialised and ready for test.</p>
+
+<p>We are assuming at this stage that you do not know anything about programming, so simply follow the instructions and check that you get what is described.<p>
+
+<p>Depress P on the keyboard (there is no need to press shift because the Monitor program automatically gives you upper case). You will get: 
+
+<pre>P
+PROG START=</pre>
+
+<p>(The computer is asking you to tell it the address of the part of memory you wish to inspect).</p>
+
+<p>Type in 0000 followed by carriage return. The display will now show:</p>
+
+<pre>P
+PROG START= 0000
+0000 31</pre>
+
+<p>(31 is the data in location 0000)</p>
+
+<p>Depress the carriage return repeatedly and you will get the following as you step through the Monitor program instructions:</p>
+
+<pre>P
+PROG START= 0000
+0000 31
+0001 80
+0002 14
+0003 FB
+etc...</pre>
+
+<p>Re-initialise with CONTROL C and then type L. The computer will again ask you for a start address but this time will list out the contents of 15 adjacent locations starting from that address. We can use this to test that the memory is there and working in the RAM area.</p>
+
+<p>Answer the computer with the address 1600 and a carriage return. If you make a mistake before you press CR you can backspace with CONTROL H and change an entry, but you must then type through the rest of the line on the screen. The computer will list the contents against the memory addresses and then stop and ask for 'MORE?'. If all is well you should see 00 in all locations. To continue, type Y and keep doing this, checking all the locations up to the highest order RAM on the board. Above that address the computer will read FF which indicates that there is no memory there. If you see any data above address 15FF (that is, anything other than 00 or FF) you can be sure you have a bad connection to the RAM IC which contains the data in question. This test only holds true immediately after first initialisation and cannot be used if you have attempted to write programs.</p>
+
+<p>To get out of LIST, type any character other than Y and the computer will re-initialise. Carry out this or any of the other reset procedures already described and procede to check the G function. This is to facilitate running a machine code program. The computer will acknowledge:</p>
+
+<pre>G
+RUN
+PROG START=</pre>
+
+<p>This means it is ready to run but wants you to tell it from where in memory it should get its first instruction. Give it this information by typing 02B9 followed by CR. You will actually be running a re-initialisation program in the Monitor which should just acknowledge with:</p>
+
+<pre>FUNCTION? P G I O L W T</pre>
+
+<p>You are now back where you started so you can try typing W which turns the computer into nothing more than a video display typewriter. You can type away to your heart's content testing out all the alpha-numeric and graphics characters, using the keys in unshifted, shifted and control mode. Do this while inspecting the coding tables shown in the section describing the VDU and get used to the cursor move commands. Type a full line of characters and adjust VR1 for best line length. To get out of this mode of operation use CONTROL C or any of the other methods of resetting. It will be fun for you to see BASIC L4.1 in action so depress T. The computer acknowledges with:</p>
+
+<pre>T
+BASIC L4.1
+OK</pre>
+
+<p>Type in NEW followed by CR to ensure the memory is cleared and the computer re-acknowledges with the BASIC header.</p>
+
+<p>Very carefully type in the following message line by line with a CR at the end of each line. Remember you can correct by backspacing with CONTROL H before you hit CR.</p>
+
+<pre>10 FOR A=1 TO 10
+20 PRINT 'YOU ARE MY MASTER'
+30 NEXT A
+RUN</pre>
+
+<p>You should not re-type the 'greater than' prompt signs - the computer is prompting YOU with these. When you press CR after typing RUN we hope you will be surprised - you have just written your first program.</p>
+
+<p>You can now be confident that your computer is working correctly and it only remains to test and adjust the Tape I/O circuits. This must be done in stages.</p>
+
+<p>First check the Tape Output software. Connect an audio monitor (simple amplifier or crystal earpiece) between the 'Tape Out' socket on the board and ground. You should hear a continuous tone. Call up BASIC by typing T and enter the above program again. Once you have done this, get back to the Monitor without erasing your BASIC program (use CONTROL C). Now press O to call up the Tape Output routine.</p>
+
+<p>The computer will ask you for a TAPE HEADER which can be anything you like written in alpha-numerics. Preferably do not use a title longer than 20 characters as you might run out of input buffer space. We suggest you type in SLAVE ROUTINE. Follow this with CR while listening to the tone on the ear piece. Nothing will happen on the VDU but after a pause of between 5 and 6 seconds (this could be longer if you are using a master clock crystal lower than the 7.20 MHz as specified) you will hear about 1 second of regular high speed pulses followed by a few seconds of what can best be described as 'burble' (this is your program going out). The burble will stop and you will hear just the continuous tone you heard at the beginning. After a further 5 or 6 seconds, the VDU will confirm that the file has finished by displaying END followed by the re-initialisation heading.</p>
+
+<p>Repeat this exercise but this time connect a continuity meter across the tape power control sockets on the board. The manual override switch must be open circuit. While you type in the tape header code the meter should show that the relay is open circuit, but as soon as you depress the CR to start the operation, the relay closes and stays closed until the VDU types END. It is obvious that the 5 or 6 second delay at each end of the routine is to allow a portion of blank tape to go by to reduce the chance of overlapping files or missing the start of the active tape at the beginning of a new cassette.</p>
+
+<p>You must now set the Baud rate for your system. The simplest way is to use a frequency meter connected to pin 3 of IC81. Adjust VR2 until the meter reads exactly 4,800 Hz. A better way, and probably more viable for most constructors, is to use a standard test tape. This is available from Transam. It is better because different tape recorders might operate at different speeds which would influence the play-back baud rate of your system. This does not matter if you are only recording and playing back your own programs, but if you wish to use those from other sources, your OVERALL SYSTEM must operate at 300 baud. Using a standard test tape calibrates your overall system to 300 baud.</p>
+
+<p>To carry out this test properly, you must have a master clock crystal having a frequency greater than 4.5 MHz, otherwise the VDU may not print out as fast as the data is coming in from the tape. You must also enter and run a special machine code program to facilitate the test. (How the program operates is explained in the section on the Monitor). The machine code program accepts any data on the tape and displays it, verbatim, on the VDU. If garble is received and decoded, garble will be printed. The test tape contains the alphabet followed by CR and Line Feed repeated many times over a period of a few minutes. All you have to do when the program is running, is set VR3 to its midway position and adjust VR2 until vou get the alphabet reliably repeated on the screen. If, at the best setting of VR2, you still get occasional garble, try altering VR3 for sensitivity. You should of course, be using the phono output from your tape recorder, but if you do not have this, use the extension speaker socket with the volume set about 20% up from minimum.</p>
+
+<p>Now carry out the following instructions EXACTLY.</p>
+
+<p>Initialise the computer with RESET, type in P and enter the start address for the program as 1600. For zero always use 0 and not O. Press CR and location 1600 will be shown to contain 20. Now use the memory change facility to start writing your program. Simply type in the following list of hexadecimal instructions - each pair of digits should be followed by CR. You will end up with a column showing address locations to the right of which is a column showing what WAS in that location (it should have been 00 in all cases) and to the right of that the new data you have just typed in. When you have typed in the complete list of instructions, use CONTROL C to re-initialise, then type L, and list from location 1600 (as previously described). Check that the codes in each location correspond EXACTLY with those in the published program. Use CONTROL C to re-initialise and then type G. Enter 1600 without pressing CR at this stage. Make sure your tape recorder is properly connected to the board and switch on the recorder in PLAY mode.</p>
+
+<p>Press CR and procede to adjust VR2 as previously described. You should see:</p>
+
+<pre>ABCDEFGHIJKLMNOPQRSTUVWXYZ
+ABCDEFGHIJKLMNOPQRSTUVWXYZ
+ABCDEFGHIJKLMNOP etc..</pre>
+
+<p>until the recording ends or you switch off the tape recorder. While this is happening your computer is locked within a program loop and you will NOT be able to get out of this with CONTROL C. You will have to use INT2 to re-initialise.</p>
+
+<p>Here is the program you must type in:</p>
+
+<pre>1600 CD 
+1601 27 
+1602 03 
+1603 CD 
+1604 1D 
+1605 03 
+1606 CD 
+1607 13 
+1608 00 
+1609 C3 
+160A 03 
+160B 16</pre> 
+
+<p>Your TRITON is now completely set up and ready for use. You have made an extremely powerful computer whose applications are limited only by your own imagination and the development of more sophisticated software - coupled with extender boards to give you extra I/O functions (Floppy Disks, Line Printers, extra Tape Recorders, more Memory, etc). We have plans for further exciting applications and developments. Please contact us or watch our advertisements in the national magazines.</p>
+
+</body>
+</html>
