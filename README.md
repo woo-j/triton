@@ -73,6 +73,7 @@ Also included are the following tapes:
 
 MANUAL_MC_TAPE - All of the machine code program samples from the manual
 MANUAL_BASIC_TAPE - All of the BASIC program samples from the manual
+TRAIN_TAPE - Train program from Computing Today, Feb 1979 (pages 38-41)
 
 Program versions on these "tapes" have been adapted to operate with L7.2
 
