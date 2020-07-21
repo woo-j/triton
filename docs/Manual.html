@@ -375,5 +375,193 @@ ABCDEFGHIJKLMNOP etc..</pre>
 
 <p>Finally, a word about clock frequency. You can use any frequency crystal for X1 but the ideal value is 7.20 MHz which should not be exceeded. Lower frequency devices are fine but the computer will operate proportionally slower. If you put in a higher frequency crystal, not only will you run into memory access time problems, but the computer will also be operating at a rate faster than the VDU can handle. The Monitor program has provided the maximum permissible print out rate for a clock frequency of 7.20 MHz.</p>
 
+<h2>PORTS AND CHIPS</h2>
+
+<p>During an INPUT or OUTPUT instruction cycle the CPU will generate the address of the I/O port required on the 8 least significant bits of the address busbar. This has to be decoded to provide a single line signal which will activate the port. It is not sufficient to provide this address on its own because there is no way that the port can tell whether the select signal has come from a genuine port select instruction or whether it is the low order byte of a memory read/write cycle. Futhermore, there are times within the machine cycle when the address busbar can be in a transient or high impedance state which could cause indeterminate address information to be decoded by the port select circuits.</p>
+
+<p>To prevent all these problems and also to differentiate between input and output ports, the decoded port line is gated with either the <SPAN STYLE="text-decoration:overline">I/OR</SPAN> or <SPAN STYLE="text-decoration:overline">I/OW</SPAN> control line. One or other of these lines goes to '0' AFTER the ports select address has been placed on the busbar and terminates BEFORE the address data changes. The pulse, so produced, is of the correct duration to strobe the I/O data on the data bus into or out of the port in question. Take, for example, the control of the Keyboard INPUT port. The port itself is simply an eight wide set of non-inverting tri-state buffers permanently connected to the data bus.</p>
+
+<p>Pins 1 and 19 enable the output of the port when they go to level '0'. Normally these pins are at '1' and held there by the output of IC13b, and keyboard data cannot affect the data bus. IC18b and 15 between them, allow 16 lines to be uniquely decoded from address bits 0 to 7. We use only 8 ports on the main board so part of this facility is redundant, hence not all the outputs from IC15 are used. IC18b is a 2 to 4 line decoder operating here as a 3 input NAND gate. When address 00H is present on the bus, pin 1 of IC15 goes low which points to Port 0 (the Keyboard). This signal is ORED with <SPAN STYLE="text-decoration:overline">I/OR</SPAN> by IC13c, d and b, so when there is coincidence, IC49 receives '0' on pins 1 and 19. Whatever data is coming from the keyboard is transmitted onto the data bus and then accepted by the CPU as genuine input data. The only reason for using three NAND gates to provide the OR function is to use spare capacity in partly used ICs.</p>
+
+<p>While on the subject of the keyboard port, those more experienced in computer techniques might wonder why we use only ONE port for the keyboard instead of having a second one to check the status. The reason is economy - both of components and space utilisation on the PCB.</p>
+
+<img src="man_fig6.png">
+
+<p>We get around this apparent deficiency in the INCH (Keyboard Input) sub-routine of the monitor. More memory is needed for the instructions but this works out cheaper than the extra gates required. Interconnections with the keyboard put the 7 bits of ASCII on bits 1 to 7 and, instead of parity, we are using bit 8 to carry the keyboard strobe.</p>
+
+<p>Output port 3 works in similar fashion. IC15 decodes its address on pin 4 and IC14a ORs it with, in this case, <SPAN STYLE="text-decoration:overline">I/OW</SPAN>. The resultant pulse is used as a clock to the D type latches within IC50. The data is entered into the latches on the rising (trailing) edge of the pulse. Using the trailing edge does not matter here. There is just sufficient current sinking capacity in a 74LS374 (IC50) to drive a small LED direct through a 1k limiting resistor. The brightness is not very high and any variations in LED efficiencies will be more pronounced but quite a usable display is obtained. The byte of data is therefore transferred from the busbar to the latches and displayed in binary fashion on the LEDs. Note that the LEDs are illuminated when an '0' is output. If you want to get a 'non-inverted' display, you will have to use software to complement the data before outputting it to this port.</p>
+
+<p>The VDU, when operating in I/O mode, is situated at PORT 5. This works in much the same way as the LED port but we are using a NOR gate to give a positive going port enable pulse. Bits 1 to 7 carry ASCII data and bit 8, the VDU strobe which is formatted to have the correct timing characteristics by the OUTCH (VDU Output) subroutine of the Monitor program.</p>
+
+<p>A further output port was required to switch the relay of the tape recorder power control (to effect automatic starting and stopping of the tape). Theoretically, a single bit port was all that was required, but as things turned out in the design this would have required a new integrated circuit. Because of this a 74LS75 (IC52) was used, which contains four latches connected as two pairs. This way we were able to provide a tape control signal to the relay at pin 11 (the <SPAN STYLE="text-decoration:overline">Q</SPAN> output of one latch) by using data bit 8 and this left a spare line on that port (bit 7) which can be used by the experimenter as an output line. The port to call for this line is number 7. At the same time the other pair of latches in IC52 are used as OUTPUT PORT 6 which comprises bits 7 and 8 which are also spare.</p> 
+
+<p>As we have moved on to the subject of tape control, take note that there is a push button switch connected across the relay contacts. This is to allow manual override so that the cassette recorder can be rewound etc. under manual control without having to unplug the remote control lead. See the relevant section for more details about the serialiser I/O ports and MODEM for the tape recorder.</p>
+
+<p>The memory of TRITON comprises four 1k blocks of ROM, one 1k block of VDU RAM and twelve 256 byte blocks of Read/Write RAM. The high order addresses are used to decode individual lines which enable each block while low order addresses point to a specific location within the previously decoded block.</p>
+
+<p>IC16 is a 3 to 8 line decoder but we are able to use it to decode, uniquely, eight individual blocks of 1k from the six most significant address lines. This is made possible by using A15 in inverted form and the internal gated select inputs of the 74LS138. The four lowest order selected lines correspond to memory blocks which start at 0000H, 0400H, 0800H and OCOOH respectively, and these hold the MONITOR, BASIC 'A' and BASIC 'B' read only memories. The block starting at OCOOH is a spare block reserved for ROM expansion. The line decoded at pin 11 or IC16 addresses the block of VDU RAM and the remaining three lines are fed to three 2 to 4 line decoders, ICs 17 and 18a, along with address bits A8 and A9.</p>
+
+<p>The last three decoders break down the remaining 1k blocks into 12 blocks, each containing 256 bytes. Each of these 12 lines goes to a specific pair of random access memory integrated circuits that form the main work area of the computer.</p>
+
+<p>Except for the ROMs, gating with <SPAN STYLE="text-decoration:overline">MEMR</SPAN> and <SPAN STYLE="text-decoration:overline">MEMW</SPAN> is carried out within the memories themselves. The 2708 read only memories contain only a chip select input and it is necessary to gate the <SPAN STYLE="text-decoration:overline">MEMR</SPAN> control signal with each of the chip select lines prior to making connection with the appropriate pin. This gating is carried out by the quad 2 input OR gates contained within IC19.</p>
+
+<p>Breaking the main RAM area down into 256 byte blocks made the design of this decoder slightly more complex than it would have been, had 1k blocks been used throughout, but the decision to do this was made on the grounds of economy as already explained.</p>
+
+<p><u>Keyboard Connector</u> (As viewed from rear of board)</p>
+
+<img src="man_fig7.png">
+
+<h2>MEMORIES ARE MADE OF THIS</h2>
+
+<p>We have excluded the VDU memory from this description because it is rather special and is covered in detail later.</p>
+
+<p>The illustration has been abbreviated as most of the memory circuitry is a repetition of the same theme. You can clearly see the difference between the ROMs and Read/Write RAMs. There are four of the former - all 2708s - but in the standard machine only three are used immediately. A spare socket is left for the fourth (IC24) so that any expansion firmware can be simply plugged in. The 2708 is an ultra violet erasble ROM which contains 1,024 (decimal) bytes of memory each being 8 bits wide. To access a specific byte within it, you need a 10 bit address and A0 through A9 are used for this purpose. The eight output pins are tri-state which are enabled by an '0' on pin 20 (the chip select input). The respective outputs from each of the ROMS can therefore be commoned together on the data bus. The 'Programming Enable' pin (18) is only used when the devices are being programmed and therefore is left disconnected within the system. We use the block select signal gated with <SPAN STYLE="text-decoration:overline">MEMR</SPAN> to provide the Chip Select strobe for the ROMs (this is described elsewhere).</p>
+
+<p>The Monitor program is located within IC21 which starts at address location 0000H so that the computer will always go through a firmware initialisation routine when switched on. The Power On Reset ensures that the first instruction the CPU reads will be the one located at 0000H. BASIC is located within ICs 22 and 23. Those new to computing should understand that these ICs MUST be placed in their correct respective sockets because there are many JUMP and CALL instructions which link the Monitor to BASIC and vice versa as well as internal jumps. Transam Components Ltd supplies the ROMs ready programmed and as the ICs all have the same type number, they will be supplied with self-adhesive labels identifying which is which. They should be designated MONITOR V4.1 for IC21, BASIC L4.1 'A' for IC22 and BASIC L4.1 'B' for IC23.</p>
+
+<p>Transam will be offering many useful programs in the future to use the space which is left for IC24. Alternatively, readers who have access to EROM programmers can use this space for any of their self-written programs that are worth holding in permanent, non-volatile, form.</p>
+
+<p>The RAM area of memory comprises TMS 2111-2 chips. These each contain 256 locations that are four bits wide. As we need to store eight bit bytes of data, two chips are required for each 256 byte block of memory. The odd number designations IC25 to IC47 correspond to the low order nibble of the byte while the respective even numbers (IC26 to IC48) correspond to the high order. Only eight address lines (A0 through A7) are required to uniquely select a byte within this organisation of a chip pair but we need to specify which pair by means of the Chip Select lines.</p>
+
+<p>The 2111s have internal chip select and Read/Write gating so we are able to drive the <SPAN STYLE="text-decoration:overline">MEMR</SPAN> and <SPAN STYLE="text-decoration:overline">MEMW</SPAN> inputs direct from the control busbar.</p>
+
+<p>ICs 25 and 26 form the first block of RAM which extends from address 1400H to 14FFH. This is used for the stack of the Monitor (set at 1480H) together with sixteen bytes (1400H to 140FH) as a 'SCRATCH' area and an unspecified length going upwards from 1410H as an input buffer. These locations are all specified by the standard Monitor and, of course, could be different if the user were to have a different Monitor. The rest of this block is taken up by part of the table and stack area for BASIC L4.1 which extends right the way through the next block (ICs 27 and 28).</p>
+
+<p>With this information you can see that you could JUST operate the machine under the control of the Monitor only by having ICs 25 and 26 in place, leaving the rest of RAM blank. If you operate under the control of BASIC L4.1 your work area does not start until the third block of RAM (ICs 29 and 30). From hereon upwards you have flexibility in how many RAMs you care to insert (depending cn your budget). Remember they have to be added in pairs and any pair that you add should go into the next highest IC designation - otherwise you will have gaps in your RAM sequence.</p>
+
+<p>Transam supplies eight 2111 10s (1k) in the standard kit of parts which is sufficient to provide all the necessary stack, tables and scratch areas with 512 bytes left as work area for BASIC. With this capacity you will be able to get the machine up and running and enjoy one or two short, experimental educational programs written in BASIC, but for the more exciting and challenging games, you will soon find you need to extend this area. By working in 256 byte blocks, this can be done in easy stages over a period of time.</p>
+
+<p>REMEMBER, when you insert the RAMs, start at the designation for IC25 and work from there upwards as you fill up the RAM capacity of the board. Alternative manufacturer's devices may be used here but it is important to check that they have the same or shorter access time as the TMS 2111-2 which is specified. Note that there is not always uniformity in type numbering between different manufacturers.</p>
+
+<img src="man_fig8.png">
+
+<h2>VDU 4 U2C</h2>
+
+<p>Without doubt this is the most complex discreet IC region of the computer and to understand it fully, you should be well acquainted with the operation of the Thomson-CSF VDU control integrated circuit (IC61). This chip has a built in clock which generates standard TV synchronisation pulses (line and field sync) on pin 26. Random interlace is used and a simplified field sync train is generated as opposed to the full CCIR specification.</p>
+
+<p>The chip, synchronously with this train of pulses, generates addresses for the VDU RAM so that the correct code of the character is selected as the TV raster spot is traversing the respective part of the television screen. An external 'Picture Point Oscillator' (IC55c and d) in conjunction with a divider chain (IC63) sets the horizontal width of a character and steps the address of the control chip by the link from pin 12 (IC63) to pin 9 (IC61). The inverted output of IC63 pin 15 is used to latch the data being addressed by the controller into IC68 (a seven wide latch), latch the picture point pattern generated by the character generator ROM into the serialiser (IC72) and reset the picture point divider chain (IC63) at the end of each character width. Note that the device used as an inverter after pin 15 of IC63 is part of an EXCLUSIVE OR gate. This happens again elsewhere in this circuit to make use of spare functions in partly used ICs.</p>
+
+<p>The picture point width (hence the character width and number of characters per line) is set by the frequency of the oscillator control VR1. This should be set to suit your television screen so that there is a small margin to the right of the 64th character - in this way, no characters are lost.</p>
+
+<p>In the standard application of the Thomson-CSF chip ASCII, data held in the RAM output latches (IC68) is fed to the column address inputs of an RO-3-2513 character generator ROM. Note that our circuit does this but has been extended in this area. Firstly we are using a 7 bit wide RAM to hold the FULL ASCII code - we need this to provide capacity for graphics. The outputs of the latches feed both the standard alpha-numeric character generator (IC69) AND a specially programmed ROM (IC70) which contains picture point data for the 64 graphic symbols. We use the EXCLUSIVE OR function (IC62d) on bits 6 and 7 of the ASCII code to select either the graphics or alpha-numeric ROM. The select signals go through further gating (ICs 67a and d) to ensure that the integrity of the cursor generating pulse (pin 15 of IC61) is not corrupted.</p>
+
+<p>Three further address lines from the VDU controller (pins 11, 12 and 13) address the picture point data ROMS in both ICs 69 and 69. Due to a limitation caused by the internal operation of the Thomson chip the row address code 000 is output for the top row AND the bottom four rows of the character cell. Normally rows 0, 8, 9, 10 and 11 are used to provide inter line gaps for alpha-numeric displays while rows 1 to 7 carry alpha-numeric picture point data. We have had to take this into account when designing the font of graphics symbols - some of which cannot fill the complete character cell rectangle on'the screen. In simple terms, the limitation means that if a graphic demands a bright picture point in row 0, there will have to be bright points on rows 8, 9, 10 and 11 in the same column. Look at the table of graphics characters and you can see how we have adjusted the graphics to suit this restriction.</p>
+
+<p>Further complications caused by this limitation are that a graphic must not appear on the topmost line of the tele-vision screen if that graphic contains picture points in its top row. The Thomson chip requires there to be zeros present here in order to derive field blanking. We could have got round this problem with extra gating but this would have been at the expense of simplicity. The restriction is, however, not much of a problem and in some instances can actually be used as a bonus. For example, by filling the top line of the screen with completely white character cells you will make the whole screen go white above the top line and below the 16th line of the screen, giving a frame to anything printed between the two extremes.</p>
+
+<p>We have got over a similar problem (involving line blanking) by gating the video output with the INI function (pin 26 of IC61) in IC71b. Without this, any graphics symbol having a picture point in its most left-hand column would have caused a 'wrap around' white line that interferes with the d.c. level of the line sync pulse. The only problem that remains in this respect is that you will now get a single 'extra' picture point showing to the right of the 64th character down a line if you use a graphic in the most left-hand position of a line. This does not happen with all graphics - only those that have picture points in their most left-hand column.</p>
+
+<p>The five outputs from the alpha-numeric ROM are wire ORED with five of the eight outputs from the graphics ROM and held high via pull up resistors R22 - 26. They are then fed to the correct positions in the serialiser shift register IC72. Note that the remaining three outputs from the graphics ROM have to be ANDED with a signal defining whether or not the character is a graphic (done by ICs 71a, c and d). This is to ensure that if alpha-numerics are printed there is a correct inter-character gap.</p>
+
+<p>So far we have not explained how the VDU RAM is addressed by the control chip. We will deal with that now.</p>
+
+<p>This is more complex than the standard application because we are allowing the CPU to memory map the VDU RAM to provide fast and possible animated graphics. To do this we have had to make allowance for the CPU to take over addressing control of the VDU RAM. This is done in a very simple way. We have taken all the address lines from IC61 and their equivalents from the computer busbar to a set of data selectors (ICs 64, 65 and 66). If the computer addresses the VDU memory location (any address between 1000H and 13FFH) the block select line (called MAP VDU in this illustration) is activated. This, of course, could happen if ever the address busbar went into a high impedance state (during HOLD, etc) so to prevent any spurious pulses affecting the operation, we gate the VDU block select line with <SPAN STYLE="text-decoration:overline">STSTB</SPAN> which only occurs when valid address information is on the busbar. We do the gating in a D type latch so that during the complete cycle and at all other times, the data selectors hand over address control to IC61.</p>
+
+<p>A similar transfer of responsibility takes place between the normal input data to the VDU (which gets to it via an output port) and the main computer data bus. In this case the data is selected by ICs 59 and 60. These also receive their changeover instruction from the changeover latch IC53. Note that we also have to do a changeover between the internally generated memory write command (pin 17 of IC61) and the computer's <SPAN STYLE="text-decoration:overline">MEMW</SPAN> strobe. This is done within IC60.</p>
+
+<p>It only remains to describe the gates on the VDUs internal data lines and IC54. The former are used to force the ASCII code for 'Space' onto the data lines when pin 13 (IC61) is at '0' in coincidence with a writing pulse to the VDU memory. This is to allow for the very useful internal function provided by the Thomson chip to clear the screen and reset the cursor in one operation.</p>
+
+<p>The VDU controller carries out a number of non writing functions as well as entering and addressing data within its memory. By using some of the ASCII codes as control, it is possible to do such things as move the cursor in steps to any position on the screen, reset the cursor, carry out a line feed or do a carriage return clearing ONLY the unused part of the line. There are also a couple of control codes that we wish the VDU to ignore - 00H and 04H respectively - these are NUL (or no operation) and EOT (end of text) flags. Recognition of all these special codes is carried out by the VDU CONTROL ROM (IC54). This has had to be specially programmed for the TRITON and the standard Thomson-CSF ROM (designed to go with their chip) will not do in this application.</p>
+
+<img src="man_fig9.png">
+
+<p>To get the best use from the computer and its VDU you need to know hexadecimal and decimal values of all the ASCII codes that are used to generate alnha-numerics, graphics and control characters. You also need to know which of the keyboard keys correspond to each graphic character. To help you, we show all the graphics with their respective codes and key names in the following tables. There is no need to learn them - just keep this Manual beside your TRITON computer whenever you use it.</p>
+
+<p>Even though you may be a software specialist, you MUST take note of the VDU's printing speed. Normally you may output a character to the VDU for printing in I/O mode every 8.3mS. The standard TRITON monitor errs on the safe side and has a built-in delay which outputs a character roughly every 9mS. If you write your own software, you must take this speed limitation into account. Furthermore, there are two I/O operations which take a considerably longer time - these are 'Clear Screen and Home Cursor' and 'Home Cursor'. These instructions must be followed by a delay of at least 132mS. Again, the TRITON's monitor makes allowance for this, but you can get direct access to these functions if you use either the 'PRINT CONTROL' or 'VDU' commands which exist in BASIC L4.1. If you use these in BASIC, you MUST follow them with a delay loop having a time constant greater than 132mS. (In practice, we have found that a 200 step 'FOR - NEXT' instruction is quite safe.) 
+
+<p><u>Modulator</u></p>
+
+<img src="man_fig10.png"><br>
+
+<img src="man_fig11.png">
+
+<p>DECIMAL AND HEX CODES FOR ALPHA-NUMERIC CHARACTERS</p>
+
+<table>
+<tr><td><u>Character</u></td><td><u>Decimal Code</u></td><td><u>Hex Code</u></td></tr>
+<tr><td>Space</td><td>32</td><td>20</td></tr>
+<tr><td>!</td><td>33</td><td>21</td></tr>
+<tr><td>&quot;</td><td>34</td><td>22</td></tr>
+<tr><td>#</td><td>35</td><td>23</td></tr>
+<tr><td>$</td><td>36</td><td>24</td></tr>
+<tr><td>%</td><td>37</td><td>25</td></tr>
+<tr><td>&amp;</td><td>38</td><td>26</td></tr>
+<tr><td>'</td><td>39</td><td>27</td></tr>
+<tr><td>(</td><td>40</td><td>28</td></tr>
+<tr><td>)</td><td>41</td><td>29</td></tr>
+<tr><td>*</td><td>42</td><td>2A</td></tr>
+<tr><td>+</td><td>43</td><td>2B</td></tr>
+<tr><td>,</td><td>44</td><td>2C</td></tr>
+<tr><td>-</td><td>45</td><td>2D</td></tr>
+<tr><td>.</td><td>46</td><td>2E</td></tr>
+<tr><td>/</td><td>47</td><td>2F</td></tr>
+<tr><td>0</td><td>48</td><td>30</td></tr>
+<tr><td>1</td><td>49</td><td>31</td></tr>
+<tr><td>2</td><td>50</td><td>32</td></tr>
+<tr><td>3</td><td>51</td><td>33</td></tr>
+<tr><td>4</td><td>52</td><td>34</td></tr>
+<tr><td>5</td><td>53</td><td>35</td></tr>
+<tr><td>6</td><td>54</td><td>36</td></tr>
+<tr><td>7</td><td>55</td><td>37</td></tr>
+<tr><td>8</td><td>56</td><td>38</td></tr>
+<tr><td>9</td><td>57</td><td>39</td></tr>
+<tr><td>:</td><td>58</td><td>3A</td></tr>
+<tr><td>;</td><td>59</td><td>3B</td></tr>
+<tr><td>&lt;</td><td>60</td><td>3C</td></tr>
+<tr><td>=</td><td>61</td><td>3D</td></tr>
+<tr><td>&gt;</td><td>62</td><td>3E</td></tr>
+<tr><td>?</td><td>63</td><td>3F</td></tr>
+<tr><td>@</td><td>64</td><td>40</td></tr>
+<tr><td>A</td><td>65</td><td>41</td></tr>
+<tr><td>B</td><td>66</td><td>42</td></tr>
+<tr><td>C</td><td>67</td><td>43</td></tr>
+<tr><td>D</td><td>68</td><td>44</td></tr>
+<tr><td>E</td><td>69</td><td>45</td></tr>
+<tr><td>F</td><td>70</td><td>46</td></tr>
+<tr><td>G</td><td>71</td><td>47</td></tr>
+<tr><td>H</td><td>72</td><td>48</td></tr>
+<tr><td>I</td><td>73</td><td>49</td></tr>
+<tr><td>J</td><td>74</td><td>4A</td></tr>
+<tr><td>K</td><td>75</td><td>4B</td></tr>
+<tr><td>L</td><td>76</td><td>4C</td></tr>
+<tr><td>M</td><td>77</td><td>4D</td></tr>
+<tr><td>N</td><td>78</td><td>4E</td></tr>
+<tr><td>O</td><td>79</td><td>4F</td></tr>
+<tr><td>P</td><td>80</td><td>50</td></tr>
+<tr><td>Q</td><td>81</td><td>51</td></tr>
+<tr><td>R</td><td>82</td><td>52</td></tr>
+<tr><td>S</td><td>83</td><td>53</td></tr>
+<tr><td>T</td><td>84</td><td>54</td></tr>
+<tr><td>U</td><td>85</td><td>55</td></tr>
+<tr><td>V</td><td>86</td><td>56</td></tr>
+<tr><td>W</td><td>87</td><td>57</td></tr>
+<tr><td>X</td><td>88</td><td>58</td></tr>
+<tr><td>Y</td><td>89</td><td>59</td></tr>
+<tr><td>Z</td><td>90</td><td>5A</td></tr>
+<tr><td>[</td><td>91</td><td>5B</td></tr>
+<tr><td>\</td><td>92</td><td>5C</td></tr>
+<tr><td>]</td><td>93</td><td>5D</td></tr>
+<tr><td>&#8593; or ^</td><td>94</td><td>5E</td></tr>
+</table>
+
+<p>DECIMAL AND HEX CODES FOR NON-PRINTING CONTROL CHARACTERS</p>
+
+<table>
+<tr><td><u>Control Function</u></td><td><u>Keyboard Key</u></td><td><u>Decimal Code</u></td><td><u>Hex Code</u></td></tr>
+<tr><td>NUL (no-op for printer)</td><td>CONT @</td><td>0</td><td>00</td></tr>
+<tr><td>EOT (End of Text)</td><td>CONT D</td><td>4</td><td>04</td></tr>
+<tr><td>Backspace</td><td>CONT H</td><td>8</td><td>08</td><tr>
+<tr><td>Step cursor RIGHT</td><td>CONT I</td><td>9</td><td>09</td></tr>
+<tr><td>Line feed</td><td>Line feed or CONT J</td><td>10</td><td>0A</td></tr>
+<tr><td>Step cursor up</td><td>CONT K</td><td>11</td><td>0B</td></tr>
+<tr><td>Clear screen/Reset cursor</td><td>CONT L</td><td>12</td><td>0C</td></tr>
+<tr><td>Carriage return/clear line</td><td>CR or CONT M</td><td>13</td><td>0D</td></tr>
+<tr><td>Roll screen (top line rolls<br>round to bottom line etc)</td><td>ESC or CONT [</td><td>27</td><td>1B</td></tr>
+<tr><td>Reset cursor</td><td>CONT \</td><td>28</td><td>1C</td></tr>
+<tr><td>Carriage return (no clear)</td><td>CONT ]</td><td>29</td><td>1D</td></tr>
+</table>
+
+
+
 </body>
 </html>
