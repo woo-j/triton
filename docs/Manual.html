@@ -399,7 +399,7 @@ ABCDEFGHIJKLMNOP etc..</pre>
 
 <p>The memory of TRITON comprises four 1k blocks of ROM, one 1k block of VDU RAM and twelve 256 byte blocks of Read/Write RAM. The high order addresses are used to decode individual lines which enable each block while low order addresses point to a specific location within the previously decoded block.</p>
 
-<p>IC16 is a 3 to 8 line decoder but we are able to use it to decode, uniquely, eight individual blocks of 1k from the six most significant address lines. This is made possible by using A15 in inverted form and the internal gated select inputs of the 74LS138. The four lowest order selected lines correspond to memory blocks which start at 0000H, 0400H, 0800H and OCOOH respectively, and these hold the MONITOR, BASIC 'A' and BASIC 'B' read only memories. The block starting at OCOOH is a spare block reserved for ROM expansion. The line decoded at pin 11 or IC16 addresses the block of VDU RAM and the remaining three lines are fed to three 2 to 4 line decoders, ICs 17 and 18a, along with address bits A8 and A9.</p>
+<p>IC16 is a 3 to 8 line decoder but we are able to use it to decode, uniquely, eight individual blocks of 1k from the six most significant address lines. This is made possible by using A15 in inverted form and the internal gated select inputs of the 74LS138. The four lowest order selected lines correspond to memory blocks which start at 0000H, 0400H, 0800H and 0C00H respectively, and these hold the MONITOR, BASIC 'A' and BASIC 'B' read only memories. The block starting at 0C00H is a spare block reserved for ROM expansion. The line decoded at pin 11 or IC16 addresses the block of VDU RAM and the remaining three lines are fed to three 2 to 4 line decoders, ICs 17 and 18a, along with address bits A8 and A9.</p>
 
 <p>The last three decoders break down the remaining 1k blocks into 12 blocks, each containing 256 bytes. Each of these 12 lines goes to a specific pair of random access memory integrated circuits that form the main work area of the computer.</p>
 
@@ -407,7 +407,9 @@ ABCDEFGHIJKLMNOP etc..</pre>
 
 <p>Breaking the main RAM area down into 256 byte blocks made the design of this decoder slightly more complex than it would have been, had 1k blocks been used throughout, but the decision to do this was made on the grounds of economy as already explained.</p>
 
-<p><u>Keyboard Connector</u> (As viewed from rear of board)</p>
+<h3>Keyboard Connector</h3> 
+
+<p>(As viewed from rear of board)</p>
 
 <img src="man_fig7.png">
 
@@ -469,13 +471,13 @@ ABCDEFGHIJKLMNOP etc..</pre>
 
 <p>Even though you may be a software specialist, you MUST take note of the VDU's printing speed. Normally you may output a character to the VDU for printing in I/O mode every 8.3mS. The standard TRITON monitor errs on the safe side and has a built-in delay which outputs a character roughly every 9mS. If you write your own software, you must take this speed limitation into account. Furthermore, there are two I/O operations which take a considerably longer time - these are 'Clear Screen and Home Cursor' and 'Home Cursor'. These instructions must be followed by a delay of at least 132mS. Again, the TRITON's monitor makes allowance for this, but you can get direct access to these functions if you use either the 'PRINT CONTROL' or 'VDU' commands which exist in BASIC L4.1. If you use these in BASIC, you MUST follow them with a delay loop having a time constant greater than 132mS. (In practice, we have found that a 200 step 'FOR - NEXT' instruction is quite safe.) 
 
-<p><u>Modulator</u></p>
+<h3>Modulator</h3>
 
-<img src="man_fig10.png"><br>
+<img src="man_fig10.png">
+
+<h2>DECIMAL AND HEX CODES FOR ALPHA-NUMERIC CHARACTERS</h2>
 
 <img src="man_fig11.png">
-
-<p>DECIMAL AND HEX CODES FOR ALPHA-NUMERIC CHARACTERS</p>
 
 <table>
 <tr><td><u>Character</u></td><td><u>Decimal Code</u></td><td><u>Hex Code</u></td></tr>
@@ -544,7 +546,7 @@ ABCDEFGHIJKLMNOP etc..</pre>
 <tr><td>&#8593; or ^</td><td>94</td><td>5E</td></tr>
 </table>
 
-<p>DECIMAL AND HEX CODES FOR NON-PRINTING CONTROL CHARACTERS</p>
+<h2>DECIMAL AND HEX CODES FOR NON-PRINTING CONTROL CHARACTERS</h2>
 
 <table>
 <tr><td><u>Control Function</u></td><td><u>Keyboard Key</u></td><td><u>Decimal Code</u></td><td><u>Hex Code</u></td></tr>
@@ -561,7 +563,162 @@ ABCDEFGHIJKLMNOP etc..</pre>
 <tr><td>Carriage return (no clear)</td><td>CONT ]</td><td>29</td><td>1D</td></tr>
 </table>
 
+<h2>TAPE I/O (FOR GOOD MEASURE)</h2>
 
+<p>The AY-5-1013 Universal Asynchronous Receiver transmitter features tri-state outputs for received data and all status bits. This makes it ideal for busbar orientated systems and obviates the need for any other I/O ports to interface it to the main data bus of the TRITON. Note that respective bits of the data in and data out terminals of the chip are commoned together before joining the TRITON's data bus. The Status bits of the UART are similarly commoned with the DAV (Data Available) bit tied to bit 1 on the bus, PE (Parity Error) to bit 2, FE (Framing Error) to bit 3, OR (Over Run Error) to bit 4 and TBMT (Transmitter Buffer Empty) to bit 5. There is no reason why all these flags and error messages should not be used although TRITON's standard Monitor only samples DAV and MAT. The monitor software, in its present form, does not check for errors even though parity is recorded - incidentally, ODD parity is used.</p>
+
+<p>The DAV and TBMT flags are used to tell the computer when the UART has received and has ready a complete byte of new data or when the UART has finished a current serialising cycle and is ready to accept a new byte for transmission. In actual fact the UART will accept a second byte while it is still transmitting the first, due to the double buffering nature of its transmitter buffer.</p>
+
+<p>The format of serialised data in TRITON is a START bit, 8 data bits, a parity bit and 2 STOP bits. These are transmitted at a rate of 300 baud set by the clock comprising IC81 (an NE 555). Baud rate is adjustable by about &#177;50 percent by means of VR2 and, of course, it is important that this is accurately set if tapes from other sources (recorded in TRITON's format) are to be played back. To obtain a rate of 300 baud, the oscillator must run at precisely 4,800 Hz and ideally this should be set on a frequency meter. We are aware that some people may have difficulty in gaining access to one of these and are prepared to supply specially recorded standard test tapes containing a few minutes of test data. If this is played into your computer with a simple machine language test routine typed into RAM you should be able to adjust VR2 until the data is reliably entered and displayed on the VDU. This will not guarantee that your clock is at 4,800 Hz because your recorder may be running at the wrong speed but it does ensure that your TRITON/Cassette Recorder pair operate TOGETHER at 300 baud. White on this subject, you may experience problems when using battery powered tape recorders and some of the cheaper varieties. For reliable operation, you should always use the SAME recorder/player and preferably a good quality mains powered machine. Batteries run down after sustained use and even the better quality recorder motors start to run more slowly when this happens. More about the tape recorder will be said later.</p>
+
+<img src="man_fig12.png">
+
+<p>In order to transmit data, the TRITON Monitor first checks to see whether the UART transmitter buffer is empty by activating the STATUS WORD ENABLE which is, in effect, PORT 1. This places the status word on the data bus and the computer checks to see whether bit 5 (TBMT) flag is at '1'. If so, it indicates that the UART is ready and the Monitor then outputs its data onto the busbar while activating the DATA STROBE (PORT 2). DATA STROBE starts the transmission serialising cycle and the serial data is output to the MODEM (IC82) at pin 25. If the TBMT flag was at '0' the Monitor goes into a loop and waits until the UART is ready.</p>
+
+<p>In order to receive data, the computer asks for status information, again through input port 1, but this time checks bit 1 (the Data Available flag). This goes high as soon as a complete serial byte has been received and formatted into parallel form in the UART's output latches. The computer will loop until this condition is met. When the flag goes to '1' the computer uses port 4 to send a 'Received Data Enable' strobe to the UART. This enables the outputs of the receiver buffer latches and places the data byte on the system busbar. To prevent the system reacting a second time to the same DAV flag, the pulse from port 4 is also used to reset DAV which then stays low until a completely new byte of data is received. Clearly the computer software cycle which carries out this operation MUST have a shorter loop period than the period between one received byte and the next, otherwise overun errors will occur. This should, under normal circumstances, present no problems with the standard monitor but if you use excessively low frequency crystals for the computer's clock, you could have problems of this nature.</p>
+
+<p>A considerable amount of thought went into the decision to use the single chip MODEM (IC82). Obviously the CUTS system represents the format used in quite a number of domestic systems, but by no means all systems are standardised on CUTS. We were also concerned about the need to line up certain types of modulator/demodulator systems and we wanted to ensure adjustment reliability. It is necessary to adjust the baud rate and any further adjustment elsewhere in the Tape I/O section would inevitably require the need for frequency measuring equipment.</p>
+
+<p>The Motorola single chip MODEM seemed highly attractive from the word go as it is extremely economical on external components, needs no adjustment, and it operates on USA or CCITT standard frequency pairs. This is important only if the output of TRITON is interfaced to an international radio/telephone transmission system. Some radio amateurs might indeed find this extremely useful and we would like to hear from anyone who has done this.</p>
+
+<p>The MC14412VL is such a versatile chip that it was difficult to decide in which mode it should be used. Eventually, in order to have a frequency pair that would give best reliability with most tape recorders and to allow the MODEM to receive at up to 600 baud (not that this is used at present), we opted to go for the USA standard 'originate' mode in which the transmitted frequency pair is:</p>
+
+<ul><li>MARK ('1') = 1,270 Hz</li>
+<li>SPACE ('0') = 1,070 Hz</li></ul>
+
+<p>Clearly we need to be able to demodulate the same pair of frequencies and so have to operate in Simplex mode - hence pins 2, 10 and 14 of IC82 are allowed to be '1'. Internal pull up resistors within the chip do away with the need for external pull ups hanging on these pins. Pin 2 actually is the 'Self Test' control input which makes the MODEM's receiver demodulate the same frequency pair that is being transmitted. Keeping this active prevents any ambiguaity as to whether one is 'originating' or 'answering'. It also allows you to carry out an ECHO Self test on the MODEM by simply connecting the output to the tape recorder to the input from the tape recorder. To do this in practice would need a special test routine written in machine code as the Monitor does not contain such a test.</p>
+
+<p>The MODEM interfaces directly with the UART and only needs a crystal and resistor to lock it to the correct frequency pairs. It is MOST important that a crystal of exactly 1.0000 MHz is used here otherwise you will be able to use pre-recorded tapes. The transmitted carrier of the MODEM is an eight level digitally synthesised sine wave of about 300mVrms which is buffered by TR1 before being fed via C27 to the tape recorder phono input. It is quite a high level signal so avoid feeding it into microphone inputs, etc. The auxiliary phono, radio or crystal cartridge inputs of most tape recorders should match satisfactorily and give flexibility in adjusting recording levels. We have found in pracice that the signal should be recorded in exactly the same way as you would handle hi-fidelity music. That is to say, you should not attempt to saturate the tape by deliberately over-recording (some systems recommend this). The output carrier is present at the output terminal all the time, so it is extremely easy to preset your recording level so that the vu meter is just indicating maximum modulation. The reason for treating the signal as Hi-Fi is that during playback the MODEM likes to see a near pure sine wave.</p>
+
+<p>You should use an output FROM your tape recorder which provides in the order of 300mV on playback. There is considerable flexibility here and we have found that anything between about 40mV and 500mV will suffice. Preferably you should use the Phono Output from the recorder rather than the extension speaker socket. The former will always be at the same level whereas the latter depends on volume and tone control settings. With Philips equipment, and many others, this also means that you can monitor the signal over the loudspeaker as it is playing back and can manually count through the files while the computer is searching for a header. You can also keep the volume low without affecting the playback level. To carry out a demodulation satisfactorily, the MODEM IC requires a very precise unity mark/space waveform at pin 1. The tolerance on the mark/space ratio has to be better than &#177; 4%. If the carrier being played back from the recorder carries any harmonic distortion, this will be difficult to convert to a square wave of the above specification - hence the need to record in Hi-Fi. To further purify the sine wave it is amplified and filtered by TR3. To some extent the input sensitivity can be adjusted by VR3 but under normal circumstances (within the range of input voltages mentioned above) this should always be set in its mid-point position. The high purity sine wave at the collector of TR3 is fed to IC83 which is a zero crossing comparator which will sense the zero crossing of a sine wave to within about 3mV. With a good input signal this results in a square wave which more than adequately meets the input specification of the MODEM. If the input signal strength falls too low, the 3mV tolerance of the comparator starts to become more significant and variance from unity mark/space ratio can occur. If you have to err to one side or the other, always aim to provide a higher, rather than lower, input signal - but do not overdo it.</p>
+
+<p>No provision is made to combat oxide fall out, hence you should always use good quality tapes. This, coupled with the use of a good recorder and close adherence to the above instructions (including the correct setting of the baud rate) should give you a very reliable, simple to make and easy to adjust tape I/O system.</p>
+
+<h1>THE TRITON MONITOR<h1>
+
+<h2>INTRODUCTION TO MACHINE CODE PROGRAMMING</h2>
+
+<p>If you have built the TRITON computer yourself, you will want to get the best out of it, and there are several modes in which it can be used. You can write and run programs in BASIC, and you may wish to record and recall these to and from tape. To do this you need to know something about the Monitor. You may wish to use the computer for control purposes for which you need to write machine language instructions. To do this it is essential to go through the Monitor - possibly making use of some of its in-built subroutines (see the section on Monitor utilities.)</p>
+
+<p>For those learning about computers it is a very good idea to get a grasp of machine code. It is not difficult to learn and can make life much more exciting as you will be able to get the computer to respond much more quickly than it will through a Basic Interpreter. Sometimes you can get several thousand times the speed for certain operations. To do this on the TRITON you must operate through the Monitor.</p>
+
+<p>TRITON'S standard Monitor is a program written in machine code which is held in ROM starting at address location 0000H. Its purpose is primarily to initialise the machine and to give it an elementary intelligence so that you can communicate with it. For this reason the machine must start off at the beginning of the monitor program every time it is switched on. The first machine code instruction that the computer sees in the Monitor sets the STACK without which it would be impossible to do much in the way of decision making via nested subroutines. It then proceeds to look at the next instruction which, in the case of TRITON, enables the interrupt operation (if ever it is needed) to be used.</p>
+
+<p>The following instruction is a JUMP which leads on to the first of the main routines called SCANMEM. This routine points to address 1600H and writes FFH into it. It then reads back the value from that address and checks that the FFH was actually stored. Furthermore it writes 00H into, the same location and checks that too. This is a check that the memory is there and working which, at the same time, leaves the memory location clear (i.e. containing 00H). The monitor routine then steps up one memory byte - to 1601H and does the same.</p>
+
+<p>This process is carried out on every successive location from 1600H upwards until the computer finds an error. The address of the location where the error occurred is most likely to be the top of the RAM work area, but it could be the address of a faulty IC. In either event this top address is written into a pair of RAM bytes used by BASIC L4.1 to tell BASIC how much work space is available. The two bytes of memory used for this are 1481H and 1482H. As a general rule, whenever two byte instructions or data are written into memory, the 8080 microprocessor expects to see the least significant byte in the lower value of the two addresses. Thus if 2000H was the location where memory ended - as found by SCAMMEM - location 1481H would contain 00H while 1482H would contain 20H.</p>
+
+<p>After checking the memory, the Monitor initialises the computer which acknowledges this on the screen with its standard message:</p>
+
+<pre>TRITON READY
+FUNCTION? P G I O L W T</pre>
+
+<p>The Monitor then goes into a keyboard loop and the computer effectively waits for you to tell it what to do. This will depend on which key you depress. The letters it expects you to type are those shown in its acknowledgement, and are abbreviations for seven different primary operations you can do with the Monitor. These are:</p>
+
+<table>
+<tr valign="top"><td>P&nbsp;=</td><td>Inspect any memory location and, if necessary, change or insert a byte of data. When the data is entered the computer automatically steps to the next address showing what is currently there and waits to see if you wish to change it.</td></tr>
+<tr valign="top"><td>G&nbsp;=</td><td>Start running a program from any specified starting address location. The computer asks you, within this routine, what start location you want.</td></tr>
+<tr valign="top"><td>I&nbsp;=</td><td>Input from tape recorder. The computer asks you for the header code of the file and then searches for it. When it has been found the data is written into the computer's memory starting at location 1600H. When the flag marking the end of the record has been found, the computer re-initialises with an abbreviated form of its initial 'switch on' message.</td></tr>
+<tr valign="top"><td>O&nbsp;=</td><td>Output a program to the tape recorder. This, again, asks you to give your recording a header code. The routine automatically outputs programs written in BASIC and stops when it gets to the end of file address (the address written into bytes 1600H and 1601H by BASIC). For user-written machine code programs you have to manually enter the address immediately following your last instruction into these two bytes. Tapes are ALWAYS loaded and dumped with 1600H being the start location. When dumping has finished the computer re-initialises.</td></tr>
+<tr valign="top"><td>L&nbsp;=</td><td>List the machine code content of all locations starting from any specified address. The computer asks for the first address then prints out the contents of this and the next 14. It then asks MORE? and expects you to type Y otherwise it re-initialises.</td></tr>
+<tr valign="top"><td>W&nbsp;=</td><td>Typewriter mode. The computer behaves just as if it was a keyboard and VDU. Anything you type is displayed on the screen including graphics. Cursor control and special VDU functions (e.g. Clear Screen, Reset Cursor, etc) all operate, but the computer responds to nothing except CONTROL C which makes it re-initialise.</td></tr>
+<tr valign="top"><td>T&nbsp;=</td><td>Jump to BASIC L4.1. This command causes the computer to jump out of the control of the Monitor into the control of BASIC. See the section which is entirely devoted to this. CONTROL C will jump back out of BASIC into the initialisation condition of the Monitor.</td></tr></table>
+
+<p>Note that CONTROL C will, in nearly all cases, get you out of an operation and back to the initialisation condition. The only times when it fails to do this are when you are locked in a user-written machine code program loop, searching tape for a non-existant header or outputting to the tape recorder. In these three cases you will have to use Interrupt 2 (which re-initialises without clearing memory) or RESET which goes through the SCANNEM routine and erases any data in memory.</p>
+
+<p>When the computer asks for its initial instruction via one of the above letters you simply have to type the letter. No carriage return is needed. If you type the wrong letter, the computer replies 'INVALID' and waits for you to try again.</p>
+
+<p>Here are some examples to try with the above functions:</p>
+
+<h3>P Function</h3>
+
+<p>Type P. The computer acknowledges with PROG START = and expects you to enter a four digit hexadecimal code as a start address. Try typing in 123M followed by a carriage return (CR). The computer says INVALID and re-initialises because you entered M as one of the digits. If you make a mistake typing in a character, you have a chance to correct it by backspacing with CONTROL H until you get to the error. Overtype the error, and continue overtyping the line until you get to where you were. Now press CR - the computer will confirm the start address by retyping it, and will then follow this with a space and the hexadecimal code of the contents at that location. In this case 3E. Depress CR again and you will step to the next location and so on all the way through memory if you so desire. This is the mode for manually inspecting memory locations.</p>
+
+<p>Re-initialise with CONTROL C and type P again. This time we shall use the function to enter data, so we shall start at an address in RAM. Enter 1600 as the start address and depress CR. This time you will see the data currently in 1600 which you can change by typing two more hexadecimal digits. If you type more than two it is only the first pair that the computer recognises, so if you make a mistake use the CONTROL H key to backspace. When you press CR the new data is entered into that location and the address is stepped on. When, at a later time, you come to enter a program in machine code, you should use this method.</p>
+
+<p>Here is a simple machine code program that you can type in, starting at address 1600, which we can use when we test the G function. The program instructs the computer to type the numbers 0 to 9 inclusive, and to keep repeating this sequence. The left-hand column is an aide memoire of the instruction's address (you only have to type this in on one occasion - when the computer asks for the start). The second column is the mnemonic of the machine code (dashes indicate that these locations carry data to go with the previous instruction). Some mnemonics are qualified with the name of the OPERAND - usually when the instruction requires the operand to be identified in the bytes following the instruction. The next column is the data that you should type in and the remarks describe what the instructions do in everyday language.</p>
+
+<pre>
+1600   MVI A   "0"     3E   Enter the ASCII code for 0
+1601   -               30     into the accumulator.
+1602   CALL    OUTCH   CD   Call subroutine which outputs
+1603   -               13     code currently in accumulator
+1604   -               00     to the VDU.
+1605   INR A           3C   Increment the accumulator.
+1606   CPI     3AH     FE   Check if code in accumulator is 
+1607   -               3A     one greater than that for 9.
+1608   JNZ     1602H   C2   If it is not, jump back to
+1609   -               02     address 1602 and loop until
+160A   -               16     9 is reached.
+160B   CALL    PCRLF   CD   When it is reached call
+160C   -               33     carriage return/line feed
+160D   -               00     output subroutine.
+160E   JMP     1600H   C3   Jump back to beginning of
+160F   -               00     program and keep repeating.
+1610   -               16
+</pre>
+
+<p>The two called subroutines OUTCH and PCRLF are utilities within the Monitor.</p>
+
+<h3>G Function</h3>
+
+<p>This function permits you to run a program from any start location you care to specify. If you have already entered the above program you can try running it. Make sure you are initialised (by using CONTROL C or Interrupt 2) and then type G. The computer acknowledges with RUN PROG START=. Type in 1600 (the start of the above program) and as soon as you press CR the program will execute. This particular program is typical of many user programs in that it stays locked in its own loop and you cannot get out of it by typing CONTROL C. You will have to use Interrupt 2.</p>
+
+<p>Try writing and running the following simple program at 1600 that will jump immediately back into the Monitor to re-initialise.<p>
+
+<pre>
+1600   JMP     RST0    C3   Jump to restart 0
+1601   -               00
+1602   -               00
+</pre>
+
+<p>Just enter these three instructions using P and run them using G. The computer will act as if it had been reset to a switch on condition (i.e. will clear all memory and completely re-initialise). This is an instruction which should normally be avoided or you will delete your program!</p>
+
+<h3>O Function</h3>
+
+<p>We shall deal with this before covering tape input. O transfers control to the tape output routine and it can be used for dumping either BASIC or machine code programs to tape. The only stipulation is that all programs MUST start at 1602H. The reason is that the routine is designed for BASIC, and to save space we have deliberately avoided writing a second routine to deal with user programs. There are, however, no major problems.</p>
+
+<p>First of all type the following short program into RAM starting at address 1602. The program uses another of the Monitor utilities (PDATA) which prints out any string of ASCII codes in memory starting at a specified location. We shall use it to print out repeatedly the TRITON's initialisation message.</p>
+
+<pre>
+1602   LXI D   0377H   11   Load DE register pair with
+1603   -               77     start address of string.
+1604   -               03
+1605   CALL    PDATA   CD   Call subroutine which prints
+1606   -               23     string of characters and
+1607   -               00     returns when it sees 04.
+1608   JMP     1602H   C3   Jump back to start of program
+1609   -               02     to repeat.
+160A   -               16
+</pre>
+
+<p>Note that the address immediately following this program is 160B - we shall be making use of this in a moment. Before that, verify that the program runs by using G and then Interrupt 2 to get out of the loop (DO NOT use RESET or you will erase your program!)</p>
+
+<p>During the tape output routine the software needs to know how long the program is that it is dumping. This is defined by the bytes in address locations 1600 and 1601. The locations must contain the low order and high order bytes of the address immediately after the end of the prgram to be saved. This is done automatically by BASIC but you have to do this manually if you wish to save user programs. Use the P function to enter this information manually in the two bytes starting at 1600. These should be 0B and 16 respectively (note that the low order byte goes in first). When you have done this, re-initalise with CONTROL C and you are ready to save your program.</p>
+
+<p>Connect up the audio leads of your recorder to the TRITON (including remote control if you have one). Depress the manual override button on TRITON (if necessary) and find a suitable place on a tape - preferably the beginning! Carry out a dummy run record to set the recording level against the carrier frequency of TRITON - just maximum on the VDU meter. Rewind, and get ready to start. Take your finger off the manual override button and then type O into TRITON. It will acknowledge with TAPE HEADER=. You should now enter a header code of your own choosing - but don't forget what it was! We suggest you use PRINT ROUTINE 1. Note that you can use free text alpha-numerics in the header but the length should not exceed 20 characters. Before pressing CR set the recorder to RECORD and then you can press CR. It will take about 15 seconds to record this program - including about 5 to 6 seconds at either end as guard gaps.</p>
+
+<p>The recording format is as follows:<p>
+
+<ul><li>5 to 6 seconds of unmodulated carrier</li>
+<li>64 carriage return codes as start file code</li>
+<li>The header code</li>
+<li>Contents of every memory location starting at 1600 byte by byte</li>
+<li>5 to 6 seconds of unmodulated carrier</li></ul>
+
+<p>When recording has finished, the computer will type END and re-initialise and, if the remote control lead is used, the tape recorder will switch off. YOU must then switch off the tape recorder's own control. Hopefully you will now have your program on tape. Rewind the recorder and play back the record over its loudspeaker to check that at least something went on! If you are satisfied, you can switch the computer off at the mains. Switch it on again, and then proceed to try the Tape Input function. Note that, if you intend to save a program written in BASIC, you must do exactly the same operations except that you can omit manually entering the end of file address. To save BASIC, you must jump out of BASIC via CONTROL C in order to pick up the O function.</p> 
+
+<h3>I Function</h3>
+
+<p>The procedure to input from a tape is the same for machine code programs as for BASIC. Connect up the audio leads and find the start of the file manually (if you can). If the file you want is somewhere in the middle of the tape you will have difficulty doing this, and will have to rely on the Input function's ability to search. If you have a long tape this could take quite some time. Do not record too many files onto a tape - 4 or 5 averaging 1 minute each is sufficient (and it is easier to index the tapes). Switch on the computer, and when it is initialised type in I. The computer will respond with TAPE HEADER= and you should then type in the header code EXACTLY, including all spaces and punctuation if there were any. Before pressing carriage return, make sure that the tape is rewound to BEFORE the place where your file starts. It does not matter if you are currently sitting in the middle of the previous file, because the input routine will ignore it. Set the recorder to play, and press CR. If you can, monitor the sound of the recording. Files having the wrong header code will be skipped over, but when the computer has made a perfect match with the code entered it will accept the input data, and when it comes to an end the computer types END, switches the tape off (if remote is being used) and re-initialises.</p>
+
+<p>All you have to do is run the program. If it was a machine code program you must type G followed by 1602 and then CR. For BASIC, type T and then RUN, followed by CR.</p>
+
+<h3>L and W Functions</h3>
+
+<p>These have been described fully already. L lists what is in adjacent memory locations in blocks of 15 bytes (so that you can inspect the screen before it continues). At the end of a block it asks MORE? and continues if you type Y (no carriage return is needed). Any other character will be flagged INVALID, and the computer will re-initialise.</p>
+
+<p>The W function has also been described elsewhere; it turns the machine into a video typewriter. No key characters are recognised, and no default conditions can arise. CONTROL C is the only way of re-initialising apart from Interrupt 2 and RESET.</p>
 
 </body>
 </html>
