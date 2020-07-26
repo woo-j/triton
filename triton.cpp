@@ -56,6 +56,7 @@ public:
     int  cursor_position;
     int  tape_status;
     int  uart_status;
+    int  vdu_startrow;
     
     void vdu_strobe(State8080* state);
     void key_press(int key, bool shifted, bool ctrl);
@@ -77,22 +78,38 @@ void IOState::vdu_strobe(State8080* state) {
             break;
         case 0x08:
             // Backspace
-            if ((cursor_position % 64) != 0) {
-                cursor_position--;
+            cursor_position--;
+            if (cursor_position < 0) {
+                cursor_position += 1024;
             }
             break;
         case 0x09:
             // Step cursor RIGHT
-            if ((cursor_position % 64) < 63)
-                cursor_position++;
+            cursor_position++;
+            if (cursor_position >= 1024) {
+                cursor_position -= 1024;
+            }
             break;
         case 0x0a:
-            // Line feed - not sure what this does! (possibly just for printer support?)
+            // Line feed
+            cursor_position += 64;
+            if (cursor_position >= 1024) {
+                cursor_position -= 64;
+                vdu_startrow++;
+                if (vdu_startrow > 15) {
+                    vdu_startrow = 0;
+                }
+                
+                for (i = 0; i < 64; i++) {
+                    state->memory[0x1000 + (((64 * vdu_startrow) + cursor_position + i) % 1024)] = 32;
+                }
+            }
             break;
         case 0x0b:
             // Step cursor UP
-            if (cursor_position >= 64) {
-                cursor_position -= 64;
+            cursor_position -=64;
+            if (cursor_position < 0) {
+                cursor_position += 1024;
             }
             break;
         case 0x0c:
@@ -101,32 +118,31 @@ void IOState::vdu_strobe(State8080* state) {
                 state->memory[0x1000 + i] = 32;
             }
             cursor_position = 0;
+            vdu_startrow = 0;
             break;
         case 0x0d:
             // Carriage return/clear line
             if (cursor_position % 64 == 0) {
-                state->memory[0x1000 + cursor_position] = 32;
+                state->memory[0x1000 + (((64 * vdu_startrow) + cursor_position) % 1024)] = 32;
                 cursor_position++;
             }
             
             while(cursor_position % 64 != 0) {
-                state->memory[0x1000 + cursor_position] = 32;
+                state->memory[0x1000 + (((64 * vdu_startrow) + cursor_position) % 1024)] = 32;
                 cursor_position++;
             }
-            
-            if (cursor_position >= 1024) {
-                for (i = 0; i < 960; i++) {
-                    state->memory[0x1000 + i] = state->memory[0x1000 + i + 64];
-                }
-                for (i = 960; i < 1024; i++) {
-                    state->memory[0x1000 + i] = 32;
-                }
-                
-                cursor_position -= 64;
-            }
+            cursor_position -= 64;
             break;
         case 0x1b:
-            // Roll screen?
+            // Screen roll (changes which memory location represents top of screen)
+            vdu_startrow++;
+            if (vdu_startrow > 15) {
+                vdu_startrow = 0;
+            }
+            cursor_position -= 64;
+            if (cursor_position < 0) {
+                cursor_position += 1024;
+            }
             break;
         case 0x1c:
             // Reset cursor
@@ -134,38 +150,25 @@ void IOState::vdu_strobe(State8080* state) {
             break;
         case 0x1d:
             // Carriage return (no clear)
-            cursor_position += 64;
             cursor_position -= (cursor_position % 64);
-            
-            if (cursor_position >= 1024) {
-                for (i = 0; i < 960; i++) {
-                    state->memory[0x1000 + i] = state->memory[0x1000 + i + 64];
-                }
-                for (i = 960; i < 1024; i++) {
-                    state->memory[0x1000 + i] = 32;
-                }
-                
-                cursor_position -= 64;
-            }
             break;
         default:
+            state->memory[0x1000 + (((64 * vdu_startrow) + cursor_position) % 1024)] = input;
             cursor_position++;
             
             if (cursor_position >= 1024) {
-                for (i = 0; i < 960; i++) {
-                    state->memory[0x1000 + i] = state->memory[0x1000 + i + 64];
-                }
-                for (i = 960; i < 1024; i++) {
-                    state->memory[0x1000 + i] = 32;
+                cursor_position -= 64;
+                vdu_startrow++;
+                if (vdu_startrow > 15) {
+                    vdu_startrow = 0;
                 }
                 
-                cursor_position -= 64;
+                for (i = 0; i < 64; i++) {
+                    state->memory[0x1000 + (((64 * vdu_startrow) + cursor_position + i) % 1024)] = 32;
+                }
             }
-        
-            state->memory[0x1000 + cursor_position - 1] = input;
             break;
     }
-    
 }
 
 void IOState::key_press(int key, bool shifted, bool ctrl) {
@@ -352,6 +355,7 @@ int main() {
     int operations_per_frame;
     int opcount;
     int glyph;
+    int vdu_rolloffset;
     
     bool inFocus = true;
     bool shifted = false;
@@ -384,6 +388,7 @@ int main() {
     
     io.uart_status = 0x11;
     io.tape_status = ' ';
+    io.vdu_startrow = 0;
     
     // Load Monitor 'A'
     rom.open("MONA72.ROM", ios::in | ios::binary);
@@ -568,8 +573,9 @@ int main() {
             // Draw screen from VDU memory
             // Font texture acts as ROMs (IC 69 and 70)
             window.clear();
+            vdu_rolloffset = 64 * io.vdu_startrow;
             for (i = 0; i < 1024; i++) {
-                glyph = main_memory[0x1000 + i] & 0x7f;
+                glyph = main_memory[0x1000 + ((vdu_rolloffset + i) % 1024)] & 0x7f;
                 xpos = (glyph % 16) * 8;
                 ypos = ((glyph / 16) * 24);
                 sprite[i].setTextureRect(sf::IntRect(xpos, ypos, 8, 24));
