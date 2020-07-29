@@ -121,6 +121,7 @@ void IOState::vdu_strobe(State8080* state) {
             vdu_startrow = 0;
             break;
         case 0x0d:
+            // Carriage return / clear line
             if (cursor_position % 64 != 0) {
                 while(cursor_position % 64 != 0) {
                     state->memory[0x1000 + (((64 * vdu_startrow) + cursor_position) % 1024)] = 32;
@@ -458,7 +459,7 @@ int main() {
     
     for (i = 0; i < 8; i++) {
         led[i].setRadius(7.0f);
-        led[i].setPosition(15.0f + (i * 15), 386.0f);
+        led[i].setPosition(15.0f + (i * 15), 396.0f);
     }
     tape_indicator.setTexture(tapemap);
     tape_indicator.setPosition(sf::Vector2f(462.0f, 386.0f));
