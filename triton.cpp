@@ -121,17 +121,13 @@ void IOState::vdu_strobe(State8080* state) {
             vdu_startrow = 0;
             break;
         case 0x0d:
-            // Carriage return/clear line
-            if (cursor_position % 64 == 0) {
-                state->memory[0x1000 + (((64 * vdu_startrow) + cursor_position) % 1024)] = 32;
-                cursor_position++;
+            if (cursor_position % 64 != 0) {
+                while(cursor_position % 64 != 0) {
+                    state->memory[0x1000 + (((64 * vdu_startrow) + cursor_position) % 1024)] = 32;
+                    cursor_position++;
+                }
+                cursor_position -= 64;
             }
-            
-            while(cursor_position % 64 != 0) {
-                state->memory[0x1000 + (((64 * vdu_startrow) + cursor_position) % 1024)] = 32;
-                cursor_position++;
-            }
-            cursor_position -= 64;
             break;
         case 0x1b:
             // Screen roll (changes which memory location represents top of screen)
@@ -315,9 +311,11 @@ void MachineOUT(State8080* state, int port, IOState* io, fstream &tape) {
             break;
         case 5:
             // VDU buffer (IC 51)
-            io->vdu_buffer = state->a;
-            if (state->a >= 0x80) {
-                io->vdu_strobe(state);
+            if (io->vdu_buffer != state->a) {
+                io->vdu_buffer = state->a;
+                if (state->a >= 0x80) {
+                    io->vdu_strobe(state);
+                }
             }
             break;
         case 6:
