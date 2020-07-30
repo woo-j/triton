@@ -639,23 +639,23 @@ FUNCTION? P G I O L W T</pre>
 <p>Here is a simple machine code program that you can type in, starting at address 1600, which we can use when we test the G function. The program instructs the computer to type the numbers 0 to 9 inclusive, and to keep repeating this sequence. The left-hand column is an aide memoire of the instruction's address (you only have to type this in on one occasion - when the computer asks for the start). The second column is the mnemonic of the machine code (dashes indicate that these locations carry data to go with the previous instruction). Some mnemonics are qualified with the name of the OPERAND - usually when the instruction requires the operand to be identified in the bytes following the instruction. The next column is the data that you should type in and the remarks describe what the instructions do in everyday language.</p>
 
 <pre>
-1600   MVI A   "0"     3E   Enter the ASCII code for 0
-1601   -               30     into the accumulator.
-1602   CALL    OUTCH   CD   Call subroutine which outputs
-1603   -               13     code currently in accumulator
-1604   -               00     to the VDU.
-1605   INR A           3C   Increment the accumulator.
-1606   CPI     3AH     FE   Check if code in accumulator is 
-1607   -               3A     one greater than that for 9.
-1608   JNZ     1602H   C2   If it is not, jump back to
-1609   -               02     address 1602 and loop until
-160A   -               16     9 is reached.
-160B   CALL    PCRLF   CD   When it is reached call
-160C   -               33     carriage return/line feed
-160D   -               00     output subroutine.
-160E   JMP     1600H   C3   Jump back to beginning of
-160F   -               00     program and keep repeating.
-1610   -               16
+1600   MVI A   "0"      3E   Enter the ASCII code for 0
+1601   -                30     into the accumulator.
+1602   CALL    OUTCH    CD   Call subroutine which outputs
+1603   -                13     code currently in accumulator
+1604   -                00     to the VDU.
+1605   INR A            3C   Increment the accumulator.
+1606   CPI     3AH      FE   Check if code in accumulator is 
+1607   -                3A     one greater than that for 9.
+1608   JNZ     1602H    C2   If it is not, jump back to
+1609   -                02     address 1602 and loop until
+160A   -                16     9 is reached.
+160B   CALL    PCRLF    CD   When it is reached call
+160C   -                33     carriage return/line feed
+160D   -                00     output subroutine.
+160E   JMP     1600H    C3   Jump back to beginning of
+160F   -                00     program and keep repeating.
+1610   -                16
 </pre>
 
 <p>The two called subroutines OUTCH and PCRLF are utilities within the Monitor.</p>
@@ -667,9 +667,9 @@ FUNCTION? P G I O L W T</pre>
 <p>Try writing and running the following simple program at 1600 that will jump immediately back into the Monitor to re-initialise.<p>
 
 <pre>
-1600   JMP     RST0    C3   Jump to restart 0
-1601   -               00
-1602   -               00
+1600   JMP     RST0     C3   Jump to restart 0
+1601   -                00
+1602   -                00
 </pre>
 
 <p>Just enter these three instructions using P and run them using G. The computer will act as if it had been reset to a switch on condition (i.e. will clear all memory and completely re-initialise). This is an instruction which should normally be avoided or you will delete your program!</p>
@@ -681,15 +681,15 @@ FUNCTION? P G I O L W T</pre>
 <p>First of all type the following short program into RAM starting at address 1602. The program uses another of the Monitor utilities (PDATA) which prints out any string of ASCII codes in memory starting at a specified location. We shall use it to print out repeatedly the TRITON's initialisation message.</p>
 
 <pre>
-1602   LXI D   0377H   11   Load DE register pair with
-1603   -               77     start address of string.
-1604   -               03
-1605   CALL    PDATA   CD   Call subroutine which prints
-1606   -               23     string of characters and
-1607   -               00     returns when it sees 04.
-1608   JMP     1602H   C3   Jump back to start of program
-1609   -               02     to repeat.
-160A   -               16
+1602   LXI D   0377H    11   Load DE register pair with
+1603   -                77     start address of string.
+1604   -                03
+1605   CALL    PDATA    CD   Call subroutine which prints
+1606   -                23     string of characters and
+1607   -                00     returns when it sees 04.
+1608   JMP     1602H    C3   Jump back to start of program
+1609   -                02     to repeat.
+160A   -                16
 </pre>
 
 <p>Note that the address immediately following this program is 160B - we shall be making use of this in a moment. Before that, verify that the program runs by using G and then Interrupt 2 to get out of the loop (DO NOT use RESET or you will erase your program!)</p>
@@ -719,6 +719,513 @@ FUNCTION? P G I O L W T</pre>
 <p>These have been described fully already. L lists what is in adjacent memory locations in blocks of 15 bytes (so that you can inspect the screen before it continues). At the end of a block it asks MORE? and continues if you type Y (no carriage return is needed). Any other character will be flagged INVALID, and the computer will re-initialise.</p>
 
 <p>The W function has also been described elsewhere; it turns the machine into a video typewriter. No key characters are recognised, and no default conditions can arise. CONTROL C is the only way of re-initialising apart from Interrupt 2 and RESET.</p>
+
+<h2>MEMORY AND PORT DESIGNATIONS</h2>
+
+<p>To help those who wish to get involved in machine code programming at an early stage, here are the addresses of memory blocks and ports. It is assumed that you will be operating under the control of the standard Monitor program, so we also list the addresses of its main Utilities.</p>
+
+<h3>Memory Start Addresses</h3>
+
+<table>
+<tr valign="top"><td>0000H&nbsp;-&nbsp;03FFH</td><td>1k&nbsp;EROM</td><td>(Holds standard MONITOR)</td></tr>
+<tr valign="top"><td>0400H&nbsp;-&nbsp;07FFH</td><td>1k&nbsp;EROM</td><td>(Holds BASIC L4.1 "A")</td></tr>
+<tr valign="top"><td>0800H&nbsp;-&nbsp;0BFFH</td><td>1k&nbsp;EROM</td><td>(Holds BASIC L4.1 "B")</td></tr>
+<tr valign="top"><td>0C00H&nbsp;-&nbsp;0FFFH</td><td>1k&nbsp;EROM</td><td>(Spare location)</td></tr>
+<tr valign="top"><td>1000H&nbsp;-&nbsp;13FFH</td><td>1k&nbsp;RAM</td><td>(VDU memory - can only be written into by computer)</td></tr>
+<tr valign="top"><td>1400H&nbsp;-&nbsp;14FFH</td><td>&frac14;k&nbsp;RAM</td><td>(Holds stack and tables for Monitor from 1400H to 147FH; 1480H upwards through this block will be used by BASIC L4.1 tables, otherwise is free as M/C code work area)</td></tr>
+<tr valign="top"><td>1500H&nbsp;-&nbsp;15FFH</td><td>&frac14;k&nbsp;RAM</td><td>(Completely reserved for BASIC L4.1 stack, otherwise is free for the user)</td></tr>
+<tr valign="top"><td>1600H&nbsp;-&nbsp;1FFFH</td><td>2&frac12;k&nbsp;RAM</td><td>(Work area for BASIC L4.1 or user programs. Note that locations 1600H and 1601H are made use of by tape I/O routines to store End of File address - hence user programs for saving/loading to and from tape should always start at 1602H - see the section describing the Monitor)</td></tr>
+<tr valign="top"><td>2000H&nbsp;-&nbsp;FFFFH</td><td>56k</td><td>Available for "Off Board" extensions</td></tr>
+</table>
+
+<h3>Port Designations</h3>
+
+<table>
+<tr><td>00H</td><td>Keyboard INPUT (note special routine is necessary)</td></tr>
+<tr><td>01H</td><td>Tape I/O UART Status INPUT</td></tr>
+<tr><td>02H</td><td>Tape I/O UART Data Strobe (start transmission) OUTPUT</td></tr>
+<tr><td>03H</td><td>LEDs OUTPUT (note LEDs are on for "0")</td></tr>
+<tr><td>04H</td><td>Tape I/O UART Receive Data Enable (receive data) INPUT</td></tr>
+<tr><td>05H</td><td>VDU OUTPUT (note strobe - bit 8 - has to be specially formatted by software)</td></tr>
+<tr><td>06H</td><td>Spare OUTPUT (note only bits 7 and 8 are output)</td></tr>
+<tr><td>07H</td><td>Relay OUTPUT (note bit 8 is used to drive tape control relay out, bit 7 is used as a spare line)</td></tr>
+<tr><td>08H - FFH</td><td>Available for "Off Board" extensions</td></tr>
+</table>
+
+<h2>MONITOR UTILITIES</h2>
+
+<table>
+<tr valign="top"><td>0000H</td><td>RST0</td><td>Reset address. Enables Interrupt and checks and clears memory writing number of bytes available into locations 1481H (low order byte) and 1482 (high order byte). With full main board memory in place this should read 2000H. Then goes on to initialise computer.</td></tr>
+<tr valign="top"><td>0008H</td><td>RST1</td><td>Reacts to Interrupt 1 clearing VDU and resetting cursor.</td></tr>
+<tr valign="top"><td>000BH</td><td>INCH</td><td>A CALL routine which inputs character from keyboard. Stays in keyboard loop until key is depressed.</td></tr>
+<tr valign="top"><td>0010H</td><td>RST2</td><td>Reacts to Interrupt 2, clearing VDU and initialising computer without clearing memory. Used for normal reset operation.</td></tr>
+<tr valign="top"><td>0013H</td><td>OUTCH</td><td>A CALL routine which outputs character to VDU.</td></tr>
+<tr valign="top"><td>0018H</td><td>RST3</td><td>Reacts to Interrupt 3 and re-vectors to 1618H for user routine.</td></tr>
+<tr valign="top"><td>001BH</td><td>INDATA</td><td>A CALL routine which allows string of characters to be entered to any place in memory. Start location of string pointed to by DE register pair which must be pre-loaded before calling INDATA. Returns on Carriage Return.</td></tr>
+<tr valign="top"><td>0020H</td><td>RST4</td><td>Reacts to Interrupt 4 and re-vectors to 1620H for user routine.</td></tr>
+<tr valign="top"><td>0023H</td><td>PDATA</td><td>A CALL routine which allows string of characters to be printed from any place in memory. DE register pair must be pre-loaded with start address before calling. Routine returns when it sees EOT terminator (04H) but DE steps to one address beyond terminator allowing immediate recall for further string to be printed.</td></tr>
+<tr valign="top"><td>0028H</td><td>RST5</td><td>Reacts to Interrupt 5 and re-vectors to 1628H for user routine.</td></tr>
+<tr valign="top"><td>002BH</td><td>PSTRNG</td><td>A CALL routine identical to PDATA, except that it outputs Carriage Return/Line Feed prior to printing string.</td></tr>
+<tr valign="top"><td>0030H</td><td>RST6</td><td>Reacts to Interrupt 6 and re-vectors to 1630H for user routine.</td></tr>
+<tr valign="top"><td>0033H</td><td>PCRLF</td><td>A CALL routine which prints Carriage Return followed by Line Feed, and then returns with the original contents of accumulator intact.</td></tr>
+<tr valign="top"><td>0038H</td><td>RST7</td><td>Reacts to Interrupt 7 and re-vectors to 1638H for user routine.</td></tr>
+</table>
+
+<p>The above are fixed location utilities whereas the following are within the main body of the Monitor which are liable to be relocated if new generation monitors are written. They are, nonetheless, very useful and can save a lot of redundant instructions elsewhere. Note that you can only guarantee using these if you have MONITOR V4.1 on board!</p>
+
+<table>
+<tr valign="top"><td>0053H</td><td>INIT</td><td>Destination of Interrupt 2. Clears screen and initialises computer. Also resets stack, so should only be used as destination of a JUMP instruction.</td></tr>
+<tr valign="top"><td>00AAH</td><td>BASICIN</td><td>Checks to see if a key has been depressed on keyboard. If it has, it returns with the data - otherwise it returns immediately with the accumulator cleared and flags set accordingly. Useful for real time interactive programs.</td></tr>
+<tr valign="top"><td>010DH</td><td>DLY</td><td>When called introduces approximately 3mS time delay and returns with all registers (except flags) intact.</td></tr>
+<tr valign="top"><td>0116H</td><td>FIVSEC</td><td>When called introduces a delay of between 5 and 6 seconds. Returns with registers and flags intact.</td></tr>
+<tr valign="top"><td>0134H</td><td>CLRSCN</td><td>Clears screen and resets cursor. Approximately 200mS time delay is built into this routine. Returns with registers and flags intact.</td></tr>
+<tr valign="top"><td>02B9H</td><td>REINIT</td><td>This should only be used as a JUMP destination. It resets the stack and re-initialises the computer WITHOUT clearing the screen. A useful instruction at the end of user programs to avoid having to use the HLT instruction.</td></tr>
+<tr valign="top"><td>0327H</td><td>TPEON</td><td>When called switches the tape control relay on (relay contacts could be used for other control purposes by the user). Note that routine returns with 80H in accumulator.</td></tr>
+<tr valign="top"><td>032CH</td><td>TPEOFF</td><td>When called switches the tape control relay off. Routine returns with OOH in accumulator.</td></tr>
+<tr valign="top"><td>03A1H</td><td>ACKA</td><td>Start address of string which prints INVALID. Use should be made of PSTRNG utility to insert Carriage Return and Line Feed.</td></tr>
+<tr valign="top"><td>0385H</td><td>ACKB</td><td>Start address of string which prints START=. (Use via PSTRNG)</td></tr>
+<tr valign="top"><td>03C4H</td><td>ACKC</td><td>Start address of string which prints HEADER=. (Use via PSTRNG)</td></tr>
+<tr valign="top"><td>03CFH</td><td>ACED</td><td>Start address of string which prints END. (Use via PSTRNG)</td></tr>
+</table>
+
+<h2>USING THE MONITOR IN MACHINE CODE PROGRAMS</h2>
+
+<p>There are 6 fixed location utility subroutines located in a jump table in the early part of the Monitor. These are designated INCH, OUTCH, INDATA, PDATA, PSTRNG, and PCRLF. We have used a couple already. (Their addresses and descriptions are given in the section on Monitor Utilities.) There are also 2 interrupts which are brought out to push buttons on the front panel. These are dedicated, but a third is available for the user. INT1 clears the screen and resets the cursor, but can only be used once unless a keyboard input follows it. (Interrupts are re-enabled within the keyboard input routine.) INT2 is the reset which does not clear memory. INT3 is spare and contains a jump instruction to 1618H which can be used for your own routine. It is NOT ADVISABLE to use INT3 unless you have a properly formatted interrupt routine sitting in that location, as you could corrupt any other programs in memory! Interrupts 4 to 7 are brought out on TRITON's extender socket. See the table for the re-vectored addresses of these. You can use INT1 as a subroutine to be called. It jumps to the CLRSCN (Clear Screen) routine elsewhere in the Monitor and this is terminated by a RETURN. Here is an example of a user-written interrupt routine using INT3. Note that it starts at the re-
+vectored start address 1618:</p>
+
+<pre>
+1618   LXI D   161FH    11   Load start of string saving
+1619   -                1F     I AM INTERRUPT 3
+161A   -                16
+1615   CALL    PSTRNG   CD   Print carriage return
+161C   -                2B     followed by string.
+161D   -                00
+161E   RET              C9   Return to main program.
+161F   DATA    I        49   String data starts here and
+1620   -       SPACE    20     terminates with end of
+1621   -       A        41     text marker 04.
+1622   -       M        4D
+1623   -       SPACE    20
+1624   -       I        49
+1625   -       N        4E
+1626   -       T        54
+1627   -       E        45
+1628   -       R        52
+1629   -       R        52
+162A   -       U        55
+162B   -       P        50
+162C   -       T        54
+162D   -       SPACE    20
+162E   -       3        33
+162F   -       EOT      04
+</pre>
+
+<p>Load this program then re-initialise and momentarily connect INT3 to ground. Next press W and type on the screen, activating INT3 from time to time. The interrupt should announce its presence. We hope that this simple example will show you that, contrary to popular belief, interrupts are quite easy to write programs for.</p>
+
+<p>Apart from the fixed location utilities there are a few other useful ones within the Monitor. These are listed and briefly described in the table. Use the table to see if you can analyse the following machine code programs which are designed to lead you through most of them.</p>
+
+<p>We know that some readers will be completely new to computing and may never have come across machine code programming before; others will have had some experience of BASIC, and some will be very experienced. In order to make this Manual of value to all parties, we have designed some experimental programs which, hopefully, will be sufficient to give the more experienced all they need to know about the Monitor, so that they can quickly go on to write their own software. We cannot possibly hope to illustrate all permutations and combinations of the wide range of instructions in the 8080 machine code set, but by frequent use of a few we will try to show, by example, how these are used. Those with less or no experience should work their way through the examples, and by seeing the same sort of pattern emerging - particularly with JUMPS and CALLS - they will soon start to see how a program can be built up. It is advisable, however, to do a lot more reading to get to grips with the full 8080 instruction set (a list of further reading is given at the end of the Manual). There are many excellent books on the subject - one of the advantages of using an 8080 in TRITON!</p>
+
+<h3>Video Typewriter Program</h3>
+
+<pre>
+1600   LXI D   1612H    11   Load start address of message
+1601   -                12     string in DE register pair.
+1602   -                16     This is required by PSTRNG subroutine.
+1603   CALL    PSTRNG   CD   Call subroutine which prints
+1604   -                28     string starting at address
+1605   -                00     held in DE register pair.
+1606   CALL    PCRLF    CD   Call subroutine which prints
+1607   -                33     out carriage return and
+1608   -                00     line feed.
+1609   CALL    INCH     CD   Call subroutine which inputs
+160A   -                0B     data from keyboard and
+160E   -                00     holds this in accumulator.
+160C   CALL    OUTCH    CD   Call subroutine which prints
+160D   -                13     out ASCII character from
+160E   -                00     data in accumulator.
+160F   JMP     1609H    C3   Jump back to address 1609H and
+1610   -                09     wait for next character from
+1611   -                16     keyboard. 
+1612   DATA    O        4F   Start address of message string. 
+1613   -       /        2F
+1614   -       K        4B
+1615   -       SPACE    20
+1616   -       T        54
+1617   -       Y        59
+1618   -       P        50
+1619   -       E        45
+161A   -       !        21
+161E   -       EOT      04   End of text terminator code.
+</pre>
+
+<p>When you run this program, it acknowledges with the message O/K TYPE! and you can then use the TRITON as if it were in the W function operating mode (i.e. it becomes nothing more than a video typewriter). You can escape from the program by depressing CONTROL C (this applies to any program which repeatedly goes through the INCH routine).</p>
+
+<h3>Duo-decimal String Program</h3> 
+
+<p>The following program starts by stepping onto the next line of the VDU and waiting for you to type in your own message String. This can be of any length (limited only by the amount of memory you have on board) and you can use any alpha-numeric or graphic characters, but there are a few exceptions. You should not use CONTROL D as this will enter the EOT code. Carriage return should only be depressed at the end of your message as it is used to step the program onto its second phase. You CAN use control codes in the string to step the cursor down and do a non-line erasing carriage return (see relevant table). When you depress the normal carriage return key the computer repeats your message 12 more times and then re-initialises without clearing the screen.</p>
+
+<pre>
+1600   CALL    PCRLF    CD   Print carriage return and
+1601   -                33     line feed.
+1602   -                00
+1603   LXI D   1618H    11   Set DE register pair to point to
+1604   -                18     start address of input buffer
+1605   -                16     required by INDATA subroutine.
+1606   CALL    INDATA   CD   Call subroutine which allows string
+1607   -                1B     to be input to buffer starting
+1608   -                00     at address held in DE reguster pair.
+1609   MVI B   0CH      06   Set the decimal number 12 (0CH)
+160A   -                0C     in register B. This specifies
+                               the number of times the line is
+                               to be repeated.
+1603   LXI D   1618H    11   Reset DE register pair to point
+160C   -                18     to start of input buffer.
+160D   -                16
+160E   CALL    PSTRNG   CD   Print string starting at address
+160F   -                23     held in DE register pair.
+1610   -                00
+1611   DCR B            05   Decrement contents of reguster
+                               B by one.
+1612   JNZ     160BH    C2   If register B is not decremented
+1613   -                0B     to zero jump back to 160BH
+1614   -                16     and print start again.
+1615   JMP     REINIT   C3   If B is at zero program has
+1616   -                B9     finished, so jump to REINIT
+1617   -                02     to return control to Monitor
+                               without clearing screen.
+1618   BUFFER                Start address of input buffer.
+</pre>
+
+<p>Note that the REINIT subroutine is NOT at a fixed location except in MONITOR V4.1. Nonetheless it is very useful as it enables you to jump out of a user program back into the Monitor without clearing the screen.</p>
+
+<h3>Keyboard/LED Program Version 1</h3>
+
+<pre>
+1600   CALL    INCH     CD   Input data from keyboard
+1601   -                0B     to accumulator.
+1602   -                00
+1603   CMA              2F   Complement contents of accumulator.
+1604   OUT     PORT 03H D3   Output contents of accumulator
+1605   -                03     to port 3 (LED port).
+1606   JMP     1600H    C3   Jump back to 1600H for next
+1607   -                00     input from keyboard.
+1608   -                16
+</pre>
+
+<p>This program enables you to test out both the LED port and the keyboard by outputting the binary code from the keyboard to the LEDs. The program complements the accumulator to compensate for the fact that on TRITON the LEDs go on for level '0'. In this program they will go on if a bit from the keyboard is '1'. Because we are going through the Monitor's INCH routine, you will find that a shift inversion takes place. You get upper case alpha codes when unshifted and lower case alpha codes when shifted. This is designed in to make the keyboard more convenient to use. Numerical keys are not affected by the shift inversion. Again, because we are using INCH you can escape from this program loop with CONTROL C. You will notice that the most significant LED (bit 8) is permanently off - this is because bit 8 is used for the input strobe and this bit is masked off by the Monitor as data is entered. Notice also that the data is latched onto the LEDs after the key has been released.</p>
+
+<h3>Keyboard/LED Program Version 2</h3>
+
+<p>This program does exactly the same as the one just described, but is written without the use of any subroutines. We are, in effect, writing into the program a simplified form of the INCH subroutine. We say 'simplified' because we are NOT going to introduce a keyboard inversion this time. The program also introduces the newcomer to some machine code logic followed by a decision. The logic in question checks whether a key has been depressed. If it has not, the program waits in a loop, and only after a depression will it continue.</p>
+
+<pre>
+1600   IN      PORT 00H DB   Input data from keyboard
+1601   -                00     port to accumulator.
+1602   MOV B,A          47   Copy contents of accumulator
+                               to B register AND
+1603   ANI     80H      E6     accumulator with 10000000
+1604   -                80     (binary), to see if bit 8
+                               is '1' or '0'.
+1605   JZ      1600H    CA   If it is '0' jump back to
+1606   -                00     1600H and wait for key
+1607   -                16     to be depressed.
+1608   MOV A,B          78   If it is '1' restore data
+                               in accumulator.
+1609   CMA              2F   Complement accumulator.
+160A   OUT     PORT 03H D3   Out put contents of accumulator
+160E   -                03     to port 3 (LED port).
+160C   JMP     1600H    C3   Jump back to 1600H and wait
+160D   -                00     for next key to be
+160E   -                16     depressed.
+</pre>
+
+<p>Bit 8 is not masked off this time, and will be permanently at '1'. Note that with the program as it stands you cannot escape via CONTROL C and will have to use Interrupt 2. You can, however, modify it to escape on CONTROL C by changing and adding a few instructions starting at 160CH. Try adding the following:</p>
+
+<pre>
+160C   CPI     03E      FE   Compare contents of
+160D   -                03     accumulator with 03H
+                               (ASCII code for CONTROL C) 
+160E   JZ      REINIT   CA   If comparison is valid
+160F   -                B9     jump to REINIT and
+1610   -                02     escape from program loop.
+1611   JMP     1600H    C3   Otherwise jump back to 1600E
+1612   -                00     and wait for next key
+1613   -                16     depression.
+</pre>
+
+<h3>Alphabet Twelve Times Over Using I/O</h3>
+
+<p>This program should be compared with the one following, as they both do the same thing - print the alphabet twelve times and then re-initialise. This first program uses the conventional I/O techniques, whereas the second makes use of the powerful memory mapped option to the TRITON's VDU. We hope you will recognise the tremendous difference in speed of operation between the two methods. Note that in both programs we make use of the RST1 instruction at the beginning. This is one of 8 special re-start instructions which are fixed destination CALL instructions. Using RST1 will call the subroutine at location 0008H, which, in the case of TRITON's Monitor, is then re-vectored with a jump to 0134H. The routine in question is the one which clears the VDU screen and resets the cursor. The advantage of using a RST instruction is that you do not have to specify the address of the subroutine, hence saving two bytes in your program. You should only use RST instructions if the subroutine being called terminates in a RETURN command.</p>
+
+<pre>
+1600   RST1             CF   Clear screen via special
+                               restart instructions.
+1601   MVI B   0CH      06   Set decimal value 12 (0CH)
+1602   -                0C     in B to specify number
+                               of alphabets required.
+1603   MVI A   41H      3E   Set ASCII code for 'A' in
+1604   -                41     accumulator.
+1605   CALL    OUTCH    CD   Print contents of accumulator.
+1606   -                13
+1607   -                00
+1608   INR A            3C   Increment ASCII code in
+                               accumulator by one.
+1609   CPI     5BH      FE   Compare it with ASCII code
+160A   -                58     which is one greater than Z.
+160B   JNZ     1605H    C2   If not greater than Z jump back
+160C   -                05     to 1605H and repeat until
+160D   -                16     complete alphabet is printed.
+160E   CALL    PCRLF    CD   If alphabet is completed output
+160F   -                33     carriage return and line
+1610   -                00     feed.
+1611   DCR B            05   Decrement value in B register by one.
+1612   JNZ     1603H    C2   If it is not zero we do not
+1613   -                03     have 12 alphabets, so jump
+1614   -                16     back to 1603H and repeat.
+1615   JMP     REINIT   C3   If it is zero, re-initialise.
+1616   -                B9
+1617   -                02 
+</pre>
+
+<p>When you run the program try and judge the time it takes to display the 12 alphabets and then go on to the next example.</p>
+
+<h3>Alphabet Twelve Times Over Using Memory Mapping </h3>
+
+<p>Although this program is longer than the one just described, you will see an element of similarity in the way the alphabet is formed (by incrementing the accumulator) and we keep track of the number of alphabets in the B register. Instead of using the I/O OUTCH routine, we use the HL register pair to point to memory locations which are within the block of the VDU's RAM. This starts at 1000H and finishes at 13FFH. We then use the MOV M,A instruction which copies whatever is in the accumulator to the memory location being addressed by the HL register pair. By using the INX H instruction we can increment the latter to display the next character etc. Notice that carriage returns and line feeds are not needed in the main body of the program because we are using addressing to tell the computer exactly where to place each character. When one alphabet is finished we have to compute the address of the start of the next by adding the hex number 26 to the address currently in the HL register pair (this is done at instruction 1611H). Notice that, after this operation, we have to make allowance for a carry by calling an INR H subroutine.</p>
+
+<pre>
+1600   RST1             CF   Clear screen with special
+                               restart instruction.
+1601   LXI H            21   Load HL register pair with
+1602   -                FF     address one less than start
+1603   -                0F     of VDU RAM.
+1604   MVI B   0CH      06   Set number of alphabets
+1605   -                0C     required in register B.
+1606   MVI A   41H      3E   Set ASCII code for 'A' in
+1607   -                41     accumulator.
+1608   INX H            23   Increment HL register pair by one.
+1609   MOV M,A          77   Copy contents of accumulator to memory.
+160A   INR A            3C   Increment contents of accumulator.
+1608   CPI    5BH       FE   Compare contents of accumulator
+160C   -                5B     with code one greater than Z.
+160D   JNZ    1608H     C2   If it is not greater than Z
+160E   -                08     jump back to 1608H and
+160F   -                16     repeat.
+1610   MOV A,L          7D   If it is, copy contents of L
+                               to accumulator.
+1611   ADI     26H      C6   Add 26H to this value.
+1612   -                26
+1613   CC      1629H    DC   If addition causes a carry,
+1614   -                29     call subroutine which
+1615   -                16     increments H register by one.
+1616   MOV L,A          6F   Replace new low byte address
+                               in register L.
+1617   DCR B            05   Decrement register B by one.
+1618   JNZ     1606H    C2   If it is not zero we do not have
+1619   -                06     12 alphabets, so jump back
+161A   -                16     to 1606H and repeat.
+1618   MVI B   0CH      06   Set decimal value 12 into
+161C   -                0C     B register.
+161D   MVI A   0AH      3E   Set accumulator to ASCII code
+161E   -                0A     for line feed.
+161F   CALL    OUTCH    CD   Output line feed -o VDU to step
+1620   -                13     cursor down (to get it clear
+1621   -                00     of last alphabet).
+1622   DCR B            05   Decrement register B by one.
+1623   JNZ     161FH    C2   If it is not zero we have not
+1624   -                1F     stepped cursor to below the
+1625   -                16     last line of alphabet, so
+                               jump back to 161FH and repeat.
+1626   JMP     REINIT   C3   If it is zero, re-initialise.
+1627   -                B9
+1628   -                02
+1629   INR H            24   Subroutine to increment register
+162A   RET              C9     H in event of a carry.
+</pre>
+
+<p>When memory mapping the VDU, you must remember that the Clear Screen/Reset Cursor operation does more than is immediately apparent to the eye. The addresses of different positions on the VDU screen must correspond to specific places on the screen (1000H is the top left-hand corner and 13FFH is the bottom right-hand corner). If, as a result of previous activity, the VDU screen has been scrolling, these absolute address values do not correspond with the absolute positions on the screen. To make sure that addresses correspond to positions in an absolute manner, you must carry out a cursor reset operation. This can be on its own or combined with the clear screen operation. A similar operation must be carried out if you use the VDU function when under the control of BASIC L4.1. Note that it takes the VDU 132mS to carry out a home cursor operation, so if ever you output the raw instruction in your own software, you must introduce a time delay greater than this before outputting anything else to the VDU. The Clear Screen/Reset Cursor utility in the Monitor has a delay of about 200mS built into it, so you can call it without introducing any further delay.</p>
+
+<p>Note that when this program runs the cursor stays stationary in its reset position (top left-hand corner of the screen). If we allowed it to stay there the re-initialisation message would overprint our alphabets, so we have included some extra instructions (starting at 161BH) which step the cursor down twelve positions immediately prior to re-initialisation.</p>
+
+<p>To further demonstrate the flexibility of memory mapping you can alter the layout on the screen by altering the value added to the address to get the next line. Alter the data at location 1612H to 29 and re-run the program. The lines should have start points staggered by 3 character positions. Similarly you can alter the start location for the display as a whole by altering the data in locations 1602H and 1603H. Try making these 20 and 10 respectively and alter the data at 1612H to 25. When you run the program the rows should slant the other way.</p>
+
+<p>When memory mapping the VDU you must always be careful to ensure that your memory pointer (HL register pair) cannot exceed the highest address of VDU (13FFH), otherwise you will start overwriting the input buffer and stack area of the Monitor. If this happens all sorts of strange things will begin to take place, and you will probably find that you completely lose control through the keyboard. If this should happen, you must resort to the RESET button and end up with a cleared memory!</p>
+
+<h3>Screen Flash Program</h3>
+
+<p>To further demonstrate the speed of memory mapping the VDU, you might like to try the following program, which alternately makes the whole screen clear and then white (all but the top line, that is). By selecting different values for the timing byte in location 160FH, you can make the screen flash on and off at different speeds. Note that we use the INX H instruction to sequence through all the relevant VDU locations (at location 1606), and immediately follow it by a check to see that we have not exceeded the VDU area. We do this by comparing the high order byte of the pointer register with 14. If a comparison is true, the program breaks out of its incrementing loop.</p>
+
+<p>The newcomer should take note of the time delay routine between address locations 160DH and 1615H. Routines of this type are very commonly used in programs and they usually work by pre-setting a value in a register or, as in this case (to get a long delay), a register pair. The value is then repetitively decremented by a looping program until the value in the register/s becomes zero. The higher the number that is pre-set the greater will be the delay. Try typing the program in and running it.</p>
+
+<pre>
+1600   MVI B   20H      06   Set ASCII code for SPACE
+1601   -                20     in register B.
+1602   LXI H   1040H    21   Set memory pointer to address
+1603   -                40     of start of second line
+1604   -                10     on VDU.
+1605   MOV M,B          70   Copy contents of register B
+1606   INX H            23     to memory location pointed
+                               to by HL register pair.
+1607   MOV A,H          7C   Increment HL and copy H to
+                               accumulator.
+1608   CPI 14H          FE   Compare value taken from H
+1609   -                14     register with 14H.
+160A   JNZ     1605H    C2   If comparison is true we are
+160B   -                05     pointing to one location 
+                               beyond end so VDU RAM.
+160C   -                16   If not we jump back to 1605H
+                               and repeat.
+160D   LXI D   6000H    11   If VDU screen is filled, load
+160E   -                00     DE register pair with
+160F   -                60     timing byte value 6000H.
+1610   DCX D            1B   Decrement DE register pair by one
+1611   MOV A,D          7A   Copy value in D to accumulator.
+1612   ORA E            B3   OR it with value currently in
+                               E register.
+1613   JNZ     1610H    C2   If it is in zero continue
+1614   -                10     through program, otherwise
+1615   -                16     jump back to 1610H and
+                               keep decrementing.
+1616   MOV A,B          78   Copy contents of B to accumulator
+1617   CPI 20H          FE   Compare with ASCII code for 
+1618   -                20     SPACE. 
+1619   JNZ     1600H    C2   If it does not compare,
+161A   -                00     jump back to beginning of
+161B   -                16     program and clear screen.
+161C   MVI B   7AH      06   If it does compare, set ASCII
+161D   -                7A     code for "WHITE CELL" in 
+                               register B
+161E   JMP     1602H    C3   Then jump back to 1602H
+161F   -                02     and make screen white.
+1620   -                16 
+</pre>
+
+<p>You will notice that each time a memory mapping operation takes place you see a number of pulses flash up on the TV screen. These represent the moments of time the CPU takes over control of the VDU's addressing lines. They are particularly noticeable in this experiment because we are sequentially addressing nearly 1,000 bytes of VDU memory. In most instances one would not be changing data in so many places in so short a period of time, and the effect of the odd pulse now and again is hardly noticeable.</p>
+
+<h3>MODEM Echo Test Program</h3>
+
+<p>The internal MODEM on the TRITON is primarily for recording programs onto tape, but it can also be used for data transmission. The principles are exactly the same. There is a subroutine in the Monitor called TPT (short for Tape Out) which simply places whatever data is in the accumulator into the transmitter buffer of the UART, which serialises it and modulates the carrier of the MODEM. A bonus exists within TRITON in that the UART/MODEM pair will transmit and receive simultaneously. One can therefore connect the MODEM's output back to its input, and link the TPT routine to its complement TPIN, which takes received data from the UART and places it into the accumulator. By placing these subroutines within a looped program, one can output data from the accumulator through the MODEM, feed it back to the MODEM's input, and then decode it in the UART and place it back into the accumulator. If all goes well the received data should be identical to the transmitted data. If it is not, then you have something wrong with your tape I/O hardware. The following program outputs the ASCII code for A through the MODEM and then clears the accumulator in preparation for the received data. When the latter arrives back it is output to the VDU. You should see a continuously repeated printing of letter "A".</p> 
+
+<pre>
+1600   HUI A   41H      3E   Set accumulator to ASCII code
+1601   -                41     for "A".
+1602   CALL    TPT      CD   Call subroutine which serialises
+1603   -                AD     and modulates data from
+1604   -                02     accumulator onto tape
+                               recorder output line.
+1605   SUB A            97   Destroy data in accumulator
+                               by clearing it.
+1606   CALL    TPIN     CD   Call subroutine which demodulates
+1607   -                1D     incoming data and forms it
+1608   -                03     into parallel word, finally
+                               placing it in accumulator.
+1609   CALL    OUTCH    CD   Print contents of accumulator
+160A   -                13     on VDU.
+160B   -                00
+160C   JMP     1600H    C3   Jump back to 1600H and keep
+160D   -                00     repeating.
+160E   -                16 
+</pre>
+
+<p>Before running the program, short the tape out and tape in sockets together on the computer's DIN socket. Run the program, and try adjusting the baud rate control - you should see a noticeable difference in the speed of reception of the letter A. Remove the shorting wire and reception should stop. When you replace it reception should start again. With a slightly more sophisticated program you could arrange for one TRITON to communicate with another down a pair of wires or via a radio link. An even simpler pair of programs would allow you to type directly onto tape and play back what you have typed onto the VDU. Why not try and write these for yourself using the INCH and OUTCH utilities as well as the TPT and TPIN routines shown above. Note that TPT and TPIN are not fixed location routines so you can only call them at addresses 02ADH and 031D respectively when using MONITOR V4.1.</p>
+
+<h3>Test Tape Playback Program</h3>
+
+<p>In the section on how to make the TRITON, we suggested you use Transam Components Ltd's test tape to adjust the baud rate of your UART - the program was listed, and instructions were given on how to use it. By repeating it here with mnemonics and instruction descriptions, we hope that you will be able to follow it through without any further explanation.</p>
+
+<pre>
+1600   CALL    TPEON    CD   Call subroutine which switches
+1601   -                27     on tape control relay.
+1602   -                03
+1603   CALL    TPIN     CD   Call subroutine to input data
+1604   -                1D     from tape and store in
+1605   -                03     accumulator.
+1606   CALL    OUTCH    CD   Print contents of accumulator
+1607   -                13     on VDU.
+1608   -                00
+1609   JMP     1603H    C3   Jump back to 1603H for next
+160A   -                03     byte from tape recorder.
+160B   -                16
+</pre>
+
+<p>Note that TPEON can only be called at address 0327H when using MONITOR V4.1.</p>
+
+<h3>Test Tape Record Program </h3>
+
+<p>In case you have lost your test tape, or want to make mother copy to be on the safe side, you can write the program written by Transam to produce our master copy. Your system must have been set up to the correct baud rate prior to making your own test recording, otherwise you will only be calibrating your own system against itself.</p>
+
+<pre>
+1600   MVI A   41H      3E   Set ASCII code for "A"
+1601   -                41     in accumulator.
+1602   CALL    TPT      CD   Call subroutine which outputs
+1603   -                AD     contents of accumulator
+1604   -                02     to tape.
+1605   INR A            3C   Increment ASCII code in
+                               accumulator.
+1606   CPI     5BH      FE   Compare it against code which
+1607   -                5B     is one greater than "Z".
+1608   JNZ     1602H    C2   If it is not, jump back to
+1609   -                02     1602H and keep repeating.
+160A   -                16
+160B   MVI A   0DH      3E   If "Z" has been reached and
+160C   -                0D     recorded, set accumulator
+                               to ASCII for CR.
+160D   CALL    TPT      CD   Output carriage return code
+160E   -                AD     to tape.
+160F   -                02
+1610   MVI A   0AH      3E   Set accumulator to ASCII code
+1611   -                0A     for line feed.
+1612   CALL    TPT      CD   Output line feed code to tape.
+1613   -                AD
+1614   -                02
+1615   JMP     1600H    C3   Jump back to beginning of
+1616   -                00     program and keep repeating.
+1617   -                16
+</pre>
+
+<p>The program repeatedly outputs the alphabet (followed by carriage return and line feed) to tape for as lona as you care to let it run.</p>
+
+<h3>Siren Program</h3>
+
+<p>In the previous program examples we have tried to demonstrate most of the Monitor's utilities and at the same time exercise the more important I/O facilities of TRITON. We have not yet used the spare output port, and this program will demonstrate how you can go about using it to communicate with the outside world (in this case with a crystal earpiece or external amplifier). Port 6 is only a two bit port - outputting any data on the two most significant data bus lines. We shall use bit 8 to generate an audio frequency square wave output, but to make the program a bit more interesting shall use software to make the frequency increase over a period of time.</p>
+
+<pre>
+1600   MVI B   80H      06   Set register B to initial
+1601   -                80     note divisor value
+                               (128 decimal).
+1602   MVI C   20H      0E   Set register C to value to
+1603   -                20     give note duration. 
+1604   MOV D,B          50   Copy current divisor from
+                               B into D.
+1605   CMA              2F   Complement accumulator.
+1606   DCR D            15   Decrement register D by one.
+1607   JNZ     1606M    C2   If register D is not zero,
+1608   -                06     jump back to 1606H
+1609   -                16     and repeat.
+160A   OUT     PORT 06H D3   If it is, output value in
+160B   -                06     accumulator to port 6.
+160C   DCR C            0D   Decrement register C by one.
+160D   JNZ     1604H    C2   If it is not zero, jump
+160E   -                04   back to 1604H and repeat.
+160F   -                16
+1610   DCR B            05   If it is, decrement register
+                               B by one.
+1611   JNZ     1602H    C2   If register B is not zero,
+1612   -                02     jump back to 1602H
+1613   -                16     and repeat.
+1614   JMP     1600H    C3   If it is, jump back to start
+1615   -                00     of program and keep 
+1616   -                16     repeating.
+</pre>
+
+<p>It is the CMA instruction which makes the output signal alternate between "1" and "0". The time taken between transitions is controlled by the value of the D register which, in the first instance, gets its data from register B. Each time a note is played and held for its duration (set by the value in C) register D is decremented so that the next note will have a marginally higher frequency. The program loops until the value in D is zero (infinite frequency!) and then starts all over again.</p>
+
+<p>To keep the program short and simple we have omitted to compensate for the fact that we have one shortening timing loop nested within another. In practice this means that as the note divisor value diminishes so will the duration of the note. For this program you can hardly notice it, but if you use TRITON to synthesise music you must make allowances for this.</p>
+
+<p>With an even simpler program than this you could use TRITON as a high stability square wave generator.</p>
+
+<p>Without doubt you will get most enjoyment from machine code programming when you start to write more lengthy programs than those we have used as illustrations. Space does not permit us to go any further at this stage, but we hope that the examples will get you going on the road to writing your own. Good luck!</p>
 
 </body>
 </html>
