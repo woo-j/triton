@@ -1200,7 +1200,7 @@ vectored start address 1618:</p>
                                B into D.
 1605   CMA              2F   Complement accumulator.
 1606   DCR D            15   Decrement register D by one.
-1607   JNZ     1606M    C2   If register D is not zero,
+1607   JNZ     1606H    C2   If register D is not zero,
 1608   -                06     jump back to 1606H
 1609   -                16     and repeat.
 160A   OUT     PORT 06H D3   If it is, output value in
@@ -1226,6 +1226,497 @@ vectored start address 1618:</p>
 <p>With an even simpler program than this you could use TRITON as a high stability square wave generator.</p>
 
 <p>Without doubt you will get most enjoyment from machine code programming when you start to write more lengthy programs than those we have used as illustrations. Space does not permit us to go any further at this stage, but we hope that the examples will get you going on the road to writing your own. Good luck!</p>
+
+<h1>TRITON BASIC L4.1</h1>
+
+<h2>INTRODUCTION TO PROGRAMMING IN BASIC</h2>
+
+<p>Most low-cost home computers to date are only capable of being programmed in machine code - this is a language of 'numbers' forming a powerful but difficult language in which to address your machine. Machine codes are interpreted by the microprocessor as specific executable instructions and are performed extremely rapidly. Each microprocessor has its own quite distinct machine codes, and these codes have to be learnt by the programmer in order to achieve execution of any task by the microprocessor, and, what is more, a program written in machine code is not executable on any machine using a different microprocessor.</p>
+
+<p>The TRITON computer can be programmed both in machine code and in a more useful language called 'Basic'.</p>
+
+<p>Before any computer is able to function as a tool, it must be instructed by the programmer exactly what to do. Communication between humans in English is only possible after years of training and even adults sometimes misunderstand each other's remarks. Clearly, ambiguities are not acceptable in computing, and a clear, precise language must be the key to communicating with a machine. These 'languages' are called programming languages, and there are several in use today, e.g. Fortran, Cobol, Algol and Basic. We shall concern ourselves only with Basic in this discussion, as this is the most common language in use in the personal computer arena.</p>
+
+<p>The 'Tiny Basic' used in the TRITON personal computer is easy to understand, simple to use and yet a very powerful aid to the programmer for everyday applications. We trust that the information which follows will enable you to become more aware of the tremendous facilities now affordable to the personal computer enthusiast, and wish you every success with your programming.</p>
+
+<h2>THE BASIC INTERPRETER</h2>
+
+<p>The TRITON BASIC is a BASIC Interpreter specially configured for the TRITON Computer. It contains many of the BASIC commands and most small BASIC programs will be easily converted to run on the system. The following is a description of the BASIC Interpreter.</p>
+
+<h2>VARIABLES</h2>
+
+<p>All variables and numbers are stored as 16 bit integers and therefore must lie in the range -32767 to 32767. There are 26 variables, each denoted by a single letter A to Z. There is one array denoted by @. This array is automatically dimensioned to make use of any memory space left unused by your Basic Program. The number of bytes of memory space in this array can be obtained at RUN time using the SIZE function. Now try Example 1.</p>
+
+<h2>FUNCTIONS</h2>
+
+<p>There are three functions available.</p>
+
+<p>ABS(X) which gives the absolute value of the variable X.</p>
+
+<p>RND(Y) which gives a random number between 1 and Y inclusive.</p>
+
+<p>SIZE which gives the number of bytes left unused by your program.</p>
+
+<p>Hence the maximum index for the array @ ( ) is SIZE/2. Now try Example 2.</p>
+
+<h2>ARITHMETIC OPERATORS</h2>
+
+<p>+ Add<br>
+- Subtract<br>
+* Multiply<br>
+/ Divide</p>
+
+<p>+, -, * and / operations must result in a value in the range -32767 to 32767 and as they are also integer, any division is rounded down. e.g. 5/2 gives 2, 2/3 will give 0. Now try Example 3.</p>
+
+<h2>COMPARE OPERATORS</h2>
+
+<p>&gt; greater than<br>
+&lt; less than<br>
+= equal to<br>
+# not equal to<br>
+&gt;= greater than or equal to<br>
+&lt;= less than or equal to</p>
+
+<p>The compare oprtators are usually used with the IF command but can also be used in expressions. The result of any comparison is 1 if true and 0 if not true (false). Try Example 4.</p>
+
+<h2>EXPRESSIONS</h2>
+
+<p>Expressions are formed from number, variables and functions. e.g.</p>
+
+<pre>
+10 LET A = 10            A is set to 10
+20 LET B = A             B is set to contents of A i.e. 10
+</pre>
+
+<p>Arithmetic operators are used in expressions and are evaluated from left to right, except that * and / are always evaluated first. Spaces between numbers, variables and functions are ignored. Spaces embedded in command words are not allowed.</p>
+
+<pre>
+10 LET A = -10           A is set to -10
+20 LET B = A/2           B is set to -5
+10 LET A = 4 * 2 + 3     A is set to 11
+10 LET A = 3 + 4 * 2     A is again set to 11 (multiply evaluated first)
+</pre>
+
+<p>Perentheses can be used to change the order of evaluation:</p>
+
+<pre>
+10 LET A = (3+4)*2       A is now set to 14
+</pre>
+
+<p>Parentheses can be nested, the maximum depth being limited by the size of the stack:
+
+<pre>
+10 LET A = 14
+20 LET B = ((A-1)*2 - 7)*3    B is set to 57
+</pre>
+
+<p>Conditional operators are usually found with the IF command:</p>
+
+<pre>
+10 IF A = 1 B = B +1 
+</pre>
+
+<p>In this statement when A is equal to 1, the expression B = B+1 is executed and 1 is added to the contents of B. Conditonal expressions can be combined to form multiple conditions and can also be used in arithmetical expressions. Try Example 5.</p>
+
+<h2>STATEMENTS</h2>
+
+<p>A BASIC statement consists of a statement number between 1 and 32767 followed by one or more commands. If a statement contains more than one command, each command is separated by a semi-colon ; and the statement is ended by a carriage return.</p>
+
+<pre>
+10 LET A = 10
+20 LET B = A
+30 LET C = A+B 
+</pre>
+
+<p>This can be written:</p>
+
+<pre>
+10 LET A = 10; LET B = A; LET C = A+B 
+</pre>
+
+<p>It should be noted that the latter method will be harder to change or correct. The commands GOTO, STOP and RETURN must be the last command in any statement. Try Example 6.</p>
+
+<h2>COMMANDS</h2>
+
+<p>The following commands are available in the TRITON BASIC L4.1</p>
+
+<h2>LET</h2>
+
+<p>LET is used to set a variable to the result of an expression.</p>
+
+<pre>
+10 LET A = 10            The variable A is set to 10 
+20 LET B = (A-1)*2       The variable B is set to the result
+                            of the expression (1/2-1)*2 i.e. 18
+30 LET @(3) = 8/3        The fourth element of the array @
+                            is set to 6 (The first element
+                            is @(0)) 
+</pre>
+
+<p>The expression need not be an arithmetical expression.</p>
+
+<pre>
+10 LET A = 1, B = 2, C = 3
+</pre>
+
+<p>each part being separated by a comma. We can therefore rewrite an earlier example:</p>
+
+<pre>
+10 LET A = 10, B = A, C = A+B
+</pre>
+
+<p>Try Example 7.</p>
+
+<h2>REM</h2>
+
+<p>The REM (Remark) Command allows the programmer to comment his program. The interpreter will ignore the rest of the line.</p>
+
+<pre>
+100 REM THIS IS THE START OF THE SUBROUTINE Y = A*A+B
+</pre>
+
+<p>Try Example 8.</p>
+
+<h2>PRINT</h2>
+
+<p>The PRINT command is used to print numbers, variables, expressions and text.</p>
+
+<pre>
+10 PRINT A               will print the contents of
+                            variable A
+10 PRINT A*2             prints twice the contents of
+                            variable A
+10 PRINT "THIS IS A TITLE" prints THIS IS A TITLE
+</pre>
+
+<p>Several variables etc. can be printed at once. Each item to be printed is separated by a comma.</p>
+
+<pre>
+10 PRINT A,B,C           will print the contents of A
+                            followed by B and C on the
+                            same line
+</pre>
+
+<p>Text can be used to qualify printout.</p>
+
+<pre>
+10 PRINT 'THE RESULT IS', A
+</pre>
+
+<p>Try Example 9.</p>
+
+<p>Text can be contained by either single or double quotes, this allows the other type of quote to be printed.</p>
+
+<pre>
+10 PRINT 'ABC"CBA', "123'321" will print
+ABC"CBAl23'321
+</pre>
+
+<p>Try example 10.</p>
+
+<p>Numerical values are printed with leading spaces (Right Justified) in a field of width 8 characters. The field width can be altered using a # sing followed by the new width (i.e. # 3 gives a width of 3). The field width will then remain effective until another or the end of the current PRINT statement.</p>
+
+<pre>
+10 PRINT A,#3, B,#1, C   will print A in a width of 8
+                         characters, B in a width of 3
+                         and C in a width of 1.
+</pre>
+
+<p>#1 will result in C being printed Left Justified and any following printout will be shifted to the right if C is greater than 9.</p>
+
+<p>The field width can also be an expression</p>
+
+<pre>
+PRINT # I, A will print A in a field width equal to
+the contents of variable I
+</pre>
+
+<p>The maximum field width is 63. Try Example 11.</p>
+
+<p>Note that negative numbers required an extra character in the field width for the minus sign. Extra spaces can be generated by repeated commas.</p>
+
+<pre>
+PRINT # 3,A,,,B          will print a 3 character A,
+                            2 spaces and a 3 character B
+</pre>
+
+<p>Several PRINT statements can be made to print on the same line by ending the statement with a comma.</p>
+
+<pre>
+10 PRINT 'THIS WILL',
+20 PRINT 'ALL BE PRINTED',
+30 PRINT 'ON ONE LINE'
+will print THIS WILL ALL BE PRINTED ON ONE LINE
+</pre>
+
+<p>Try Example 12.</p>
+
+<p>PRINT on its own will space one line.</p>
+
+<p>Grpahic characters can be printed using the PRINT statement. The description of the graphics font lists those graphics which can be contained in quotes and will result in graphics being printed. Try Example 13.</p>
+
+<p>The PRINT statement can also be used to issue control characters to the display chip.</p>
+
+<pre>
+10 PRINT ^H              will issue a control H which will
+                            backspace the cursor
+10 PRINT ^I              will issue a control I which will
+                            forward space the cursor
+10 PRINT ^J              moves cursor down
+10 PRINT ^K              moves cursor up
+10 PRINT ^L              will clear the whole screen and
+                            reset the cursor.
+                            Note that this command must be
+                            followed by a delay before the
+                            next command (FOR I=1 TO 250; NEXT I)
+10 PRINT ^M              will reset the cursor to the start
+                            of the line.
+</pre>
+
+<p>Try Example 14.</p>
+
+<h2>INPUT</h2>
+
+<p>The INPUT command is used to read an expression from the keyboard. Normally the keyboard input is just an integer value between -32767 and 32767.</p>
+
+<pre>
+10 INPUT A               When this statement is executed,
+                            the BASIC will first print A
+                            followed by a space and then wait
+                            for keyboard input. The input is
+                            terminated by carriage return.
+                            The input is then stored in the
+                            variable A
+10 INPUT A,B             will print A, space, then wait
+                            for input, it will then print B,
+                            space, and wait for input again
+</pre>
+
+<p>Try Example 15.</p>
+
+<p>Instead of just allowing the machine to prompt you with the variable, it is much better to ask a specific question. This is done by enclosing the text of the question in quotes.</p>
+
+<pre>
+10 INPUT 'HOW MANY EGGS HAVE YOU LEFT?' I
+</pre>
+
+<p>The machine will print HOW MANY EGGS HAVE YOU LEFT? and then wait for a number to be typed in. If during RUN time, the typed input is not a valid expression, the prompt will be repeated and then the machine will wait again. It is also possible to reprint only part of the prompt.</p>
+
+<pre>
+10 INPUT 'WHAT IS', 'A+B?'C, 'A-B?'D
+</pre>
+
+<p>The first time the printout will be WHAT IS A+B? and after an invalid input it will just print A+B? Try Example 16.</p>
+
+<p>The BASIC interpreter uses its expression evaluation routine to decode the input and therefore the programmer or user can enter an expression using variables already set up.</p>
+
+<pre>
+10 LET A=3, B=2
+20 INPUT C 
+30 PRINT C 
+</pre>
+
+<p>Instead of entering a value for C, the user can enter an expression such as A+B. The expression will then be evaluated by the interpreter and the result 5 stored in the variable C. The machine will then print 5. Try Example 17.</p>
+
+<p>It is also possible to enter single characters as a reply by making use of the expression input.</p>
+
+<pre>
+10 LET Y=0, N = 1
+20 INPUT 'DO YOU WANT TO CONTINUE? Y OR N' A
+30 IF A=1 STOP 
+</pre>
+
+<p>If the user replies Y, A will be set to the contents of Y, i.e. zero. If the user replies N, A will be set to 1 and program will STOP.</p>
+
+<h2>IF</h2>
+
+<p>The IF command is used to compare expresssions, using the compare operators. If the result of this comparison is true (non zero), the rest of the statement is executed. If the result of the comparison is false (zero), the rest of the statement is skipped and execution resumes on the next statement.</p>
+
+<pre>
+10 IF A=0 PRINT 'A IS ZERO'
+</pre>
+
+<p>The machine will print A IS ZERO only when A is zero. Note that unlike other BSIC interpreters and compilers, the word THEN is not used. Try Example 18.</p>
+
+<p>Either side of the compare can be an expression.</p>
+
+<pre>
+10 IF A=B*2 PRINT 'A IS TWICE B'
+20 IF A*3=B*2 PRINT 'A = B*2/3'
+</pre>
+
+<p>Try example 19.</p>
+
+<p>A compare operator need not be used in the IF statement but this practice should be avoided where possible as it can make the program very hard to follow.</p>
+
+<pre>
+10 IF A-1 PRINT 'A IS NOT ONE'
+</pre>
+
+<p>The PRINT command is only skipped when the result of the expression in the IF command is zero. Several commands can follow the IF command.</p>
+
+<pre>
+10 IF A=0 PRINT 'A IS ZERO'; GOTO 50
+</pre>
+
+<p>When A is zero, the machine will print A IS ZERO and then jump to statement 50.</p>
+
+<h2>GOTO</h2>
+
+<p>You will probably be fairly familiar with the GOTO command already as it has appeared in several of the examples for the other commands. The GOTO command is used to break the sequential processing of the BASIC interpreter and causes the interpreter to jump either forward or backwards to the specified statement number.</p>
+
+<pre>
+50 GOTO 10 
+</pre>
+
+<p>When the interpreter executes this statement it will jump back up the program to statement 10 and continue its processing from statement 10. Again, the statement number following the GOTO can be an expression.</p>
+
+<pre>
+20 GOTO A*2 
+</pre>
+
+<p>It will jump to the statement number calculated from the expression A*2. If the expression gives a non-existent statement number, the BASIC will give an error report.</p>
+
+<p>Using a simple expression for a GOTO is useful where different routines may be required as a result of an input. Try example 20.</p>
+
+<p>The problem with using the 'computed' GOTO is that the statement numbers of the routines must follow the sequence defined by the expression and this can cause problems when adding code unless careful planning has been carried out. Another method of using a computed GOTO is to use the array variable and index it.</p>
+
+<pre>
+10 LET @(1) = 100, @(2) = 200, @(3) = 100, @(4) = 25
+20 INPUT I
+30 GOTO @(I)
+</pre>
+
+<p>If the input for I is 1 the interpreter will jump to statement 100, for I = 2 it will jump to 200, for I = 3 to 100 again, for I = 4 to 25.</p>
+
+<p>It is advisable when using the computed GOTO to check the variable for valid values, e.g. in the above example it would be advisable to insert:</p>
+
+<pre>
+25 IF I > 1 GOTO 20
+27 IF I > 4 GOTO 20
+</pre>
+
+<p>This will only allow an input of 1 to 4, any other input will result in a repeat request for input. Try Example 21.</p>
+
+<h2>GOSUB AND RETURN</h2>
+
+<p>The GOSUB command, although similar to the GOTO command, is used to exit from a statement and jump to a routine starting at the specified statement number. Execution continues from the specified statement number until a RETURN command, whereupon the BASIC returns to the command following the original GOSUB.</p>
+
+<pre>
+10 PRINT 'LETS EXECUTE ROUTINE 100'
+20 GOSUB 100; PRINT 'WE HAVE NOW RETURNED'
+30 STOP
+100 PRINT 'THIS IS ROUTINE 100'
+120 PRINT 'I WILL RETURN WHEN I HAVE FINISHED'
+130 RETURN
+</pre>
+
+<p>This will result in the following print-out:</p>
+
+<pre>
+LETS EXECUTE ROUTINE 100
+THIS IS ROUTINE 100
+I WILL RETURN WHEN I HAVE FINISHED
+WE HAVE NOW RETURNED
+</pre>
+
+<p>The GOSUB 100 command causes the BASIC to jump to statement 100 but to remember where it is in statement 20. It now executes from statement 100 until it reaches the RETURN command. It then returns to statement 20 and continues processing it.</p>
+
+<p>The GOSUB command is used in a program where several lines of program appear several times. These lines need only be written once and a GOSUB used when these are required. Try Example 22.</p>
+
+<h2>FOR AND NEXT COMMANDS</h2>
+
+<p>The FOR command is a very powerful command. It is used to take the BASIC interpreter loop 'FOR' a specified number of times, the end of the loop being defined by the NEXT command.</p>
+
+<pre>
+10 FOR 1=2 TO 10 STEP 2
+20 PRINT I
+30 NEXT I
+</pre>
+
+<p>I is set to 2 when the FOR statement is first encountered. It will then remain at 2 until the NEXT command is encountered. On reaching the NEXT command 2 is added to I and the Basic returns to the command following the FOR command. This is repeated until I becomes greater than 10 whereupon execution continues with the command following the NEXT command.</p>
+
+<p>Hence, the machine will print:</p>
+
+<pre>
+2
+4
+6
+8
+10
+</pre>
+
+<p>On exit from the loop, I remains at its next value, i.e. 12.</p>
+
+<p>If statement 10 had been:</p>
+
+<pre>
+10 FOR I = 2 TO 11 STEP 2
+</pre>
+
+<p>I will be left at its first value greater than 11, i.e. 12.</p>
+
+<p>Try Example 23.</p>
+
+<p>Negative indexing is allowed as long as the first value is greater than or equal to the second and the step is negative.</p>
+
+<pre>
+10 FOR 1=10 TO 1 STEP - 1
+50 NEXT I
+</pre>
+
+<p>I will start at 10 and step down to 1 in increments of 1. If STEP is omitted, a step of 1 is assumed.</p>
+
+<pre>
+10 FOR I =1 TO 100
+</pre>
+
+<p>I will start at 1 and step up to 100 in increments of 1. Once more, expressions can be used in all three positions instead of numbers. The expressions are evaluated when the FOR command is executed and any following changes to the variables used will not affect the loop.</p>
+
+<pre>
+10 LET I = 10
+20 FOR I = I TO I + 5
+50 NEXT I
+</pre>
+
+<p>The initial value of I is evaluated as 10, the final value is 15. Within the loop, I will index from 10 to 15 in steps of 1. Try Example 24.</p>
+
+<p>FOR and NEXT commands can be 'nested' within each other, the limit being that of the size of the stack.</p>
+
+<pre>
+10 FOR I = 1 TO 10
+20 FOR J = 1 TO 5
+30 PRINT I * J
+40 NEXT J
+50 NEXT I
+</pre>
+
+<p>This will result in the machine printing I*J when I=1 and J=1 2 3 4 5 then for I=2 and J=1 to 5 etc... until I=10. Try Example 25.</p>
+
+<p>When a NEXT command is executed, the BASIC interpreter checks that the variable specified is the same as that used by the most recent FOR. If they are not the same, the FOR is terminated and the previous FOR examined. This continues until a match is found.</p>
+
+<pre>
+10 FOR I = 1 TO 10
+20 FOR J = 1 TO 10
+30 IF J = 5 GOTO 50
+40 NEXT J
+50 NEXT I
+</pre>
+
+<p>Each time J gets to 5, the BASIC jumps to statement 50. This cancels the J FOR loop leaving J at 5 and continues with the I FOR loop. If within a FOR loop, another FOR loop using the same variable is encountered, the first FOR loop is terminated. Try Example 26.</p>
+
+<h2>STOP</h2>
+
+<p>The STOP command stops the execution of the program when it is executed. Any number of STOP commands can be included within a program.</p>
+
+<pre>
+10 GOSUB 100
+20 GOSUB 200
+30 GOSUB 300
+4O STOP
+</pre>
+
+<p>This is an example where STOP is useful.</p>
 
 </body>
 </html>
