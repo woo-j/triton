@@ -1718,5 +1718,354 @@ WE HAVE NOW RETURNED
 
 <p>This is an example where STOP is useful.</p>
 
+<h2>VDU</h2>
+
+<p>The VDU command allows the programmer direct access to the VDU control chip and its memory, hence allowing a wide range of graphic applications.</p>
+
+<p>The VDU command has two parameters, the first being the VDU memory address, the second being the desired graphic symbol specified as a decimal number.</p>
+
+<pre>
+10 VDU 5, 126
+</pre>
+
+<p>This will result in the graphic &rarr; being placed in the fifth byte of the VDU memory. The VDU memory is arranged as 16 rows each containing 64 bytes therefore addresses 1 to 64 are on the first row, 65 to 128 on the second, etc. Due to the function of the VDU control chip, care should be taken when using the first row and the first column as certain graphics characters will produce strange effects.</p>
+
+<p>Try Example 27.</p>
+
+<p>You will notice from this example that X is used for column addressing and Y for row addressing. By leaving Y constant, the same row is always used.</p>
+
+<p>Formula Z = X + Y * 64 converts the X and Y values into an address Z. It also avoids using the top row. To use the top row as well, use the following formula: 
+
+<pre>
+Z = X + (Y-1) * 64
+</pre>
+
+<p>To allow the programmer to use all the VDU control commands, address zero has been allocated:</p>
+
+<pre>
+10 VDU 0, 12
+</pre>
+
+<p>This does not use memory location zero, instead the value 12 is output to the VDU controller. 12 is the command to clear the screen and reset the cursor. Note that commands 12 and 28 require an extra delay while the command is executed. A FOR loop should be used (FOR I=1 TO 150; NEXT I) before the next PRINT, VDU or INPUT command.</p>
+
+<p>Try Example 28.</p>
+
+<p>Other useful VDU commands are as follows:</p>
+
+<table>
+<tr><td>8</td><td>Backspace cursor one character</td></tr>
+<tr><td>9</td><td>Forward space cursor one character</td></tr>
+<tr><td>10</td><td>Line Feed (Move cursor down one line)</td></tr>
+<tr><td>11</td><td>Move cursor up one line</td></tr>
+<tr><td>12</td><td>Reset cursor to top and clear screen</td><tr>
+<tr><td>13</td><td>Carriage Return - Reset cursor to start of line clearing rest of line</td></tr>
+<tr><td>27</td><td>Line Feed</td></tr>
+<tr><td>28</td><td>Reset cursor to top without screen clear</td></tr>
+<tr><td>29</td><td>Reset cursor to start of line without rest of line clear</td></tr>
+</table>
+
+<p>When using the memory mapping option, care must be taken to make sure that the memory address is between 1 and 1024 inclusive. If you exceed 1024 it is possible to overwrite the stack and your program.</p>
+
+<p>It is possible to make your BASIC program modify itself using VDU but this is fairly difficult and not really worth the trouble it can cause.</p>
+
+<p>Before using memory mapping it is advisable to use either command 12 or 28 to reset the cursor. If the screen has been scrolling, row 1 will not be at the top of the scan unless this is done.</p>
+
+<p>The graphic symbol specified in the second parameter is a decimal number between 0 and 255 inclusive. If a larger number is specified, only the least significant byte is used.</p>
+
+<p>The graphics and character code are given elsewhere in the Manual but some of the useful are listed below.</p>
+
+<table>
+<tr><td>0 to 31</td><td>see Graphic Font</td></tr>
+<tr><td>32</td><td>Space</td></tr>
+<tr><td>33 - 47</td><td>! " # $ % &amp; ' ( ) * + , - . /</td></tr>
+<tr><td>48 - 57</td><td>0 to 9</td></tr>
+<tr><td>58 - 64</td><td>: ; &lt; = &gt; ? @</td></tr>
+<tr><td>65 - 90</td><td>A to Z</td></tr>
+<tr><td>91 - 95</td><td>[ \ ] &uarr; &larr;</td></tr>
+<tr><td>96 - 127<td>see Graphics Font</td></tr>
+<tr><td>128 - 225</td><td>Is a repeat of 0 to 127 (The high order bit is ignored)</td></tr>
+</table>
+
+<p>To print a variable between 0 and 9 using VDU, just add 48.</p>
+
+<pre>
+VDU 0, I + 48
+</pre>
+
+<p>This will print the value of I if it lies between 0 and 9.</p>
+
+<p>To produce moving graphic, it is necessary to use FOR loops to index the memory mapping. In the sample program BOUNCE, the old location of the character is blanked out using a space (32) and the character mapped into its new Location.</p>
+
+<p>By leaving the blanking instruction out, the sample program PATTERN gradually draws a pattern.</p>
+
+<h2>DIRECT COMMANDS</h2>
+
+<p>The following are direct commands to the BASIC interpreter. They are obeyed as soon as they are entered.</p>
+
+<table>
+<tr valign="top"><td>RUN</td><td>RUN will start the execution of the program at the lowest statement number.</td></tr>
+<tr valign="top"><td>LIST</td><td>LIST will print out all statements in ascending numerical order.<br>
+LIST 100 will print out all the statements starting at statement 100.<br>
+LIST 50,10 will print 10 lines starting at statement 50.</td></tr>
+<tr valign="top"><td>NEW</td><td>NEW will delete all program statements ready for a new program. Control C will return you (at any time) to the Monitor.</td></tr>
+</table>
+
+<p>Any BASIC command can be entered as a Direct Command by leaving off the statement number. The statement is then executed immediately and not stored as part of the program.</p>
+
+<p>This feature is very useful when your program stops due to an error report (see Error Reports).</p>
+
+<h2>ABBREVIATIONS</h2>
+
+<p> All the commands can be abbreviated as follows. It is advisable only to abbreviate when you are tight on memory as the abbreviated program can be extremely difficult to follow.</p>
+
+<pre>
+FUNCTIONS
+
+A.      = ABS
+R.      = RND
+S.      = SIZE
+
+COMMANDS
+
+Implied = LET     i.e. A=B+C, D=E+F etc.
+REM     = REMARK
+P.      = PRINT
+IN.     = INPUT
+I.      = IF
+G.      = GOTO
+GOS.    = GOSUB
+R.      = RETURN
+F.      = FOR
+TO      = TO
+S.      = STEP
+N.      = NEXT
+S.      = STOP
+V.      = VDU
+
+DIRECT COMMANDS
+
+L.      = LIST
+R.      = RUN
+N.      = NEW
+</pre>
+
+<h2>ERROR REPORTS</h2>
+
+<p>It is quite probable that you can have already seen some of error reports generated by the BASIC Interpreter. Although there are only three different error messages WHAT?, HOW? and SORRY) the BASIC will insert a question mark at the point where the error occurred.</p>
+
+<table>
+<tr valign="top"><td>WHAT?</td><td>This means the interpreter has come across a command or expression that it cannot interpret.<br>
+<pre>
+WHAT?
+300 I? PUT A            - INPUT is spelt wrongly 
+
+WHAT?
+40 A + 300/(B+C?        - The close parenthesis is missing
+</pre></td></tr>
+<tr valign="top"><td>HOW?</td><td>This means the interpreter cannot execute the command.<br>
+<pre>
+HOW?
+60 A = 300*500?         - The result is greater than 32767 
+
+10 A=5,B=0
+
+HOW?
+20 C=A/B?               - You cannot divide by zero 
+
+HOW?
+40 GOTO 37?             - Statement 37 is missing
+</pre></td></tr>
+<tr valign="top"><td>SORRY</td><td>This means that there is not enough memory. This can occur during typing in a program or during the execution when the array is used - @ ( ). It is worth checking the variable or expression if the array is involved to make sure that it is a sensible value.<br>
+<pre>
+SORRY?
+210 A = @(I*J+K)
+</pre>
+If this occurred during typing in of the program then there is not enough memory. If this occurred during execution (RUN) then either there is not enough memory for @ or the expression I*J+K may be incorrect. To check this type:<br>
+<pre>
+PRINT I,J,K,I*J+K
+</pre>
+and the values of I J K and I*J+K will be printed. You can now check if the result is correct. If the result of the PRINT is OK then another check is:<br>
+<pre>
+PRINT SIZE - this will give how much memory space (in bytes) is left.
+</pre></td></tr>
+</table>
+
+<h1>WORKED EXAMPLES</h1>
+
+<h2>TRITON BASIC EXAMPLES</h2>
+
+<p>These examples should be tried as the description is read. To enter BASIC commands enter T as answer to the TRITON READY message. The machine will reply:</p>
+
+<pre>
+BASIC L4.1
+OK
+</pre>
+
+<p>Before each example, unless other wise stated, you should now type</p>
+
+<pre>
+NEW Return
+</pre>
+
+<p>This will clear any old program already in memory. The machine will again reply:</p>
+
+<pre>
+BASIC L4.1
+OK
+</pre>
+
+<p>It is now ready for BASIC code. Each line of code is keyed then entered by pressing the Return Key. Control C can be entered to return to the monitor at any time.</p>
+
+<h2>EXAMPLE 1</h2>
+
+<p>Variables</p>
+
+<pre>
+10 LET A=1
+20 LET B=-8
+30 PRINT A,B
+RUN
+</pre>
+
+<p>The machine should print 1 -8</p>
+
+<h2>EXAMPLE 2</h2>
+
+<p>Functions</p>
+
+<pre>
+10 LET A= -8
+20 LET B= ABS(A)
+30 LET C= RND(lO)
+40 PRINT A,B,C
+RUN
+</pre>
+
+<p>The machine should print -8 8 ? The ? will be a random number between 1 and 10. If you type RUN again, you will get a different third number. To find the number of bytes of memory used by this program, or any program, enter PRINT SIZE followed by CR - try this with the other examples.</p>
+
+<h2>EXAMPLE 3</h2>
+
+<p>Arithmetic Operators</p>
+
+<pre>
+10 LET A = 3 + 4
+20 LET B = 5 - 6
+30 LET C = 3 * 15
+40 LET D = 5/3
+50 PRINT A,B,C,D
+RUN
+</pre>
+
+<p>The machine should print 7 -1 45 1</p>
+
+<h2>EXAMPLE 4</h2>
+
+<p>Compare Operators</p>
+
+<pre>
+10 LET A = 0
+20 LET B = 0
+30 LET C = 0
+40 IF 1 > 2 LET A = A + 1
+50 IF 3 # 4 LET B = B + 1
+60 IF 4 >=3 LET C = C + 1
+70 LET D = 2 < 1
+80 PRINT A,B,C,D 
+RUN
+</pre>
+
+<p>The machine should print 0 1 1 0</p>
+
+<p>The explanation is as follows:</p>
+
+<ul><li>Statement 40 &nbsp;&nbsp;1 is not greater than 2 so A remains at zero</li>
+<li>Statement 50 &nbsp;&nbsp;3 is not equal to 4 so B has 1 added to it</li>
+<li>Statement 60 &nbsp;&nbsp;4 is greater than 3 so C has 1 added to it</li>
+<li>Statement 70 &nbsp;&nbsp;2 is not less than 1 so D is set to zero</li>
+</ul>
+
+<h2>EXAMPLE 5</h2>
+
+<p>Expressions</p>
+
+<pre>
+10 LET A = -10
+20 LET B = A/2
+30 LET C = ((A-1)*2+B)*3
+40 PRINT A,B,C
+RUN
+</pre>
+
+<p>The machine should print -10 -5 -81</p>
+
+<h2>EXAMPLE 6</h2>
+
+<p>Statements</p>
+
+<pre>
+10 LET A = 10; LET B=A; LET C=A+B
+20 PRINT A,B,C
+RUN
+</pre>
+
+<p>The machine should print 10 10 20</p>
+
+<h2>EXAMPLE 7</h2>
+
+<p>The LET command</p>
+
+<pre>
+10 LET A = 10
+20 LET B = (A-1)*2
+30 LET @(3) = B/3
+40 PRINT A,B,@(3)
+RUN
+</pre>
+
+<p>The machine should print 10 18 6</p>
+
+<h2>EXAMPLE 8</h2>
+
+<p>The REM command</p>
+
+<pre>
+10 LET A = 5
+20 REM - EVALUATE AREA OF CIRCLE
+30 LET B =(314*A*A)/100
+40 PRINT B
+RUN
+</pre>
+
+<p>The machine should print 78</p>
+
+<h2>EXAMPLE 9</h2>
+
+<p>The PRINT command</p>
+
+<pre>
+10 LET A = 5
+20 PRINT 'A=',A,'A*A=',A*A
+RUN
+</pre>
+
+<p>The machine should print A= 5 A*A= 25</p>
+
+<p>Note that although the machine has printed 25 for A*A, the value of A is still 5.</p>
+
+<h2>EXAMPLE 10</h2>
+
+<pre>
+10 PRINT "HOW MANY 2'S in 4"
+20 PRINT "THIS IS WRITTEN IN BASIC LANGUAGE"
+RUN
+</pre>
+
+<p>The machine should print</p>
+
+<pre>
+HOW MANY 2'S IN 4
+THIS IS WRITTEN IN BASIC LANGUAGE
+</pre>
+
 </body>
 </html>
