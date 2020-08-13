@@ -2067,5 +2067,710 @@ HOW MANY 2'S IN 4
 THIS IS WRITTEN IN BASIC LANGUAGE
 </pre>
 
+<h2>EXAMPLE 11</h2>
+
+<pre>
+10 LET A = 3
+20 LET B = 100
+30 PRINT # 3,A,B,A,B
+RUN
+</pre>
+
+<p>The machine should print bb3100bb3100. The character b is a blank.</p>
+
+<p>Try this example using different values for A and B and changing 3. Now try this:</p>
+
+<pre>
+10 LET A = 0
+20 LET A = A + 1
+30 PRINT #A,A 40
+IF A < 10 GOTO 20
+RUN 
+</pre>
+
+<p>The machine should now print:</p>
+
+<pre>
+1
+ 2
+  3
+   4
+    5
+     6
+      7
+       8
+        9
+         10
+</pre>
+
+<p>The field width is set to the same value as the variable A, hence the numbers are slowly moved one space to the right each time.</p>
+
+<h2>EXAMPLE 12</h2>
+
+<pre>
+10 LET A = 0
+20 LET A = A + 1
+30 PRINT # 1,A,
+40 IF A < 20 GOTO 20
+RUN
+</pre>
+
+<p>The machine should print:</p>
+
+<pre>
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20
+</pre>
+
+<p>The commas following the A in the PRINT statement causes all the numbers to be printed on the same line.</p>
+
+<h2>EXAMPLE 13</h2>
+
+<pre>
+10 PRINT ' zzzzzzz'
+20 PRINT ' zezzzez'
+30 PRINT ' zzezezz'
+40 PRINT ' zzzezzz'
+50 PRINT ' zzezezz'
+60 PRINT ' zezzzez'
+70 PRINT ' zzzzzzz'
+RUN 
+</pre>
+
+<p>The machine should print the Five of Clubs.</p>
+
+<p>Note that z is typed by pressing shift and Z - it will appear on the screen as &#9608;</p>
+
+<h2>EXAMPLE 14</h2>
+
+<pre>
+10 PRINT 'AB',^J,'CD',^K,'EF'
+20 PRINT
+RUN
+</pre>
+
+<p>The machine should print</p>
+
+<pre>
+AB  EF
+  CD
+</pre>
+
+<h2>EXAMPLE 15</h2>
+
+<pre>
+10 INPUT A
+20 PRINT 'A IS ',A
+30 INPUT B,C 
+40 PRINT 'B IS',B, ' C IS',C
+RUN
+</pre>
+
+<p>The machine should print A. If you type a number followed by Return, the machine will print A IS nnn, where nnn is the number entered. The machine will now ask for B, and then C, and will then print B IS xxx C IS yyy, where xxx and yyy are the values entered for B and C.</p>
+
+<h2>EXAMPLE 16</h2>
+
+<pre>
+10 INPUT 'WHAT IS', 'YOUR AGE?' A
+20 INPUT 'WHAT IS', 'YOUR HEIGHT?' B
+30 LET C = B*12/A
+40 PRINT 'YOU HAVE GROWN', #4,C, 'INCHES PER YEAR'
+RUN
+</pre>
+
+<p>The machine should print WHAT IS YOUR AGE? now enter your age. The machine should print WHAT IS YOUR HEIGHT? type an invalid input e.g. 6 FEET. The machine should print WHAT followed by YOUR HEIGHT? Now enter you height to the nearest foot.</p>
+
+<h2>EXAMPLE 17</h2>
+
+<pre>
+10 INPUT A,B
+20 INPUT C
+30 PRINT C
+RUN
+</pre>
+
+<p>Enter any numbers for A and B then enter an expression such as A*B for C. The machine should then print the result of the expression.</p>
+
+<h2>EXAMPLE 18</h2>
+
+<pre>
+10 LET A=11
+20 PRINT 'COUNT DOWN'
+30 LET A=A-1
+40 PRINT A
+50 IF A*1 GOTO 30
+60 PRINT 'IGNITION'
+70 PRINT 'TRITON HAS LIFTOFF' 
+RUN 
+</pre>
+
+<p>The IF command at statement 50 will cause the programme to jump back to statement 30 until A is equal to 1 when it will skip to statement 60 and finish the program.</p>
+
+<h2>EXAMPLE 19</h3>
+
+<pre>
+10 INPUT A
+20 IF A > 1000 PRINT 'A IS VERY LARGE'
+30 IF A = 100 PRINT 'A IS ONE HUNDRED'
+40 IF A < 3 PRINT 'A IS SMALL'
+50 IF A # 0 GOTO 10
+RUN
+</pre>
+
+<p>Enter several values for A, i.e. 2000 then 100 then 2. The program will keep asking for another input until zero is entered.</p>
+
+<h2>EXAMPLE 20</h2>
+
+<pre>
+10 INPUT A,B
+20 INPUT 'ADD OR SUBTRACT - ENTER 1 OR 2' C
+30 GOTO C*50
+50 LET D=A+B
+60 GOTO 200
+100 LET D=A-B
+200 PRINT 'THE RESULT IS ', D
+RUN 
+</pre>
+
+<h2>EXAMPLE 21</h2>
+
+<pre>
+10 PRINT 'COMBINATION'
+20 LET X=RND(5), Y=RND(5), Z=RND(5)
+30 LET A=0
+40 LET A=A+1
+50 GOTO 30+A*30
+60 INPUT 'WHAT IS THE 1ST NUMBER?' B
+70 IF B=X GOTO 40
+80 GOTO 30
+90 INPUT 'WHAT IS THE 2ND NUMBER?' B
+100 IF B=Y GOTO 40
+110 GOTO 30
+120 INPUT 'WHAT IS THE 3RD NUMBER?' B
+130 IF B=Z GOTO 40
+140 GOTO 30
+150 PRINT 'WELL DONE'
+RUN 
+</pre>
+
+<p>The machine will generate 3 random numbers between 1 and 5 inclusive - you have to guess them. If you get one wrong, you start again.</p>
+
+<p>Note the 'computed' GOTO at statement 50. If A is 1 the machine jumps to statement 60. If A is 2 it jumps to 90, etc.</p>
+
+<h2>EXAMPLE 22</h2>
+
+<pre>
+10 GOSUB 100
+20 INPUT 'HEIGHT' A
+30 GOSUB 100
+40 INPUT 'WEIGHT' B
+50 GOSUB 100
+60 INPUT 'AGE' C
+70 STOP
+100 PRINT 'PLEASE TYPE IN YOUR',
+110 RETURN
+RUN
+</pre>
+
+<p>The machine should print:</p>
+
+<pre>
+PLEASE TYPE IN YOUR HEIGHT
+PLEASE TYPE IN YOUR WEIGHT
+PLEASE TYPE IN YOUR AGE
+</pre>
+
+<p>Note the print command ends in a comma.</p>
+
+<h2>EXAMPLE 23</h2>
+
+<pre>
+10 FOR I=1 TO 12 STEP 3
+20 PRINT I
+30 NEXT I
+40 PRINT 'I IS LEFT AT', I
+RUN
+</pre>
+
+<p>The machine should print:</p>
+
+<pre>
+1
+4
+7
+10
+I IS LEFT AT 13.
+</pre>
+
+<h2>EXAMPLE 24</h2>
+
+<pre>
+10 INPUT A,B,C
+20 LET C=ABS(C)
+30 IF B < A LET C = -C
+40 FOR I=A TO B STEP C
+50 PRINT I
+60 NEXT I
+RUN
+</pre>
+
+<p>A is the start value, B is the end value and C is the step. The program contains a check to ensure the correct sign for the step.</p>
+
+<p>First try A=1 B=10 C=3<br>
+Now try A=10 B=1 C=-2<br>
+Then A=50 B=-5 C=10<br>
+A=4 B=20 C=-4</p>
+
+<p>Type RUN for each execution.</p>
+
+<h2>EXAMPLE 25</h2>
+
+<pre>
+10 FOR I = 1 TO 12
+20 FOR J = 1 TO 12
+30 PRINT #4, I*J,
+40 NEXT J
+50 PRINT
+60 NEXT I
+</pre>
+
+<p>The machine should print the first 12 multiplication tables.</p>
+
+<h2>EXAMPLE 26</h2>
+
+<pre>
+10 INPUT 'ENTER A NUMBER BETWEEN 1 AND 10' A
+20 FOR I = 1 TO 10
+30 IF I = A GOTO 60
+40 PRINT I
+50 NEXT I
+60 FOR I = 10 TO A STEP -1
+70 PRINT I
+80 NEXT I
+RUN
+</pre>
+
+<p>The machine will loop inside the first FOR loop until A is reached, it then jumps to statement 60 and encounters another FOR using the variable I, the first FOR is terminated and execution continues with the second FOR loop.</p>
+
+<h2>EXAMPLE 27</h2>
+
+<pre>
+10 LET X = 1 , Y = 8
+20 FOR I = 48 TO 90
+30 LET Z = X + Y * 64
+40 VDU Z, I
+50 X = X + 1
+60 NEXT I
+RUN 
+</pre>
+
+<h2>EXAMPLE 28</h2>
+
+<pre>
+10 VDU 0, 12
+20 FOR I=1 TO 150;NEXT I
+30 LET Y = 4*64
+40 FOR X = 10 TO 18
+50 LET Z = X + Y
+60 VDU Z, 42
+70 VDU Z+Y, 42
+80 NEXT X
+90 LET X = 10
+100 FOR Y = Y TO Y+Y STEP 64
+110 LET Z = X+Y
+120 VDU Z, 42
+130 VDU Z+8, 42
+140 NEXT Y
+RUN
+</pre>
+
+<p>This should clear the screen and draw a square of *'s. Note the delay after the clear screen (Statement 20).</p>
+
+<p>Finally, to insert an extra line or modify an existing line in any program, it is only necessary to type the line number followed by the new text. They do not have to be in numerical order as they are sorted by BASIC. With Example 28 entered, enter the following:</p>
+
+<pre>
+40 FOR X = 10 TO 55
+130 VDU Z+45, A
+70 VDU Z+Y, A
+150 NEXT A
+120 VDU Z, A
+60 VDU Z, A
+5 FOR A = 1 TO 127
+</pre>
+
+<p>List this and you will find all statements now in numerical order. Run the program and see the changes.</p>
+
+<h1>WORKING PROGRAMS</h1>
+
+<h2>BOUNCE (1K)</h2>
+
+<h3>DESCRIPTION</h3>
+
+<p>BOUNCE is a small program written to show the use of the VDU command in memory mapping mode. When RUN is entered, the screen should clear and then the letter 0 will appear to bounce about the screen.</p>
+
+<h3>HOW IT WORKS</h3>
+
+<p>Statement 10 is used to clear the screen and reset the cursor. Five variables are then initialized, I and J being the horizontal and vertical co-ordinates for the ball position on the screen. K and L are the increments for these positions and N is the previous position. Statement 30 is the start of the main loop of the program. Here the increments are added to the horizontal and vertical positions. Statements 40 and 50 check that the horizontal position is still within the bounds of the screen. If it is greater than 64 or less than 1, the sign of the increment K is changed and added twice to bring the position back onto the screen.</p>
+
+<p>Statements 70 and 80 similarly check the vertical position is on screen. Statement 100 then calculates the actual byte number M which I and J point to. The previous position is then blanked by Statement 110 and the new position displayed by Statement 120. Variable N is used to save the old position and the program jumps back to Statement 30 to continue. The initial values of K and L can be changed to produce different speeds and directions.</p>
+
+<pre>
+10 VDU 0,12
+20 LET I=0,J=0,K=1,L=1,N=1
+30 LET I=I+K,J=J+L
+40 IF I>64 GOTO 60
+50 IF I>=1 GOTO 70
+60 LET K=-K,I=I+K+K
+70 IF J>16 GOTO 90
+80 IF J>=1 GOTO 100
+90 LET L=-L,J=J+L+L
+100 LET M=I+(J-1)*64
+110 VDU N,32
+120 VDU M,79
+130 LET N=M
+140 GOTO 30 
+</pre>
+
+<h2>PATTERN (1K)</h2>
+
+<h3>DESCRIPTION</h3>
+
+<p>PATTERN is a very similar program to BOUNCE. It uses the VDU command in memory mapping mode to draw a pattern on the screen.</p>
+
+<h3>HOW IT WORKS</h3>
+
+<p>PATTERN is almost identical to BOUNCE. The first difference is Statement 20 where K and L are different values to produce a different index.</p>
+
+<p>Statement 110 is the next change - the previous position is no longer blanked out and hence a trail is left as the asterisk 'bounces' about the screen. Eventually the asterisk will start to follow the same path and will hence disappear.</p> 
+
+<p>Try different values of K and L to produce different patterns.</p>
+
+<pre>
+10 VDU 0,12
+20 LET I=0,J=0,K=2,L=3
+30 LET I=I+K,J=J+L
+40 IF I>64 GOTO 60
+50 IF I>=1 GOTO 70
+60 LET K=-K,I=I+K+K
+70 IF J>16 GOTO 90
+80 IF J>=1 GOTO 100
+90 LET L=-L,J=J+L+L
+100 LET M=I+(J-1)*64
+110 VDU M,42
+120 GOTO 30 
+</pre>
+
+<h2>POOLS (1K)</h2>
+
+<h3>DESCRIPTION</h3>
+
+<p>POOLS is a small program written to help you pick your 'Win of a Life Time'. You tell the program how many teams to select from, how many teams to pick and how many times to repeat the selection. The program will then print the required number of teams, having selected them in random. This is repeated for the number of times required. Good Luck.</p>
+
+<h3>HOW IT WORKS</h3>
+
+<p>The program prints the title POOLS and then asks HOW MANY TEAMS ALL TOGETHER. This gives the total from which the selection can be made. Next the program then sets up a FOR loop to produce this number of selections at Statement 60.</p>
+
+<p>The array is then zeroed for the total number of teams and another FOR loop set up for the required number of teams to be selected. The function RND is used to select a random team number from the total number and the array is checked to see if this has already been selected. If it has, RND is jumped back to try for another number. If the number has not been slected, the appropriate position in the array is set to one to indicate the number has been selected.</p>
+
+<p>Statement 120 is the end of the inner most FOR loop and causes the program to jump back to Statement 80 until the required number of teams has been selected. After all the teams have been selected, the array is scanned and the index of all non zero elements printed giving the randomly selected teams.</p>
+
+<pre>
+10 PRINT'POOLS'
+20 INPUT'HOW MANY TEAMS ALL TOGETHER'A
+30 INPUT'HOW MANY TO PICK'B
+40 IF B>A GOTO 30
+50 INPUT'HOW MANY TIMES'C
+60 FOR X=1 TO C
+70 FOR 1=1 TO R;@(I)=0;NEXT I
+80 FOR Y=1 TO B
+90 Z=RND(R)
+100 IF @(Z)#0 G0T0 90
+110 @(Z)=1
+120 NEXT Y
+130 FOR I=1 TO A
+140 IF @(1)=0 GOTO 160
+150 PRINT #4,I,
+160 NEXT I
+170 PRINT;PRINT
+180 NEXT X
+</pre>
+
+<h2>MISSILE (1K)</h2>
+
+<h3>DESCRIPTION</h3>
+
+<p>Missile is a game which utilizes the graphics and memory mapping features available to the TRITON.</p>
+
+<p>The object of the game is to shoot down each enemy aircraft before it gets past your defences (across the screen). To do this you command three missile sites.</p>
+
+<p>Unfortunately, your radar station has been knocked out and the aircraft can come in at any height between 1 and 16 miles high.</p>
+
+<p>The missile stations are sited at 16, 32 and 48 miles from the coast (left edge of the screen). Both the aircraft at 8 miles high, station 1 must fire with a delay of 8 seconds.</p>
+
+<p>There are 10 aircraft coming in and before each, you must set the missile fuses by specifying the time delay before ignition.</p>
+
+<p>Good Luck.</p>
+
+<pre>
+10 N=0
+20 FOR J=1 TO 10
+30 @(2)=976,@(5)=992,@(8)=1008
+40 @(3)=976,@(6)=992,@(9)=1008
+50 PRINT'MISSILE'
+60 INPUT'1ST'@(1),'2ND'@(4),'3RD'@(7)
+70 VDU 0,12
+80 FOR I=1 TO 150;NEXT I
+90 Y=(RND(16)-1)*64,Z=1
+100 FOR X=1 TO 64
+110 VDU Z,32
+120 W=Y+X
+130 VDU W,62
+140 Z=W
+150 FOR I=1 TO 7 STEP 3
+160 IF X<@(I) GOTO 250
+170 VDU @(I+2),32
+180 IF @(I+1)<1 GOTO 250
+190 VDU @(I+1),94
+200 @(I+2)=@(I+1)
+210 @(I+1)=@(I+1)-64
+220 IF @(I+2)=W GOTO 400
+250 NEXT I
+300 NEXT X
+310 GOTO 500
+400 VDU W,42
+410 N=N+1
+500 NEXT J
+510 PRINT'HITS',N 
+</pre>
+
+<h2>REVERSAL (1K & 2K)</h2>
+
+<h3>DESCRIPTION</h3>
+
+<p>The REVERSAL GAME is a game of skill played with the computer. The computer will arrange the numbers 1 to 9 in a random sequence and your job is to arrange them into ascending order in the minimum number of moves.</p>
+
+<p>For example:</p>
+
+<p>The machine might print the following sequence -</p>
+
+<pre>
+8 3 7 9 1 4 2 6 5
+</pre>
+
+<p>You now have to get these arranged in ascending order. To do this, you are allowed to reverse the order of any number of digits starting at the left hand side.</p>
+
+<p>The machine will ask</p>
+
+<pre>
+NUMBER TO REVERSE
+</pre>
+
+<p>If you enter 4 the result will be</p>
+
+<pre>
+9 7 3 8 1 4 2 6 5
+</pre>
+
+<p>If you now enter 9 you will get</p>
+
+<pre>
+5 6 2 4 1 8 3 7 9
+</pre>
+
+<p>You now have 9 in the correct place and can set about getting 8 7 6 etc. in their correct positions.</p>
+
+<p>After a few games, some short cuts will become apparent. Go on - see how good you are.</p>
+
+<pre>
+10 PRINT 'THE REVERSAL GAME'
+20 FOR I=1 TO 9
+30 LET A=RND (9)
+40 IF I=1 GOTO 80
+50 FOR J=1 TO I-1
+60 IF @(J)=A GOTO 30
+70 NEXT J
+80 LET @(I)=A
+90 NEXT I
+95 LET B=0
+200 PRINT #2,@(1),@(2),@(3),@(4),@(5),@(6),@(7),@(8),@(9)
+210 INPUT'NUMBER TO REVERSE'J
+220 IF J<1 GOTO 240
+230 IF J<10 GOTO 260
+240 PRINT'INVALID - TRY AGAIN'
+250 GOTO 210
+260 LET K=(J+1)/2
+270 FOR I=1 TO K
+280 LET A=@(I),@(I)=@(J+1-I),@(J+1-I)=A
+290 NEXT I
+295 LET B=B+1
+300 FOR I=1 TO 9
+310 IF @(I)#I GOTO 200
+320 NEXT I
+330 PRINT'TOTAL',#3,B
+340 GOTO 10
+</pre>
+
+<h3>ALTERNATIVE ENDING FOR ABOVE (RUNS IN 2K)</h3>
+
+<pre>
+320 NEXT I
+400 IF B<6 PRINT 'EXCELLENT';GOTO 500
+410 IF B<11 PRINT 'VERY G000';GOTO 500
+420 IF B<16 PRINT 'GOOD';GOTO 500
+430 IF B<21 PRINT 'NOT BAD';GOTO 500
+440 PRINT 'BETTER LUCK NEXT TIME'
+500 PRINT 'YOUR TOTAL WAS',#4,B
+510 GOTO 10 
+</pre>
+
+<h2>BATTLE (2K)</h2>
+
+<h3>DESCRIPTION</h3>
+
+<p>The BATTLE game is a simple version of the old game of battleships. In this game, both you and the computer have a grid of squares five by five, number 1 to 25.</p>
+
+<pre>
+     YOURS           COMPUTERS
+1  2  3  4  5     1  2  3  4  5
+6  7  8  9  10    6  7  8  9  10
+11 12 13 14 15    11 12 13 14 15
+16 17 18 19 20    16 17 18 19 20
+21 22 23 24 25    21 22 23 24 25
+</pre>
+
+<p>The computer will hide four single square ships somewhere in its grid. It will ask you to hide your four ships in your grid by specifying their positions.</p>
+
+<p>The computer will now ask which square you wish to fire at, check if you have scored a hit and then select one of your squares at random and shoot back.</p>
+
+<p>The winner is the first to hit all four ships.</p>
+
+<p>Be careful that you don't waste your shots by picking the same square twice.</p>
+
+<pre>
+10 PRINT 'BATTLE GAME'
+15 LET N=4 
+20 FOR I=1 TO 50;@(I)=0;NEXT I 
+30 FOR I=1 TO N 
+40 LET J=RND (25) 
+50 IF @(J+25)#0 GOTO 40 
+60 LET @(J+25)=1 
+70 NEXT I 
+80 PRINT 'WHAT ARE YOUR',#3,N,' POSITIONS' 
+90 FOR 1=1 TO N 
+100 INPUT J 
+114 IF J<1 PRINT 'INVALID POSITION - TRY AGAIN';GOTO 100 
+115 IF J>25 PRINT 'INVALID POSITION - TRY AGAIN';GOTO 100 
+120 IF @(J)#0 PRINT 'THIS POSITION IS USED - TRY RGAIN';GOTO 100 
+125 LET @(J)=1 
+130 NEXT I 
+140 LET A=N,B=N 
+200 INPUT 'WHERE DO YOU WANT TO FIRE AT'J 
+204 IF J<1 PRINT 'INVALID POSITION';GOTO 400 
+205 IF J>25 PRINT 'INVALID POSITION';GOTO 400 
+210 IF @(J+25)=2 GOTO 400 
+220 IF @(J+25)=1 GOTO 500 
+230 PRINT 'YOU MISSED ME - MY TURN NOW' 
+240 LET @(J+25)=2 
+250 LET J=RND (25)
+260 IF @(J)=2 GOTO 250 
+270 IF @(J)=1 GOTO 600 
+280 PRINT 'I MISSED YOU - I PICKED',#3,J,' - YOUR TURN' 
+290 LET @(J)=2 
+300 GOTO 200 
+400 PRINT 'YOU WASTED THAT ONE - MY TURN NOW' 
+410 GOTO 250 
+500 LET A=A-1 
+510 PRINT 'YOU HIT ME - I HAVE',#2,A,' LEFT' 
+520 IF A=0 GOTO 700 
+530 PRINT 'MY TURN NOW' 
+540 GOTO 240 
+600 LET B=B-1 
+610 PRINT 'I HIT YOU - I PICKED.,#3,J 
+620 PRINT 'YOU HAVE',#2,B,' LEFT' 
+630 IF B=0 GOTO 800 
+640 PRINT 'TOUR TURN' 
+650 GOTO 290 
+700 PRINT 'YOU HAVE JUST WON - I WILL GET YOU NEXT TIME' 
+710 GOTO 900 
+800 PRINT 'I HAVE WON AGAIN' 
+900 GOTO 10 
+</pre>
+
+<h2>NUMBER GAME (2K)</h2>
+
+<h3>DESCRIPTION</h3>
+
+<p>This is a computer version of the popular game. Instead of coloured pegs, the machine will select a four digit number between 1111 and 8888 inclusive.</p>
+
+<p>The idea of the game is to guess this random number in the minimum number of moves. To help you in this task, after each move, the machine prints the number of digits, correct and in the correct place (Black) and the number of digits correct but in the wrong place (White).</p>
+
+<p>For instance, suppose the machine selected</p>
+
+<pre>
+4732
+</pre>
+
+<p>If your guess was</p>
+
+<pre>
+1725
+</pre>
+
+<p>the machine will print</p>
+
+<pre>
+BLACK = 1 WHITE = 1
+</pre>
+
+<p>The seven is correct and in the right place, hence BLACK = 1</p>
+
+<p>The two is correct but in the wrong place, hence WHITE = 1</p>
+
+<p>If your next guess is</p>
+
+<pre>
+7451
+</pre>
+
+<p>the machine will print</p>
+
+<pre>
+BLACK = 0 WHITE = 2
+</pre>
+
+<p>Seven and four are correct but in the wrong places.</p>
+
+<p>See what the minimum number of moves you can get the number in.</p>
+
+<pre>
+10 LET @(15)=64,@(16)=174,@(17)=234,@(18)=394
+20 LET @(19)=165,@(20)=265,@(21)=365,@(22)=75
+30 LET @(23)=275,@(24)=375,@(25)=85,@(26)=185
+40 LET @(27)=385,@(28)=95,@(29)=195,@(30)=295 
+50 PRINT'NUMBER GAME' 
+60 LET K=0 
+70 LET @(11)=RND(8),@(12)=RNO(8),@(13)=RND(8),@(14)=RNO(8) 
+80 FOR I=1 TO 4;LET @(I)=@(I+10);NEXT I 
+90 LET K=K+1 
+100 INPUT 'WHAT IS YOUR GUESS'D 
+110 LET A=D/1000,D=D-A*1000
+120 LET B=D/100,D=D-B*100 
+130 LET C=D/10,D=D-C*10 
+140 LET @(7)=A,@(8)=B,@(9)=C,@(10)=D 
+150 LET @(5)=0,@(6)=0 
+160 FOR I=15 TO 30 
+170 LET A=@(I),B=A/100,C=A/10-Bx10,D=A-B*100-C*10 
+180 IF @(B+1)=@(C+1) LET @(D+1)=@(D+1)+1,@(B+1)=10,@(C+1)=20 
+190 NEXT I 
+200 PRINT #2,'BLACK=',@(5),' WHITE=',@(6)
+210 IF @(5)#4 GOTO 80 
+220 IF K<3 PRINT 'EXCELLENT';GOTO 270 
+230 IF K<6 PRINT 'VERY GOOD';GOTO 270 
+240 IF K<9 PRINT 'GOOD';GOTO 270 
+250 IF K<12 PRINT 'NOT BAD';GOTO 270
+260 PRINT 'BETTER LUCK NEXT TIME'
+270 PRINT 'YOUR TOTAL WAS',#4,K
+280 GOTO 50 
+</pre>
+
 </body>
 </html>
