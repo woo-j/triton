@@ -1,0 +1,364 @@
+<html><head><title>Level 7 Monitor</title></head><body>
+
+<h1>LEVEL SEVEN DOCUMENTATION</h1>
+
+<h2>T.C.L. SOFTWARE 1979.</h2>
+
+<p>This document is believed to be correct and every effort has been made to ensure the information contained herein is accurate. However, no responsibility can be accepted for inaccuracies or omissions.</p>
+
+<p>LEVEL SEVEN is a new and very powerful software package for the TRITON computer system. It consists of a 2k monitor with 24 functions and an 8k extended BASIC.</p>
+
+<p>AVAILABLE EXCLUSIVELY FROM:<br>
+TRANSAM COMPONENTS LTD.<br>
+12 CHAPEL STREET, LONDON, NW1<br>
+TEL: 402 8137</p>
+
+<h1>LEVEL SEVEN FIRMWARE</h1>
+
+<h2>LEVEL SEVEN BASIC &amp; MONITOR</h2>
+
+<h2>PAUL BAXTER (TRANSAM)</h2>
+
+<h1>LEVEL SEVEN MONITOR</h1>
+
+<p>The first section of this documentation deals with the operation and application of the 7.2 monitor, the second section is devoted to the extended BASIC.</p>
+
+<h2>INTRODUCTION</h2>
+
+<p>The Triton level seven monitor is a 2k operating program intended to carry out essential management routines and provide the user with a powerful set of commands for entering, debugging, and running machine code programs. It also has single keystroke vectors to TRAP for more extensive assembly language writing and to level seven BASIC for programming in the high level language.</p>
+
+
+<h2>GETTING IT GOING </h2>
+
+<p>The level seven firmware comes in 10x2708 type EPROMS, the monitor is supplied in 2 EPROMS marked MONITOR 7.2 A and MONITOR 7.2 B. The A rom is inserted into the socket on the main board for IC21 which is the socket furthest from the expansion socket, the B rom is placed in the socket for IC24 (the one nearest to the expansion socket). Note: Users with a parallel version will have the 7.2A chip replaced with one marked 7.2P. This goes in the same position as the A.</p>
+
+<p>The level seven BASIC is in 8x2708 EPROMS and needs to be fitted in an EPROM card on the motherboard. The card may be placed at any position on the motherboard, but the jumper (or switch) should be set at the topmost position (block 7) which is the position nearest to the plug on the card. The EPROMs are placed in the card starting BASIC 7.2 A in the position of IC7 (top right hand socket), BASIC B goes in IC8 next to it, BASIC C goes below A etc.</p>
+
+<p>Take care when inserting the roms as it is very easy to bend the pins when inserting. Check the roms again, then plug the rom card into the motherboard and switch on. The welcome message below should be displayed.</p>
+
+<pre>
+TRITON V7.2
+END:XXXX (XXXX is a hexadecimal address)
+FUNCTION?  P Q J E R C G A D U H L F T S I O W M V X N Z K
+</pre>
+
+<p>Triton is now waiting for you to enter one of the letters shown in the FUNCTION message. The message END:XXXX is to inform the user of the amount of memory on-line at power-up. This is the amount of memory that will be assumed until another reset occurs. It is important to power up the motherboard at the same time or before the main board as otherwise the Triton will only assume memory on the main board. At power-on Triton performs a non-destructive memory test to determine how much memory is available. This means that RESET can be pressed at any time without the fear of destroying the contents of memory. This also means that memory will contain a random pattern at switch on. If it is desired to set memory to a certain value refer to the E function.</p>
+
+<p>XXXX is the address at which memory failed. This will be 2000 with the on-board ram or 4000 with one ram card in position 1 on the motherboard and so on.</p>
+
+<p>Reference is made in following sections to 'The main loop'. This is the waiting section of the monitor. Triton prints the FUNCTION message and awaits an entry from the user.</p>
+
+<h2>USING TRITON</h2>
+
+<p>The functions and their use are described below; it is recommended that these are studied carefully if you are used to any of the previous monitors as there are some differences in operation. After the description is an example of the monitor in action. This should enable you to take full advantage of the many features of the level seven monitor.</p>
+
+<h3>P - Program</h3>
+
+<p>This function allows entry and displaying of the content of memory in hexadecimal (shortened to hex) - its main use is for the entry and checking of small blocks of memory. For longer programs, the Q function is more suited.</p>
+
+<p>To call this function, type P. The message 'START:' will be printed below and the computer waits for you to enter a start address for programming. The address is entered in Hex and may be up to 4 characters long. If more than 4 characters are entered the last four entered are used; if less than 4 are entered leading zeros are appended (e.g. If 23 is entered the address 0023 is used). If an invalid character is entered it terminates the address (e.g. if X is entered the address will be 0000).</p>
+
+<p>If during entry, a mistake is made, the character can be deleted by use of the DEL key. The character can then be re-typed and when the new address is correct press the RETURN key and the address entered will be displayed below together with the data in that location in the form: 0000 31</p>
+
+<p>Note that both the address and data are in hex. The user may then enter new data, or retain the old data. To retain the data in that location press RETURN; the computer will then step to the next location in memory, displaying it as before. If you wish to step back one location the up-arrow (&uarr;) should be entered as the first character ( shift (RS) ). If the value in that location is to be changed, it should be entered followed by RETURN or up-arrow (depending on whether you wish to step forward or back). If the data is only 1 character a leading 0 is added if 2 characters or more the last 2 characters are used. This method for entering addresses and data applies to the other functions with the exception of Q (see next section). To exit from the program mode (or, indeed from any function) enter Control-C. (The CTRL key held whilst C is pressed). The FUNCTION message will be displayed.</p>
+
+<h3>Q - Quick Program</h3>
+
+<p>This function has been included as a tool primarily for the entry of programs or strings of data and is not intended for changing single bytes. To enter the function from the main monitor loop type 'Q' - TRITON will respond with 'START:' You can then enter an address as detailed above. When the 'return' key is pressed the monitor will respond as in the program mode and you may step backwards or forwards as above. The difference comes in entering data - instead of having to press 'return' between bytes, the monitor will enter and step forward as soon as two digits have been entered - in addition invalid characters (not 0-9 or A-F) will be ignored. If a valid character is typed incorrectly you cannot use the 'Del' key - instead you must press 'return' followed by '^' to go back to that location again. To exit from the function type control C as above. You may step forward or back through memory after entering the first digit without altering the content of that location.</p>
+
+<h3>J - Jump to BASIC L7.2</h3>
+
+<p>This function causes a jump to BASIC level seven. This function will respond with the message:</p>
+
+<pre>
+BASIC L7.2.
+END ADDRESS ?
+</pre>
+
+<p>The computer will then wait for you to enter an address in hex at which you wish to stop BASIC using memory, this is used to free memory for use by machine-code subroutines etc. If you wish BASIC to use all memory, enter a RETURN and the message</p>
+
+<pre>
+2554 BYTES FREE
+READY >
+</pre>
+
+<p>will be displayed and the computer is now in BASIC (2554 bytes is the message with 3k of on-board ram). To exit to the monitor enter control-C. If an address less than 1700 or greater than the end of memory is entered, all memory is used. This function must be used before X and will always clear memory whereas X will not.</p>
+
+<h3>E - Erase Memory</h3>
+
+<p>This function is used to initialise a block of memory to any given value. When this function is called up, the computer will request a start address, an end address and a byte value - the start and end addresses are both 4 digit hex-addresses as detailed previously, the byte value is any two digit hex byte. When 'return' has been pressed after entering the byte, the monitor will proceed to fill memory between the two addresses (inclusive) with that byte. When the function is finished the oscillator will sound.</p>
+
+<p>N.B. For correct operation the start address must be below the end address as the byte is written to memory commencing at the 'START': address and incremented until it equals the end address. Therefore if the 'START:' is given at 3000 and the end as 2000 all memory will be set to the value except between 2000 - 3000! This also applies to the S,H,F and N functions.</p>
+
+<h3>R - Register Operation</h3>
+
+<p>When this function is entered the monitor will wait for another key to be pressed to indicate which register operation is required. If the space bar is hit all registers and flags will be displayed - a typical printout is shown below:</p>
+
+<pre>
+A  C  B  E  D  L  H  SP   PC
+00 10 FF 57 05 57 AO 1468 1647 SAP
+</pre>
+
+<p>You will note that the register pairs (HL,DE,BC) are displayed low order byte first - the letters refering to the register PC - Program counter, SP - Stack pointer are printed above. The letters following the program counter represent the flags - if the flag is set the letter is present. The 5 are listed below:</p>
+
+<p>S = Sign Flag, Z = Zero, A = Auxilary Carry, C = Carry, P = Parity</p>
+
+<p>To modify a register from the main loop, type 'R' followed by the letter of the register you wish to modify e.g. to modify the accumulator, type 'RA'. The value of the accumulator would then be printed with the cursor one space along, you may then enter a new value for the accumulator followed by 'return'. If you do not wish to modify the register you may exit by typing 'return' without entering any data. The monitor will signify an error condition and the register will not be changed. The same applies to the 16 bit registers SP or PC. To modify these registers type 'P' for program counter and 'S' for stack pointer. To display the flags from the main loop, type 'RF' and the flags set, if any, will be displayed. If you do not wish to change the flags, enter control C. To clear all the flags, type return or to set some flags type in their letters (as detailed above). The letters need not be in any order. An invalid character in the string will not be flagged as an error but will simply terminate the update i.e.: PZBCA will set the parity and zero flags only, resetting the others.</p>
+
+<h3>C - Continue from a breakpoint</h3>
+
+<p>This function requires no other data and loads up the registers in the 8080 with the pseudo-registers in memory (those displayed in the R function). The last register to be loaded is the program counter, causing an immediate jump to the address held in PC register.</p>
+
+<h3>G - Goto Address</h3>
+
+<p>This function will execute a machine code program at a specified address. When the letter is entered a start address will be requested; once the address has been entered by pressing 'return' the monitor checks for any errors and if none are found a carriage return followed by a line feed will be printed and the program will start to execute.</p>
+
+<h3>A - ASCII String into Memory</h3>
+
+<p>This function allows you to enter a string of characters into memory directly from the keyboard. The monitor will request a start address. When this has been entered correctly and the 'return' key is pressed the monitor will print a carriage return followed by a line feed and wait for you to enter some characters. As each character is entered it is displayed and entered into memory starting at the address specified. To delete characters use the 'DEL' key or control H. When the string has been entered an 'EOT' character (07H) must be entered to denote the end of the string. To obtain this character type control D - this will be entered into memory and the monitor will then print END:XXXX. Where XXXX is the address of the byte <u>after</u> the 'EOT' character, this should be the begin address of any subsequent strings. If 'EOT' is not required on the end of a string, terminate it with 'control C'. The 'control C' will not be entered and the end address is that of the byte immediately after the last character.</p>
+
+<h3>D - Display String</h3>
+
+<p>This function imitates a PSTRNG monitor utility (see later) and will print out any string from the address entered until it encounters an 'EOT' character such as those entered using the 'A' function. When this function is entered the start address of the string will be requested. When this has been entered a CR/LF sequence will be printed followed by the string. Unless it is known that a string exists at the entered address, it is best to use the 'N' function to find any strings. When this function is entered the start address of the string will be requested. When this is entered a CR/LF sequence will be printed followed by the string.</p>
+
+<h3>U - Useful function (Port Operations)</h3>
+
+<p>This function allows you to read and write to any port. When this function is entered the port number will be requested. This must be entered as a two digit hex number followed by 'return'; the data at that port will be displayed and you may either hit 'return', which will display the port data again (this is useful to see if the data at the port is changing) or alternatively, a two digit hex number may be entered - followed by 'return'. This data will then be written to the port and the data at the port will be read and displayed again. To exit from this function enter control C.</p>
+
+<h3>H - HEX Dump</h3>
+
+<p>This function produces a formatted hex-dump of memory between any two addresses. This allows for greater density than the 'L' function. The monitor will request a start address followed by an end address and will then produce a dump of memory (in hex) from the start address to the end address (inclusive). The dump is formatted so that the start of each line (with the exception of the first) will have the address XXX0; therefore all lines will contain 16 bytes (except the first and last). To exit from this function before it has finished type control C. To halt the printout temporarily enter control 'S' (X-OFF) to resume printout type control 'Q' (X-ON). These actions apply to all printout with the addition that when the printout has been halted with control 'S' a new line can be started by pressing the return key whereupon a CR/LF sequence will be printed. This is most useful when the output is diverted to a teletype or similar printer when a long line would otherwise be overtyped at the end stop. The printout can then be resumed with control 'Q'. When the dump has finished the oscillator will sound to inform you.</p>
+
+<h3>L - List Memory</h3>
+
+<p>This function will list short sections of memory by simply entering an address. When this function is entered a start address will be requested from the user. When this has been entered that address will be printed followed by the data in that location. This sequence will be repeated on subsequent lines for the next 15 locations and below that the prompt 'more?' will be printed. If you type 'Y' the next 15 locations will be listed, if you enter any other letter the function corresponding to that letter will be entered, if any other character is typed (e.g. the space bar) the error message will be printed and the monitor will enter the main loop.</p>
+
+<h3>F - Find Bytes</h3>
+
+<p>This function allows you to search memory between two addresses for any string of bytes. When this function is entered a start and end address are requested followed by the 'BYTE:' prompt. You may then enter a string of bytes separated by commas and the last byte terminated by pressing 'return'. The monitor will then start to search between the two addresses (inclusive) for that byte string and print out the locations (if any) where the string starts. When the search has finished the oscillator will sound to inform you.</p>
+
+<h3>T - Trap</h3>
+
+<p>Trap is the Triton Resident Assembly Language Package - it resides on an 8k eprom card on the motherboard (see catalogue or documentation for details). This function will enter TRAP displaying the list of options available - no memory initialisation is performed by entry to TRAP and therefore program integrity is maintained.</p>
+
+<h3>S - Shift Memory</h3>
+
+<p>This function is more than a memory move instruction; it is an 'intelligent' move. When this function is entered a start and end address are requested from you. When you have entered the address of the block you wish to move (inclusive) the prompt 'TO:' will be printed - you then enter the address you wish to move the block to. After pressing 'return' the monitor will move the block and when finished beep the oscillator to tell you. 
+
+<h3>I - Input Tape (in standard TRITON format) to memory</h3>
+
+<p>This function will allow you to enter prerecorded tapes into TRITON's memory starting at 1602. When 'I' is typed from the main loop the tape control relay will be switched off and a tape header requested. When this has been entered correctly (use the DEL key where appropriate) press 'return'. The tape relay will be switched on and the message 'FILES FOUND' will be printed. Note the cursor drops onto the next line. The tape will now be searched for a header corresponding to that typed in. As each header is found it is printed out and if the two do not correspond a CR/LF is printed and the monitor waits for the next header. If the monitor recognises the header the cursor stays on the same line whilst the program is loaded. When the tape has finished loading, the message 'END' is printed out, the oscillator will sound and the monitor will re-enter the main loop waiting for another command. If during loading an error occurs (due to a noise spike or bad tape etc.,) a CR/LF and a question mark will be printed - note that only one question mark will be printed no matter how many errors are detected. This may also mean that the monitor may not recognise the end of the tape when it comes. If this happens you must use the Reset switch since the monitor does not read the keyboard - this also applies to the 'O' function and whilst the monitor is looking for a header or loading the tape.</p>
+
+<p>N.B: It is not advisable to try to load a tape when the output is directed to a printer since if the printer may not accept characters as fast as the tape is sending (30 characters per second) the header will not be printed correctly or recognised - therefore use the 'V' function first.</p>
+
+<h3>O - Output a program to tape (in standard Triton format)</h3>
+
+<p>This function will allow you to save machine code programs starting at 1602. When you type 'O' the tape relay will switch off and the tape header will be requested. When this has been entered start the tape recorder, then hit the return key -the monitor will switch on the recorder, wait for 5-6 seconds and then proceed to write the program in the TRITON standard format (see later). When the data has been written out the monitor will wait for 5-6 seconds and then switch off the relay, beep the oscillator for a moment and say 'END' before returning to the main monitor loop.</p>
+
+<h3>W - Typewriter Mode</h3>
+
+<p>Type 'W' and the monitor will print all characters entered until a control 'C' which aborts back to the monitor: The monitor will print onto the printer if it is selected.</p>
+
+<h3>M - Motor Switch</h3>
+
+<p>This function will toggle the tape-motor control relay - i.e. if it is off it will be turned on and vice versa. Once this has been done the monitor will print its function message and wait for another command.</p>
+
+<h3>V - VDU Switch</h3>
+
+<p>This function will direct the output to a printer as well as to the VDU. It therefore switches the printer output on and off. Even if you have no printer it can still be of use in slowing down the output by changing the value at locations 1402/3 the printout speed may be varied (this does not apply to V6.2P). It is initially set up to 110 Baud - for formula etc., see later. At reset the printer is off.</p>
+
+<h3>X - Extended Basic</h3>
+
+<p>This function enters BASIC without clearing memory or initialising vectors and therefore the J function should be used upon first entry to BASIC. To exit to the monitor from BASIC type control 'C'. N.B: To delete a character in BASIC you can now use the 'DEL' key instead of control H. In EDIT note the top right key (5FH) will give the delete character function.</p>
+
+<h3>N - Neat Dump of Strings</h3>
+
+<p>This function will produce a formatted text dump of memory. The monitor will request a start and end address and will produce a formatted dump between those 2 addresses (for details of format see H function). All printable upper case ascii characters (20 to 5FH) are printed as they are, otherwise a period (.) will be printed in its place - the characters are separated with spaces. When the dump has finished the tone will sound.</p>
+
+<h3>Z - Zap A Prom.</h3>
+
+<p>This function is to be used in conjunction with the Eprom programme card (available from Transam), it requests a start address and will then program the 2708 eprom with that and the next 1023 locations in memory. Two errors are possible; 'PROGRAM ERROR' - indicating that the device has a bit set to 'Zero' that should go to 'one' - this is not possible although a logic one may be changed to a zero - the device will have to be erased. The other is a 'READ ERROR' this occurs if the data programmed into the device does not correspond to that in memory after the device has been programmed. If all goes well the monitor will say 'END' and sound the tone - the tone will also be sounded in the event of an error.</p>
+
+<h3>K - Keyboard Unshift</h3>
+
+<p>This function is mainly of use to those using Triton with a printer and/or the lower case graphics Rom as a letter writer or word processor. Typing 'K' will reverse the effect of the monitor's shift on the keyboard so it will act as a normal typewriter i.e. the lower case small - press shift to get upper case - this only affects the letters, numbers are as before. To get back to normal type Shift-K. At reset the shift is set to normal - upper case on unshift keys.</p>
+
+<h2>HERE ENDETH THE LESSON..............</h2>
+
+<p>That concludes the description of the functions - if you've ploughed through those - congratulations!</p>
+
+<p>The following section contains notes on the use of the monitors various functions as examples. This is followed by notes on use, circuits, specifications, monitor routines and addresses.</p>
+
+<h2>SETTING AN EXAMPLE</h2>
+
+<p>In this section we shall use an example given in listing 1 to demonstrate the use of the monitor. This program inputs a character from the keyboard and maps it on the VDU.</p>
+
+<p>A few brief words of explanation are in order for those of you unfamiliar with this type of listing - it is called an assembler listing and is split into 6 columns:-</p>
+
+<pre>
+ADDRESS DATA LABEL MNEMONIC OPERAND COMMENT 
+   1      2    3      4        5       6
+</pre>
+
+<p>These listings are produced by the TRAP assembler. Columns 1 and 2 are those produced by the assembler, the first column listing the address, the data being from 3 bytes so one complete instruction is on one line - this makes the program much easier to read. The other columns are the original text, the 3rd column is optional and is used for referencing subroutines etc., the 4th and 5th columns are for the instruction and the 6th column contains any comments.</p>
+
+<h3>Listing 1</h3>
+
+<pre>
+0000            ; PROGRAM TO DEMONSTRATE L7
+0000            ;
+0000                   ORG   1600H
+0000            ;
+1600            INCH   EQU   000BH
+1600            RESPRP EQU   00ESH
+1600            SCREEN EQU   1000H
+1600            ;
+1600 42 16             DW    ENDPRG  ;MARK END FOR TAPE
+1602 CF         CLRSCN:RST   1       ;CLEAR SCREEN
+1603 11 22 16          LXI   D,STRING;SET TO PRINT STRING
+1606 CD E5 00          CALL  RESPRP  ;PRINT AND GET CHARACTER
+1609 21 00 10          LXI   H,SCREEN;SET HL TO START OF VDU
+160C 77         MAP:   MOV   M,A     ;PUT THE CHARACTER ON VDU
+160D 7C                MOV   A,H     ;LOOK AT HIGH BYTE
+160E FE 14             CPI   14H     ;END OF VDU?
+1610 C2 0C 16          JNZ   MAP     ;NO- CARRY ON
+1613 CD 0B 00          CALL  INCH    ;YES- WAIT FOR A KEY
+1616 11 34 16          LXI   D,MESSG ;AND ASK IF MORE
+1619 CD E5 00          CALL  RESPRP  ;GET REPLY
+161C FE 59             CPI   'Y'     ;YES?
+161E C0                RNZ           ;NO- BACK TO MONITOR
+161F C3 02 16          JMP   CLRSCN  ;ELSE- DO AGAIN
+1622            ;
+1622            STRING:DB    'ENTER A CHARACTER',04H
+1634            MESSG: DB    'AGAIN (Y/N) ?',04H
+1642            ENDPRG:DS    0
+1642                   END 
+</pre>
+
+<p>First of all clear memory to 0 so we can see what we are doing so type E 1600, FFFF as the end (for good measure) and 00 as the Byte, after a couple of seconds the function message will be printed after a beep - now list from 1600 to check this; type 'Y' to the 'more?' prompt, then type 'Q' to enter the program. Type the digits checking the addresses against those listed. Once entered use control 'C', then check using the L function to list again. If any bytes are entered wrongly change those with the 'P' function. Once we have entered the program we must enter the 2 strings -the first one starts at 1622, type A 1622 (RET) ENTER A CHARACTER (CONTROL-D). The end address should be 1634 so put the 2nd string in by typing A 1634 (RET) AGAIN (Y/N)?(CNTRL-D) - OK we should now be ready to run. Type G-1602. If the program has been entered correctly the screen should clear and the message 'ENTER A CHARACTER' will be displayed on the second line - hit a key and the VDU will be mapped continuously, hit INT2 and the screen should settle down and the registers displayed - the PC will be somewhere between 160C and 1610 and the HL register at 1000 which is the first position on the VDU - this is where the problem is - we haven't incremented it so the program will never end - we must insert an INX H instruction at 160D; but first we must make room for it - type S 160D 1642 160E so we are moving the block from 160D -1642 up one byte - having done this we can insert (using the P function) 23 at 160D and run once again. The message will be printed with a graphic character preceeding it. This is because we moved the message by one byte, so we will have to change the address at 1604/5 - we can find where the strings have moved to by using the N function from 1610 to 164F. Put the correct addresses in 1604/5 and 1618/9 - having done this try again - the correct message is issued but we seem to have problems with the character - let's try a breakpoint - the best place to put one is at 160F. Using the P function put D7 at 160F and run again - we have now found the problem - the accumulator has been loaded with the H register so we have lost the original character. However, if we save the character in the B register and map the B register instead, this should solve the problem - we need to open out another gap at 1609, so using the S function move the program up and insert the byte 47 at 1609 and change the byte at 160D to 70 (MOV M,B).</p>
+
+<p>Having done this change 1610 to FE - now all that remains is to change the addresses of the strings (again) so use the F function to search from 1600 to 1650 for 45,4E and 41,47 which are the first 2 bytes of the 1st and 2nd string respectively. Change 1604/5 and 1619/A again and run - it should now do what we said it would - and correspond to listing 2.</p>
+
+<h3>Listing 2</h3>
+
+<pre>
+0000            ; PROGRAM TO DEMONSTRATE L7
+0000            ;
+0000                   ORG   1600H
+0000            ;
+1600            INCH   EQU   000BH
+1600            RESPRP EQU   00ESH
+1600            SCREEN EQU   1000H
+1600            ;
+1600 44 16             DW    ENDPRG  ;MARK END FOR TAPE
+1602 CF         CLRSCN:RST   1       ;CLEAR SCREEN
+1603 11 24 16          LXI   D,STRING;SET TO PRINT STRING
+1606 CD E5 00          CALL  RESPRP  ;PRINT AND GET CHARACTER
+1609 47                MOV   B,A     ;SAVE CHARACTER
+160A 21 00 10          LXI   H,SCREEN;SET HL TO START OF VDU
+160D 70         MAP:   MOV   M,B     ;PUT THE CHARACTER ON VDU
+160E 23                INX   H       ;ON TO NEXT LOCATION
+160F 7C                MOV   A,H     ;LOOK AT HIGH BYTE
+1610 FE 14             CPI   14H     ;END OF VDU?
+1612 C2 0D 16          JNZ   MAP     ;NO- CARRY ON
+1615 CD 0B 00          CALL  INCH    ;YES- WAIT FOR A KEY
+1618 11 36 16          LXI   D,MESSG ;AND ASK IF MORE
+161B CD E5 00          CALL  RESPRP  ;GET REPLY
+161E FE 59             CPI   'Y'     ;YES?
+1620 C0                RNZ           ;NO- BACK TO MONITOR
+1621 C3 02 16          JMP   CLRSCN  ;ELSE- DO AGAIN
+1624            ;
+1624 45 4E 54   STRING:DB    'ENTER A CHARACTER',04H
+1627 45 52 20
+162A 41 20 43
+162D 48 41 52
+1630 41 43 54
+1633 45 52 04
+1636 41 47 41   MESSG: DB    'AGAIN (Y/N) ?',04H
+1639 49 4E 20
+163C 28 59 2F
+163F 4E 29 20
+1642 3F 04
+1644            ;
+1644            ENDPRG:DS     0
+1644                   END
+INCH  000B   RESPRP 00E5    SCREEN 1000   ENDPRG 1644
+CLRSCN1602   STRING 1624    MAP    160D   MESSG  1636
+</pre>
+
+<p>Now do a hex jump from 1600 to 1650 to find where the program ends and put this address in 1600/2 - we are now ready to save the program. Type 'O' and give the program any tape header start the recorder and press 'return' to send the data. To retrieve the program use the I function - whilst loading the tape deliberately stop and start the tape - a question mark should be shown on the next line - indicating a load error - only one question mark will appear. This concludes the example.</p>
+
+<h2>NOTES ON USE:</h2>
+
+<p>1. When a program is run a 'ret' instruction (C9) will return to the monitor (provided the stack is not reset).</p>
+
+<p>2. When using the 'F' function a match will always be found at 1410 as this is where the match pattern is held.</p>
+
+<p>3. Alter using TRAP it is best to do a reset as some of the interupt vectors may have been destroyed.</p>
+
+<p>4. The monitor checks for a program in ROM 2 (IC22) before printing out the function message. If the first byte in the second rom is 31 (LXI SP) then the program in ROM 2 will be executed.</p>
+
+<p>5. If an attempt is made to jump to non-existent memory (FF) this will be vectored back to the monitor (as with all the interrupts) so vastly diminishing the chances of destroying the program.</p>
+
+<p>6 Tiny BASIC will not run with this monitor.</p>
+
+<p>7. An explanation of the 'S' function - if the byte sequence 31,70,1A is held in memory and it is to be moved forward (UP) one byte to give 31,31,70,1A it must be moved from the top first otherwise we get 31,31,31,31 but if we want to move the other way we must start at the bottom.
+
+<p>N.B.: TOP:FFFF &nbsp;&nbsp;BOTTOM:0000 &nbsp;&nbsp;UP:TOWARDS THE TOP &nbsp;&nbsp;DOWN:TOWARDS THE BOTTOM</p>
+
+<p>8. The G function can be used for repeatedly executing a program by loading the stack pointer with 1470 and the PC with the address of the program - NOTE that in this case a 'return' to the monitor is not permissible - instead a jump to START must be used.</p>
+
+<p>9. SETTING PRINTER MODE FROM PROGRAMS</p>
+
+<pre>
+POKE  $1401,$55  :REM PRINTER ON
+POKE  $1401,$AA  :REM PRINTER OFF
+3E55              MVI A,55H  ;PRINTER ON
+32 01 1A          STA 1401H 
+3EAA              MVI A,0AAH ;PRINTER OFF
+3201 1A           STA 1401 H 
+</pre>
+
+<p>10. The Y function is vectored through ram at 1473 so to change the vector change the locations at 1474/5.</p>
+
+<h2>KEYBOARD AUTO REPEAT AND OSCILLATOR</h2>
+
+<img src="lvl7_fig1.png">
+
+<p>R1 = 1k &#x00B1; 10%<br>
+R2 = SEE TEXT<br>
+RV1,2,3 = 10k PRESET<br>
+C1 = 100&mu;F 16V ELECT<br>
+C2 = 47&mu; 16V TANT<br>
+C3 = 1&mu; 16V TANT<br>
+C4 = 1&mu; POLYESTER<br>
+D1 = 1N4148<br>
+TRI = 2N3053<br>
+G1-4 = 74LS132<br>
+SPKR = 3-16 OHMS SPEAKER</p>
+
+<h2>HOW IT WORKS</h2>
+
+<p>AUTO REPEAT - with no strobe (input LOW) C1 is discharged and the input is now the output is high from G1 and C2 is fully charged. G3 o/p is high and the o/p G3 (acting as an inverter) is low. When a strobe arrives C1 starts to charge up (via RV1) but whilst it is charging (time determined by setting of RV1) the o/p of G1 is still high, since both inputs to G are high the output goes low - this is inverted by G3 sending a steady strobe to the input port. If now the strobe input goes low again, C1 discharges rapidly via D1 and the output goes low again. If, however, the input is maintained for long enough for C1 to charge up, both inputs from G1 are high and the output goes low - this sends the output (by G2+3) low again, this starts to discharge C2 - when C2 has discharged the input goes low sending the output high and giving a high output again - this starts to charge C2 again and so on until the strobe is removed. RV2 determines the rate of repeat.</p>
+
+<h2>OSCILLATOR</h2>
+
+<p>The principle of operation is similar to that of the repeat, but when the input (BIT7) is low the output of the gate is held high, but as soon as the output goes high the circuit starts to oscillate. Since C3 is small this occurs rapidly giving an audio frequency (adjustable by means of RV3). This is amplified by TRI to drive a small speaker. R2 should be chosen to give the appropriate tone - any value from 20R to 100R should be appropriate. Alternatively, a 30R resistor may be placed in series with a 100R wire wound potentiometer to act as a volume control. The switch included is optional but is desirable to allow the speaker to be switched direct from port 7 (for music programs etc). The oscillator should sound on an error and on the other functions detailed previously.</p>
+
+<h2>CONSTRUCTION</h2>
+
+<p>The circuit is reasonably simple and should pose no construction problems. Veroboard is one suitable method. The prototype was built on vero-strip board and mounted between the switches and transformer next to the speaker. The components should be mounted resistors first - the IC should be socketed - put C4 as close to IC1 as possible - this will stop weird effects when the oscillator sounds with auto repeat. Take care to insert the capacitors and diodes correctly. If the diode is reversed the repeat will start immediately.</p>
+
+<img src="lvl7_fig2.png">
+
+<p>The two circuits shown above are to interface the serial output from Triton to a 20ma or RS232 terminal. On certain TELETYPES* making the circuit below should suffice where the TTY supplies its own 20ma.</p>
+
+<img src="lvl7_fig3.png">
+
+<p>The reed relay is the same type as used on the tape I/O on Triton.</p>
+
+<p>*Trade Mark of TELETYPE CORP.</p>
+
+
+
+</body></html>
