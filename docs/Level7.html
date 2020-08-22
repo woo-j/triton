@@ -300,7 +300,7 @@ CLRSCN1602   STRING 1624    MAP    160D   MESSG  1636
 
 <p>5. If an attempt is made to jump to non-existent memory (FF) this will be vectored back to the monitor (as with all the interrupts) so vastly diminishing the chances of destroying the program.</p>
 
-<p>6 Tiny BASIC will not run with this monitor.</p>
+<p>6. Tiny BASIC will not run with this monitor.</p>
 
 <p>7. An explanation of the 'S' function - if the byte sequence 31,70,1A is held in memory and it is to be moved forward (UP) one byte to give 31,31,70,1A it must be moved from the top first otherwise we get 31,31,31,31 but if we want to move the other way we must start at the bottom.
 
@@ -359,6 +359,155 @@ SPKR = 3-16 OHMS SPEAKER</p>
 
 <p>*Trade Mark of TELETYPE CORP.</p>
 
+<h2>SERIAL I/O</h2>
 
+<p>The level seven monitor provides a serial output to a printer. This can be turned on or off by using the V function, it can also be changed in programs as mentioned previously. The serial output appears as one bit on Bit 8 of Port 6 it is overidden in software and the speed of output can be easily changed by altering a value stored in RAM - see later.</p>
+
+<p>The data is inverted - i.e. logic Zero is +5 and one 0V. The format is as follows:-</p>
+
+<img src="lvl7_fig4.png">
+
+<p>Each character starts with a start Bit followed by 8 data bits followed by a fake parity Bit (always 1) this is suitable for teletypes and most printers where parity checking is not needed. Two stop bits are sent at the end of each character with the exception of a carriage return where a continuous stop bit is sent for 3 character periods to allow the mechanism to return properly. This should be more than adequate for most machines. N.B. A special version of the monitor is available for high speed parallel printers such as the TRANSAM BD80. It should be noted that the character is output to the printer (if selected) before the VDU.</p>
+
+<p>When the computer is reset, the serial o/p speed is set to 110 baud - Bit time = 9.09ms = 10 characters per second, to alter the speed the formula below should be used to calculate the value - converted to hex, and put into locations 1402/3.</p>
+
+<img src="lvl7_fig5.png">
+
+<p>The minimum value (0001) gives 6K baud at 7mHz or 15K baud, at 18mHz.</p>
+
+<h2>TAPE-FORMAT</h2>
+
+<p>The standard Triton format is used for input and output in the 7.1 monitor - this is detailed below.</p>
+
+<p>Each Bit consists of a start Bit, 8 Data Bits, an odd parity Bit followed by 2 stop Bits. The actual record format is 5-6 seconds of continuous mark tone, 64 sync characters (0DH), program end address low, high, program, 5-6 seconds mark tone. The end address is stored in 1600,01, and this is automatically set up by tiny BASIC but must be preset by the user in machine code programs (see example) For BASIC L7.1 the tape routines are contained within the BASIC and these should be used for loading and storing L7.1 BASIC programs.</p>
+
+<h2>MONITOR ROUTINES AND ADDRESSES</p>
+
+<h3>MEMORY MAP</h3>
+
+<p>This is a memory map of the L7.1 system.</p>
+
+<img src="lvl7_fig6.png">
+
+<p>The L7.1 monitor occipies locations 0000 to 03FF and 0C00 to 0FFF, the space from 0400 to 0BFF is left for user expansion (see previous section).</p>
+
+<p>Useful addresses are listed below:</p>
+
+<pre>
+1401   DISSW      55 = PRINTER ON    AA = VDU ONLY
+1403   SPEED      Baud rate
+1410   BUFFER
+1430   INT 3
+1433   INT 4
+1436   INT 5
+1439   INT 6
+143C   INT 7
+1472   KEYSFT     80 = NORMAL        7F = TYPEWRITER SHIFT
+1476   INVEC      INPUT VECTOR
+1479   OUTVEC     OUTPUT VECTOR
+</pre>
+
+<h3>PORT ADDRESS</h3>
+
+<table>
+<tr><td>0</td><td>Keyboard - Input only - special routine needed.</td></tr>
+<tr><td>1</td><td>Tape I/O Uart status input</td></tr>
+<tr><td>2</td><td>Tape I/O Uart data strobe output</td></tr>
+<tr><td>3</td><td>Led port output - On = Logic zero</td></tr>
+<tr><td>4</td><td>Tape I/O uart receive data enable input</td></tr>
+<tr><td>5</td><td>VDU output - Strobe routine needed</td></tr>
+<tr><td>6</td><td>Serial O/P on Bit 8 - Bit 7 spare</td></tr>
+<tr><td>7</td><td>Bit 8 = Relay - Bit 7 = Oscillator (speaker) (see circuit)</td></tr>
+<tr><td>8 - 15</td><td>Decoded on board by 74LS154 (needs extra decoding)</td></tr>
+<tr><td>16 - FF</td><td>Available for extensions</td></tr>
+</table>
+
+<h3>MONITOR UTILITIES</h3>
+
+<table>
+<tr><th>ADDRESS</th><th>NAME</th><th>COMMENTS</th></tr>
+<tr><td>0000</td><td>RST0</td><td>Reset address. Sets up vectors - checks memory and prints initialisation message after clearing screen.</td></tr>
+<tr><td>0008</td><td>RST1</td><td>Clears VDU and resets cursor returns after suitable delay with all registers intact.</td></tr>
+<tr><td>000B</td><td>INCH</td><td>A call routine which waits for a character to be typed in from the input device and returns with the character in the accumulator all other registers intact.</td></tr>
+<tr><td>0010</td><td>RST2</td><td>Interrupt 2 - Jumps to INIT routine, saves registers and prints them on VDU and printer (if selected) then enters main loop.</td></tr>
+<tr><td>0013</td><td>OUTCH</td><td>Character output routine; outputs to the VDU (and printer if selected) the character in the accumulator, returns with all registers intact.</td></tr>
+<tr><td>0018</td><td>RST3</td><td>INTERUPT 3; vectored to 1430 for user jump vector. (NOTE: on parallel printer versions this interrupt is not available to the user).</td></tr>
+<tr><td>001B</td><td>INDATA</td><td>Will wait for characters to be entered from input device; echo on the VDU and put into memory pointed to by the DE register pair. On a carriage return the routine terminates; a space followed by an EOT character (04H) is stored in memory with the DE register pointing to the EOT character; the return is not stored.</td></tr>
+<tr><td>0020</td><td>RST4</td><td>= Interrupt 4; vectored to 1433 for user operations.</td></tr>
+<tr><td>0023</td><td>PDATA</td><td>Prints a string stored in memory pointed to by the DE register pair; returns on EOT with all registers intact with the exception of the DE pair; points to character <u>after</u> the EOT - allowing the routine to be called again for a string following the first.</td></tr>
+<tr><td>0028</td><td>RST5</td><td>= Interrupt 5; vectored to 1436 for user operations.</td></tr>
+<tr><td>002B</td><td>PSTRING</td><td>Similar to Pdata but a CR/LF sequence is output before the string is printed.</td></tr>
+<tr><td>0030</td><td>RST6</td><td>= Interrupt 6; vectored to 1439 for user operations.</td></tr>
+<tr><td>0033</td><td>PCRLF</td><td>Will output a CR/LF sequence to the output device(s); returns all registers intact.</td></tr>
+<tr><td>0038</td><td>RST7</td><td>= Interrupt 7; vectored to 143C for user operations.</td></tr>
+<tr><td>003B</td><td>ECHOCH</td><td>Will input a character from the input device and print it on the output device before returning it in the accumulator - all other registers intact.</td></tr>
+</table>
+
+<p>The above subroutines are fixed utilities and are guaranteed to remain at these addresses if another monitor is produced.</p>
+
+<p>The routines listed below are not guaranteed to remain in these positions if subsequent versions of the monitor are released.</p>
+
+<p>Routines marked with an asterisk (*) are in the same position as the V5.1 monitor.</p>
+
+<table>
+<tr><td>*URTOUT</td><td>003E</td><td>Will output the character in the accumulator to tape; returns registers intact.</td></tr>
+<tr><td>*TAPOFF</td><td>004A</td><td>Will switch the tape motor relay off - returns with A=0 all other registers intact.</td></tr>
+<tr><td>COMP</td><td>00BF</td><td>Will compare the DE to the HL register pair; returns C set if DE HL Z set if DE=HL and neither set if HL DE. A is lost.</td></tr>
+<tr><td>*FIVSEC</td><td>00C5</td><td>Waits for 5-6 seconds before returning all registers intact.</td></tr>
+<tr><td>RESPRP</td><td>00E5</td><td>Will print the CR/LF sequence followed by the string pointed to by the DE register pair and will then wait for a character to be entered, echo it and return with the character in A; the DE register pair will point to the location of the EOT character - all other registers intact.</td></tr> 
+<tr><td>ERROR</td><td>015B</td><td>Will print a CR/LF followed by the message 'Error' and beep the oscillator before returning to the main loop.</td></tr>
+<tr><td>ERR1</td><td>015E</td><td>As above but without the leading CR/LF.</td></tr>
+<tr><td>PRBEEP</td><td>015A1</td><td>Will print the string pointed to by the DE register pair, beep the oscillator and return to the main loop.</td></tr>
+<tr><td>BEEP</td><td>0154</td><td>Will sound the oscillator and return to the main loop.</td></tr>
+<tr><td>START</td><td>0174</td><td>Re-enters the monitor main loop.</td></tr>
+<tr><td>STRTAD</td><td>0208</td><td>Will print the prompt 'START:' and get a 4 digit address in the HL pair DE + A lost - aborts to monitor on error.</td></tr>
+<tr><td>GETADR</td><td>020B</td><td>Will print the message pointed to by the DE pair and get an address as above.</td></tr>
+<tr><td>G2BYT</td><td>020E</td><td>Will print a space and wait for an address to be entered as above.</td></tr>
+<tr><td>STEND</td><td>022A</td><td>Will get a start and end address, end on top of stack - start below that. HL,DE,+A registers lost.</td></tr>
+<tr><td>COMPI</td><td>0231</td><td>Similar to COMP but jumps to beep if DE-HL are equal.</td></tr>
+<tr><td>PRADAT</td><td>023F</td><td>Prints the address pointed to by the HL pair and the data in that location on the next line. A is lost, others intact.</td></tr>
+<tr><td>PRTLOC</td><td>0242</td><td>Prints the data pointed to by the HL pair - A lost.</td></tr>
+<tr><td>ENDADR</td><td>0251</td><td>Prints the message 'END:' followed by the address in the HL pair. A and DE lost.</td></tr>
+<tr><td>PRADI</td><td>0254</td><td>Prints the address in the HL pair.</td></tr>
+<tr><td>RHEXSP</td><td>0259</td><td>Prints the data in the accumulator followed by a space. A lost.</td></tr>
+<tr><td>PRTSPC</td><td>0256</td><td>Prints a space. A - lost.</td></tr>
+<tr><td>INSPBF</td><td>027B</td><td>Prints a space then gets a string in the Buffer; returns on 'return' with a space followed by an EOT. DE points to EOT character. DE + A lost.</td></tr>
+<tr><td>INBUFF</td><td>0270</td><td>Prints the character in A and gets a string in buffer as above. DE + A lost.</td></tr> 
+<tr><td>PRTDAT</td><td>02AB</td><td>Prints the accumulator in hex - A lost.</td></tr>
+<tr><td>TAPOUT</td><td>02C2</td><td>Turns the tape relay off, requests a header - gets header, turns relay on, waits 5 seconds, sends 64 sync characters followed by header and returns. A,B,D,E lost.</td></tr>
+<tr><td>TAPIN</td><td>02E1</td><td>Turns the tape relay off, requests and gets a header - turns the tape relay on, prints the message 'FILES FOUND:' and searches the tape, printing all headers. Returns when a match is found. A,B,D,E lost.</td></tr>
+<tr><td>URTER</td><td>0365</td><td>Gets a character from tape and checks for an error condition, prints out a CR/LF followed by '?' N.B. The C register must be loaded with '?' prior to calling this for the first time but not changed until tape loading is complete. B lost.</td></tr>
+<tr><td>TAPRD</td><td>03E6</td><td>Gets a character from the tape and prints it on the VDU - repeats indefinitely.</td></tr>
+<tr><td>*TAPON</td><td>03F6</td><td>Turns tape relay on. A returns 80H. All others intact.</td></tr>
+<tr><td>GETACC</td><td>0C14</td><td>Expects to find 2 hex digits in buffer converts and puts in A. B + DE lost.</td></tr>
+<tr><td>*UARTIN</td><td>0E62</td><td>Gets character from tape in A - other registers intact.</td></tr>
+<tr><td>*TAPHDR</td><td></td><td>Turns relay off, requests and gets a header in buffer. DE + A lost.</td></tr>
+<tr><td>ERRMSG</td><td>0ED6</td><td>Start address of string which prints 'ERROR'; call at 0ED7 to omit space. (Use via PDATA or PSTRNG).</td></tr>
+<tr><td>STRMSG</td><td>0ECF</td><td>Start address of string which prints.'START:' Use as above.</td></tr>
+<tr><td>ACKA</td><td>0FDS</td><td>Start address of string which prints 'HEADER:' Use as above.</td></tr>
+<tr><td>ACKD</td><td>0E49</td><td>Start address of string which prints 'END', Use as above.</td></tr>
+</table>
+
+<h3>Notes for use with programs in TRITON manual.</h3>
+
+<p>1. Using interrupt 3. Interrupt 3 is now vectored to 1430 so you should first insert the bytes C3,18,16 in locations 1430-2 before using the program.</p>
+
+<p>2. Duo-Decimal program. Change the instruction at 1615 to RET by changing 1615 to C9.</p>
+
+<p>3. Keyboard/Led Program version 2. Change the instruction at 160E in the alternative ending to RZ by changing the byte at 1610 to C8.</p>
+
+<p>4. Alphabet twelve times using I/O - change instruction at 1615 as above.</p>
+
+<p>5. Alphabet using memory mapping. Change the instruction at 1626 as in 3.</p>
+
+<p>6. Modem echo test. Change the instruction at 1602 to call uartout by changing the bytes at 1603/4 to 3E and 00 - change the instructions at 1606 to call uartin by changing the bytes at 1607-8 to 62 and 0EH.</p>
+
+<p>7. Test tape playback program. Is now contained in the monitor at 03E6.</p>
+
+<p>8. Test tape record program. Change the instructions at 1602, 160D, 1612 to call uartout by changing the bytes following each of these addresses to 3E and 00.</p>
+
+<h2>IMPLEMENTATION</h2>
+
+<p>Level Seven is available direct from TRANSAM COMPONENTS LIMITED at 12 Chapel Street, London, N.W.1. They can be supplied in exchange for programmed EPROMS (see catalogue for details) TRAP is also available from TRANSAM.</p>
 
 </body></html>
