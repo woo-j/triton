@@ -510,4 +510,444 @@ SPKR = 3-16 OHMS SPEAKER</p>
 
 <p>Level Seven is available direct from TRANSAM COMPONENTS LIMITED at 12 Chapel Street, London, N.W.1. They can be supplied in exchange for programmed EPROMS (see catalogue for details) TRAP is also available from TRANSAM.</p>
 
+<h1>TRITON LEVEL SEVEN BASIC</h1>
+
+<h2>INTRODUCTION</h2>
+
+<p>The TRITON level seven BASIC is an extended BASIC with full mathematical and string functions plus features not available on any other 8K basics together with high speed execution.</p>
+
+<h2>OVERVIEW</h2>
+
+<p>The number range (using scientific notation) is 10 x 10<sup>38</sup> to 10 x 10<sup>-38</sup> (approx) with an accuracy of 6&frac12; digits (actually 24 binary bits), the last digit is rounded (if necessary). Numbers are displayed in conventional form unless the number exceeds the value 999999 or is smaller than .01 in which case the display will be in scientific format (sign, mantissa, exponent, sign, exponent).</p>
+
+<p>Numbers are stored in binary resulting in faster execution, greater accuracy and more compact storage than other methods (such as B.C.D.).</p>
+
+<p>Strings are also supported as an integral part of the BASIC and an extended range of string functions are available (including the very-powerful INSTR function). A full range of mathematical functions are also supported.</p>
+
+<h2>GETTING IN</h2>
+
+<p>To enter BASIC see the monitor section which should be read in full before continuing. Only if you have read this documentation fully and still have problems, should you contact TRANSAM.</p>
+
+<p>You should now be in the command level of BASIC (the prompt '&gt;' has been printed and the computer awaits your command...)</p>
+
+<h2>BACK TO BASICS</h2>
+
+<p>Entering lines</p>
+
+<p>A full line editing facility is available at all times when entering lines for BASIC whether in EDIT, INPUT or in the command level. This is achieved by using certain reserved characters for control purposes; these are detailed below:</p>
+
+<table>
+<tr><td>CNT-H (or DEL)</td><td>steps the cursor back one position in the line.</td></tr>
+<tr><td>CNT-I</td><td>steps the cursor forward one position in the line.</td></tr>
+<tr><td>CNT-K</td><td>steps the cursor forward to the end of the line.</td></tr>
+<tr><td>CNT-L</td><td>steps the cursor back to the start of the line.</td></tr>
+<tr><td>CNT-J</td><td>opens a space at the cursor position and moves all characters up to make room.</td></tr>
+<tr><td>= (top key right)</td><td>will delete the character before the cursor and close the line up.</td></tr>
+</table>
+
+<p>Any other character is taken as a character to be placed in the line and steps the cursor on one position.</p>
+
+<p>If any attempt is made to insert characters beyond the end of a line or backspace beyond the start of the line the commands are ignored.</p>
+
+<p>To enter a line press the RETURN key, this will enter all characters to the left of the cursor, alternatively cnt-] can be used to enter the whole line regardless of the cursor position.</p>
+
+<h2>ESCAPE CODES</h2>
+
+<p>The ESC key is used when entering lines for entering a whole word with two keys; the ESC key is followed by another key which will signify the word to be entered. Most keys will produce words; these are listed below. CNT-C will cause a return to the monitor as usual. Note that control characters do not perform their usual editing functions if preceded by ESC.</p>
+
+<pre>
+CNT A    PRINT        CNT B    AUTO           CNT D       CLEAR
+CNT E    CLS          CNT F    CALL           CNT G       DIM
+CNT H    DATA         CNT I    DUMP           CNT J       DEF
+CNT K    EDIT         CNT L    ERASE          CNT M (RET) END
+CNT N    FOR          CNT O    GOTO           CNT P       GOSUB
+CNT Q    GET          CNT R    HELP           CNT S       INPUT
+CNT T    IF           CNT U    LPRINT         CNT V       LIST
+CNT W    LINE         CNT X    LOAD           CNT Y       LET
+CNT Z    NEXT         CNT [    OFF            CNT ES      OUT
+CNT ]    ON           CNT ↑    POKE           CNT =       RUN
+space    RETURN       !        RESTORE        "           REM
+#        READ         $        RANDOMIZE      %           RESUME
+&        REPLACE      '        RENUM          (           STOP
+)        SWAP         *        SAVE           +           SCR
+,        TRACE        -        VDU            .           WIDTH
+/        NOT          0        THEN           1           ELSE
+2        TO           3        STEP           4           USING
+5        MOD          6        AND            7           OR
+8        XOR          9        +              :           -
+;        *            <        /              =  
+>        <            ?        =              =           @
+A        FN           B        PI             C           TAB(
+D        SPC(         E        BAS            F           ASC
+G        ATN          H        COS            I           CHR
+J        EXP          K        FRE            L           HEX
+M        INP          N        INT            O           LEN
+P        LOG          Q        PEEK           R           RND
+S        SGN          T        SIN            U           SQR
+V        STR          W        TAN            X           VAL
+Y        LEFT         Z        RIGHT          [           MID
+/        INSTR        ]        STRING
+</pre>
+
+<h2>ABBREVIATIONS</h2>
+
+<p>In addition to the above escape codes, many of the words can be abbreviated by using the ] key. The abbreviations are listed below (all words are listed in full during LIST).</p>
+
+<pre>
+]       PRINT      A]     AUTO        C]     CONT
+CL]     CLEAR      CA]    CALL        D]     DIM
+DA]     DATA       DU]    DUMP        E]     EDIT
+ER]     ERASE      F]     FOR         G]     GOTO
+GOS]    GOSUB      H]     HELP        I]     INPUT
+L]      LPRINT     LI]    LIST        LO]    LOAD
+M]      MID        N]     NEXT        O]     OFF
+P]      POKE       PE]    PEEK        R]     RUN
+RE]     RETURN     RES]   RESTORE     RA]    RANDOMIZE
+S]      STOP       SW]    SWAP        SA]    SAVE
+T]      TRACE      TH]    THEN        V]     VDU
+W]      WIDTH      X]     XOR
+</pre>
+
+<h2>FORMATTING</h2>
+
+<p>BASIC level seven has a unique space-saving feature which permits faster execution and more compact storage together with a fixed format listing resulting in greater readability and freedom of formatting when entering lines. Each reserved word (those listed as words under ESC codes) is stored as one byte and spaces are not stored (except in quoted strings or in REM statements) and are automatically converted to full words on LIST and spaces are added according to certain rules - giving a listing which will correspond exactly to another, no matter whether the original was typed with or without spaces.</p>
+
+<p>Spaces are optional and may be placed anywhere in line with certain exceptions - these are that a reserved word may not contain spaces and if a combination of letters could be wrongly interpreted as another word: for example 6 IF F OR T THEN 43 should not be entered as: 6 IFFORTTHEN as this will be interpreted as IF FOR T THEN. This should therefore be entered as 6IFF ORTTHEN43 which will be interpreted correctly. Note that if a keyword is entered with an imbedded space it will not be interpreted and can cause weird syntax errors. Where the listing appears correct but yields a SYNTAX ERROR IN LINE 12 re-enter the line by using EDIT and exit from the line with CNT-]. If this does not work the error must exist in some other place.</p>
+
+<h2>BASIC BASIC<h2>
+
+<h3>VARIABLES</h3>
+
+<p>BASIC uses variables as a means for conveying values in programs. A variable is a symbolic name given to a value; the value that the name represents may be changed at any time in the program and is stored in decimal at all times so resulting in greater flexibility over systems which have limited type variables. Variables must start with a letter and can contain any number of letters or numbers thereafter. Note however, that only the first two characters are unique to a variable and therefore CAT and CANDY are the same variable (CA). Variables may not contain reserved words; some examples of valid and invalid variables are given below:
+
+<table>
+<tr><td><u>Acceptable Variables</u>&nbsp;&nbsp;&nbsp;</td><td><u>Unacceptable Variables</u></td></tr>
+<tr><td><p>A</br>C2</br>XX</br>COPY</br>UXZC</p></td><td><p>31 (begins with a digit)</br>28 (numeric constant)</br>ONE (contains keyword ON)</p></td></tr>
+</table>
+
+<p>Undeclared variables which are accessed are given the value 0.</p>
+
+<h3>STRING VARIABLES</h3>
+
+<p>String variables are formed in the same way as numeric variables and are followed by a dollar ($). The same rules apply as for numerics; the variable A1 and 1$ are distinct variables and may be used together, if a string variable is undeclared, it takes the value of a null string ( "" ). This assures that later changes or additions will not yield errors or unpredictable results.</p>
+
+<h3>ENTER</h3>
+
+<p>To enter a line in basic is a simple operation. Lines may be of two forms; the first is an immediate command and will be executed immediately the RETURN key is pressed to enter the line; this is also referred to as the DIRECT ENTRY mode. Try entering the immediate command PRINT "the dragon" followed by the RETURN key - Triton should then do as you say and print 'the dragon' on the next line. Below this it will print READY to tell you it has finished executing the program and awaits your next command. Certain commands may not be used as direct statements (DEF, INPUT and LINE input) and others are illogical (DIM, DATA etc..) but may be used. Any command may be put in a program (including RUN, EDIT and SCR).</p>
+
+<p>The second form is as follows. To enter a line as part of a program type a line number before the commands; this will cause the line to be stored in memory as part of the program and will not be executed immediately. TRY entering the following line:</p>
+
+<pre>
+1 GOTO 1
+</pre>
+
+<p>the computer will merely re-prompt you with &gt; and wait for your next command. It has entered the line into memory and we can check this by executing a list command; type LIST and the line entered will be listed. To run the program enter the command RUN; the computer will then seem to do nothing. Don't worry; if you look at the program you will see why; we have put the computer in an infinite loop - it is 'chasing its' tail' so to speak. To stop the program we must take some action. Press the top right hand key on the keyboard. This is called the break key - the message BREAK IN LINE 1 will be printed to tell you that the program has been interrupted in line 1; we can continue the program where we left off by using the CONT command. This will again lock the computer in a loop so we must use the break key to stop it (note that to break from an INPUT statement use CNT-D). To get rid of the program type SCR; this will delete all lines from the program, you can verify by using the LIST command.</p>
+
+<h3>FEATURES</h3>
+
+<p>Level seven BASIC has many unique and useful features not found on other 8k basics. Some of the more unusual features are detailed hereunder.</p>
+
+<h3>HEX CONSTANTS</h3>
+
+<p>Level seven supports hex constants in a program and these are denoted by a preceeding dollar sign. These can be used as normal constants (H=$c9) as data ( 10 DATA $CD,$00,$13 ) or as an entry for an INPUT command.</p>
+
+<h3>HEX STRINGS</h3>
+
+<p>Hex strings may be created for any integer from 0 to 65535. The HEX function will produce a string with the hex value of the argument.</p>
+
+<p>These two features make base-conversion unnecessary in the monitor and indeed hex constants in the program make is much easier to read. Both features can of course be used in the immediate mode to give conversions.</p>
+
+<h3>DATA FILES</h3>
+
+<p>Data files are simply implemented in level seven by the unique feature of being able to save and load string and numeric arrays in the program. A very powerfull SAVE and LOAD structure permits great flexibility in data storage without restricting its power.</p>
+
+<h2>COMMANDS</h2>
+
+<p>All commands may be used in a program (Including SCR) so, for instance a program may list part of itself and then execute that part. Certain commands do, however, not resume the program and exit to the command level. These commands are: SCR, STOP, END, EDIT and AUTO.</p>
+
+<p>NOTE: The list of words given previously are not all implemented in release 1 of the BASIC; these commands will give a SYNTAX ERROR if used and no plans are made to implement any of these extra words. The words in question are: HELP, RESUME, REPLACE, RENUM, USING and MOD.</p>
+
+<h3>ARITHMETIC OPERATIONS</h3>
+
+<p>Where a formula for a calculation contains more that one operation certain rules are used in deciding the order of operators execution. In any formula BASIC will perform operations in the following order:</p>
+
+<ol>
+<li>Parentheses are the highest priority and any expression in parentheses will be executed before the rest of the line. This also applies to nested parentheses; the innermost expression will be evaluated first.</li>
+<li>Exponentiation</li>
+<li>Unary minus</li>
+<li>Multiplication or division (of equal priority)</li>
+<li>Addition or Subtraction</li>
+<li>Logical operators in the order NOT, AND, OR or XOR (OR and XOR same priority)</li>
+</ol>
+
+<p>If the rules do not clearly designate the order of evaluation, the expression will be evaluated from left to right. The expression X^Y^Z</p>
+
+<ol>
+<li>X^Y = step 1</li>
+<li>(result step 1)^Z = step 2</li>
+</ol>
+
+<h3>PARAMETERS</h3>
+
+<p>The commands LIST and SCR may be justified with parameters to restrict the range of their operation. If no parameters are specified the operation is performed on the whole of the program (i.e. the whole program is listed or deleted). If one operand is specified it is performed on that line, or the next line following it (unless it is beyond the end of the program), so for instance if a program contains lines 10, 20 and 40 and the command SCR 30 is issued line 40 will be deleted (the same applies to list). If two operands are specified (separated by a dash (-)) the operation is performed for the first line (or the next one) through to the last line (or the one before it). A summary is given below:</p>
+
+<ol>
+<li>LIST will list all lines</li>
+<li>LIST 10 will list line 10 (or the next line)</li>
+<li>LIST 10-40 will list from line 10 (or next) to 40 (or preceding)</li>
+<li>LIST -10 will list from the start to line 10</li>
+<li>LIST 10- will list from line 10 to the end.</li>
+</ol>
+
+<h3>AUTO</h3>
+
+<p>Level seven has a useful and easy to use AUTO command for supplying line numbers when entering programs. Auto entered on its own will cause 10 to be printed out, and each time return is pressed it will step 10. To change the start to 100 enter AUTO 100. To change the step to 5 enter AUTO 10,5. This will start at line ten and increment in steps of five.</p>
+
+<p>If the line number exceeds 65529, Basic will complain with an OVERFLOW ERROR.</p>
+
+<p>If the line number being printed already exists in memory an asterisk is printed before the line to warn the user. He may take one of the following steps if this happens:</p>
+
+<ol> 
+<li>Ignore it and enter the line. This will replace the line already in store</li>
+<li>Leave the AUTO mode by entering CNT-D.</li>
+<li>Delete the line by typing RETURN.</li>
+<li>Leave the line in memory by issuing a CNT-L followed by a RETURN.</li>
+</ol>
+
+<p>To quit from AUTO enter CNT-D.</p>
+
+<h3>PRINT</h3>
+
+<p>This is BASIC's main output command and is used for printing values strings etc..</p>
+
+<h3>LPRINT</h3>
+
+<p>LPRINT follows the same rules as PRINT with the addition that the line will be sent to the printer as well as to the vdu. The printout always returns to the vdu only after an LPRINT. Wherever PRINT is used LPRINT may be substituted.</p>
+
+<p>PRINT used alone (or followed by a colon) will result in a CR/LF being printed (Carriage Return &amp; Line Feed). PRINT may be abbreviated to ].</p>
+
+<p>Characters enclosed in quotes are printed as entered. As in all quoted strings if the last character on the line is a quote (") it may be ommited to save space - eg: PRINT "HELLO THERE" and PRINT "HELLO THERE will both produce the correct message but the second example uses one less byte.</p>
+
+<p>Two separators are used to separate items in a PRINT statement. These are a comma (,) and a semi-colon (;). The comma will move the cursor to the next tab position (every 8 characters). A semi-colon will print a single space unless it is the last character in the print statement in which case it will not move the cursor. If no separator is used no spaces will be output, so for instance an answer to a sum can be put next to a quoted string as in PRINT "THE ANSWER = "A+B which would produce something like THE ANSWER = 32 which is much more readable and uses less storage than the usual semi-colon separator.</p>
+
+<p>Note for use with other BASIC's: Some other BASIC's use a semi-colon to separate items without printing a space. In this case the semi-colon may be ommitted so the string "HELLO ";A ;" HOW ARE YOU" may be entered as either "HELLO "A " HOW ARE YOU" or "HELLO":A :"HOW ARE YOU" both of which will produce the same printout and both of which save 2 bytes over the original.</p>
+
+<p>If it is wished to print 2 (or more) strings combined without a space either PRINT A B or PRINT A +B may be used; the first one is preferable since it does not use extra space (if there is not enough room a NO STRING SPACE ERROR will be printed, but this cannot happen with the first example. Also the second example uses one extra byte).</p>
+
+<p>Two functions are available in PRINT which produce formatting, the first, TAB will move the cursor to the column specified in the argument (providing it has not passed it already) and SPC will print the specified (up to 255) number of spaces.</p>
+
+<p>Numbers are printed as detailed before with leading and trailing zeroes suppressed.</p>
+
+<p>Scientific notation consists of the sign, mantissa, sign, exponant. EG 12345000 would be printed as 1.2345E+7.</p>
+
+<h3>INPUT</h3>
+
+<p>The command used to get replys from the user, used for both string and numeric data.</p>
+
+<p>Multiple inputs are allowed and the elements (variables) to be entered are separated by commas.</p>
+
+<p>e.g. INPUT A,B$,H</p>
+
+<p>This input will cause the default prompt (?) to be printed. The user could then enter the data separated by commas, as on the input statement (EG 12,FRED,33.763) and would assign 12 to A 'FRED' to B$ and 33.763 to H. If the user only entered one or two items (EG 12,HARRY), BASIC would re-prompt for the remaining items with a question mark. If too many items were entered the excess items are ignored without producing any form of error message. If the user wishes to supply his own prompt then this is enclosed in quotes before a semi-colon and the variable. This would then be printed WITHOUT the question mark and without any extra spacing.</p>
+
+<p>E.G. INPUT "WHAT IS YOUR NAME ? ";NAME$</p>
+
+<p>If a RETURN is typed without any other characters being entered for a string, a null string ("") is returned, if for a numeric value, the value 0 is returned. If a numeric value is required and string data is entered BASIC will re-prompt with the original prompt.</p> 
+
+<h3>LINE INPUT</h3>
+
+<p>A special version of INPUT for strings may be supplied with a prompt in quotes and ONE STRING variable. It then prompts the user with the prompt supplied and will save all characters upto the RETURN in the string variable named. This includes leading spaces, quotes ("), colons (:) and commas (,) all of which are not used on a normal string INPUT. As before a single RETURN will produce a null string.</p>
+
+<h3>GET</h3>
+
+<p>This is a special, real time feature for getting information without waiting for a RETURN. This feature opens up many possibilities in the fields of interactive games and simulations. The GET command produces no prompt and does not echo any characters typed. When used it returns immediately, whether a key has been pressed or not. If a numeric variable is specified the GET will return 1 to 9 if the keys 1 to 9 are pressed; otherwise it will return 0 (as with INPUT). If a string variable is specified any key pressed will be returned as a single character string. If no key is pressed a nul string ("") is returned. Only one argument is allowed.</p>
+
+<p>EG 100 GET A$ :IF A$ ="Y" THEN PRINT "YES" ELSE GOTO 100</p>
+
+<p>will wait for Y to be pressed and print YES before continuing.</p>
+
+<h3>RUN</h3>
+
+<p>Used alone will clear all variables and arrays and execute the program from the lowest numbered statement. If a line number is specified then execution will commence at the line specified. (if the line specified does not exist the error message MISSING LINE ERROR would be displayed).</p> 
+
+<p>The use of RUN performs an implicit CLEAR. RUN may be used in a program.</p>
+
+<h3>CLEAR</h3>
+
+<p>Clear has two distinct forms, both of which clear all variables, strings and arrays. Used alone it will free all free memory for use. When used with a number it will reserve that number of bytes for exclusive use of strings. This defaults at power-on to 50 and can be altered by the user to any figure (so long as there is sufficient memory). If an attempt to use too much space is made, NO SPACE ERROR is printed. The number of free bytes for strings can be determined by using the FRE(A$)) function. If there is not sufficient space for strings (indicating a larger CLEAR number is required) the error message NO STRING SPACE will be printed.</p>
+
+<h3>SCR</h3>
+
+<p>Unique to LEVEL SEVEN BASIC this feature allows for deletion of blocks of lines as well as the whole program. (For parameters see list parameter section). SCR will clear the whole program as normal. Note that line numbers quoted as parameters are INCLUSIVE.</p>
+
+<h3>LIST</h3>
+
+<p>Allows blocks of lines or the whole program to be listed in the standard BASIC format (for parameters see previous section).</p>
+
+<h3>READ</h3>
+
+<p>Used in conjunction with the DATA statement allows data to be placed within a program and obtained in the same manner as an input statement. If there is insufficient data in the program to satisfy a read statement a MISSING DATA error is generated, if a mismatch occurs between the READ and DATA statements (ie the variable is numeric and the data is string) the message SYNTAX ERROR IN 1000 (or whatever line contains the data) is printed.</p>
+
+<h3>RESTORE</h3>
+
+<p>Allows the user to re-use data by resetting the point at which data is to be read in the program. Used alone it will reset the position to the first DATA statement (performed automatically by RUN). If it is followed by a line number, it will go to that line (providing it exists).</p>
+
+<h3>DATA</h3>
+
+<p>The complement to READ statement above, may contain mixed data in the same line. The string data must be enclosed in quotes if the string contains any spaces or commas or colons; otherwise they are optional. (Note that the trailing quote may be omitted if it is the last character on the line).</p>
+
+<p>EG 233 DATA 12,hello,HELP," THIS IS A ,,STRING</p>
+
+<h3>DIM</h3>
+
+<p>Used to reserve space for matrices, which may contain up to 255 dimensions and each dimension up to 65535 elements (memory allowing). The elements must all be the same type. Arrays (matrices) are named in the same way as variables (see previous section). Several different arrays may be dimensioned at once by separating the separate arrays with commas. A dimension is not necessary if the individual dimensions are less than 10. If an element is accessed from an array before it is dimensioned it will be dimensioned to 10 elements per dimension (actually 11 because of the zero subscript). It is always best to dimension the array first for readability and to save space. Also note the use of the zero element which is present in all arrays. If an attempt is made to read an element not in an array (too big, not enough dimensions or too many dimensions) the error message BAD SUBSCRIPT ERROR will be printed. If an attempt is made to dimension an array twice or to dimension an array after using an element (in which case it will automatically dimension to 11 or 11x11) the error message REDIMENSION ERROR will be printed.</p>
+
+<h3>GOTO</h3>
+
+<p>Used to transfer execution to another line. The expression following the word GOTO must refer to a valid line otherwise an error will occur. Any numeric expression may be used.</p>
+
+<p>EG GOTO 100 &nbsp;&nbsp;&nbsp;&nbsp;GOTO 1000+A*20</p>
+
+<p>The GOTO command can also be used to run a program without resetting the variables and arrays.</p>
+
+<h3>GOSUB</h3>
+
+<p>Used to execute a subroutine. The argument form is as shown above for GOTO.</p>
+
+<h3>RETURN</h3>
+
+<p>Used to end a subroutine; returns to the point after the corresponding GOSUB.</p>
+
+<h3>FOR</h3>
+
+<p>Used with NEXT for loop operations. Defaults to a step of 1. Will always execute at least once.</p>
+
+<p>EG FOR A=1 TO 10</p>
+
+<h3>STEP</h3>
+
+<p>Used to alter the step after execution of a for next loop, if ommitted defaults to 1</p>
+
+<p>EG FOR O=1 TO -1 STEP -1</p>
+
+<h3>NEXT</h3>
+
+<p>Used to terminate a FOR loop. May be followed by the variable of the FOR statement, defaults to the innermost loop (the last FOR statement). If no preceeding FOR is present the error MISSING FOR ERROR will be printed.</p>
+
+<h3>NESTING</h3>
+
+<p>Is limited only by memory size and is typically in the region of 300-400 levels.</p>
+
+<p>EG NEXT &nbsp;&nbsp;&nbsp;&nbsp;NEXT COUNT &nbsp;&nbsp;&nbsp;&nbsp;NEXT I,J (special case for multiple for loops).</p>
+
+<h3>IF</h3>
+
+<p>This is the conditional test to determine the course of action to be taken by the program.</p>
+
+<p>The THEN is optional as a qualifier but may be needed in certain circumstances.</p>
+
+<p>EG IF A=+1 THEN 30 &nbsp;&nbsp;&nbsp;&nbsp;IF A&gt;=B PRINT "THEY ARE EQUAL" &nbsp;&nbsp;&nbsp;&nbsp;IF A&lt;=S4 THEN A=4 :GOTO C &nbsp;&nbsp;&nbsp;&nbsp;IF A&lt;&gt;L THEN PRINT "YOU LOSE</p>
+
+<p>ELSE may also be used and will be executed if the comparison is false.</p>
+
+<p>EG IF A&gt;N THEN PRINT "YES" ELSE PRINT "NO &nbsp;&nbsp;&nbsp;&nbsp;IF A&lt;G-5/2 THEN 40 ELSE 80</p>
+
+<p>Note that if the qualifier (either THEN or ELSE) is used as a conditional GOTO, the number must be a constant. To use an expression, GOTO should be used.</p>
+
+<p>EG IF A=GG GOTO A*10 ELSE GOTO GG*100</p>
+
+<p>Else may be nested.</p>
+
+<p>EG IF A=2 GOTO 34 ELSE IF A=12 GOTO 47 ELSE PRINT "ERROR":END</p>
+
+<p>If ELSE is not present execution will continue on the next line if the compairson is false. If ELSE is used it must appear on the same line as the IF. Execution will continue on the next line when an ELSE is encountered.</p>
+
+<h3>CLS</h3>
+
+<p>Clears the vdu, incorporates a delay. No arguments needed.</p>
+
+<h3>VDU</h3>
+
+<p>Used for sending ASCII codes to, and memory mapping the VDU. Must contain 2 arguments, separated by commas, the first argument must lie in the range 0 to 1024 and determines the position of the character to be mapped. If 0 is used the character is output in the normal way through the port. This is used for sending control characters which could not be put in a PRINT statement.</p>
+
+<p>EG To send a line feed only to the terminal, use VDU 0,$0D.</p>
+
+<p>The second argument is the character to be sent, or mapped. It must lie in the range 0 to 255. Characters greater than 127 are the same as 0 to 127. Eg 128 is the same as 0.</p>
+
+<p>EG FOR POS=1 TO $400:VDU POS,$20:NEXT :REM SLOW CLEAR OF VDU</p>
+
+<h3>POKE</h3>
+
+<p>Used for changing memory; consists of two arguments separated by a comma. The first argument is the address and must be between 0 and 65535 ($FFFF). The second argument is the value to be put at that address and must lie in the range 0 to 255 ($FF).</p>
+
+<h3>OUT</h3>
+
+<p>Used for outputting values to the 8080 ports; consists of two arguments separated by commas, both of which must be in the range 0 to 255 ($FF). The first argument gives the port number, the second the value to be sent to the port.</p>
+
+<h3>CALL</h3>
+
+<p>Used for interfacing user written machine code routines to the main BASIC program. Consists of 3 arguments separated by commas. The first argument must lie in the range 0 to 65535 ($FFFF) and is the address to be called. The second argument must lie in the same range, and is passed to the user program in the DE register pair. The third parameter must be a variable and is used to store the value of the DE pair on return. All registers may be destroyed (except the SP) and a return to BASIC is accomplished with a RET instruction at the end of the user program ($C9).</p>
+
+<p>EG CALL $3000,A,A &nbsp;&nbsp;&nbsp;&nbsp;CALL C,V,I</p>
+
+<h3>END</h3>
+
+<p>Used to stop execution of the program and may be put anywhere in the program.</p>
+
+<h3>CONT</h3>
+
+<p>Used to continue execution of a program after it has been halted by a stop command, by typing CNT-D on an INPUT statement or by hitting BREAK during execution. May only be used if the program has not been changed. If the program has been changed, or an error has occurred, the error message CONT ERROR will be printed.</p>
+
+<h3>EDIT</h3>
+
+<p>Used to recall a line into the input buffer for editing in the normal way (see line editing). EDIT is followed by the number of the line to be edited. The line is then printed out as it would be in the LIST command. If the line is too long to fit in the buffer an OVERFLOW ERROR is given and the line remains intact and unchanged. The line is printed out and the cursor moved to the start of the line. Editing may be carried out in the normal way; the line number can be edited to facilitate copying lines without re-typing the whole line, or small changes can be made.</p>
+
+<h3>LET</h3>
+
+<p>Used to assign a value to a variable, (optional).</p>
+
+<h3>ON</h3>
+
+<p>Another form of conditional GOTO, may be used with GOTO or GOSUB. Takes the form .. ON var GOTO (GOSUB) num,num,num... var is any variable and num is a line number. Var may be an expression. The expression is evaluated and a GOTO (or GOSUB) executed to the N'th line number.</p>
+
+<p>EG The following code can be replaced by an ON command.</p>
+
+<pre>
+100 IF A=1 THEN 1000
+110 IF A=2 THEN 1100
+120 IF A=4 THEN 2006
+130 IF A=5 THEN 2088
+140 IF A=6 THEN 3000
+150 PRINT "ERROR ------"
+</pre>
+
+<p>Can be replaced by:</p>
+
+<pre>
+100 ON A GOTO 1000,1100,150,2006,2088,3000
+150 PRINT "ERROR ------"
+</pre>
+
+<p>Note that line 150 was inserted if A was 3. If the number (A) is less than 1 or greater than the number of lines listed then execution continues after the last number (the next statement). With GOSUB the RETURN instruction will cause a return to the next statement after the ON GOSUB.</p>
+
+<h3>DEF</h3>
+
+<p>Def is used to define the user function. The function has one local parameter (one that cannot be used by the rest of the program), and the statement takes the form</p>
+
+<pre>
+DEF FNR(X)=INT(X*RND(1))
+</pre>
+
+<p>FN is the common name for all user functions and is followed by a name (names for functions are made in the same way as variables) in this case R. X is the local parameter and is distinct from the variable X which may co-exist. Wherever X is used on the right hand side of the equals sign the parameter is substituted. This means that the variable X cannot be used and this should be borne in mind when writing programs. Any other variables may be used on the right hand side. The parameter need not be used at all (a dummy parameter). The user defined function is used as in any expression like:</p>
+
+<pre>
+A=FNR(4)
+</pre>
+
+<p>which result in A taking a random value from 0 to 3. The function must be declared before it is used. A DEF statement may not be used as an immediate command.</p>
+
+<h3>REM</h3>
+
+<p>Used for putting comments into programs, the rest of the line after a REM is ignored and stored as it is typed.</p>
+
 </body></html>
