@@ -1,4 +1,4 @@
-<html><head><title>Level 7 Monitor</title></head><body>
+﻿<html><head><title>Level 7 Monitor</title></head><body>
 
 <h1>LEVEL SEVEN DOCUMENTATION</h1>
 
@@ -30,11 +30,11 @@ TEL: 402 8137</p>
 
 <h2>GETTING IT GOING </h2>
 
-<p>The level seven firmware comes in 10x2708 type EPROMS, the monitor is supplied in 2 EPROMS marked MONITOR 7.2 A and MONITOR 7.2 B. The A rom is inserted into the socket on the main board for IC21 which is the socket furthest from the expansion socket, the B rom is placed in the socket for IC24 (the one nearest to the expansion socket). Note: Users with a parallel version will have the 7.2A chip replaced with one marked 7.2P. This goes in the same position as the A.</p>
+<p>The level seven firmware comes in 10x2708 type EPROMS, the monitor is supplied in 2 EPROMS marked MONITOR 7.2 A and MONITOR 7.2 B. The A ROM is inserted into the socket on the main board for IC21 which is the socket furthest from the expansion socket, the B ROM is placed in the socket for IC24 (the one nearest to the expansion socket). Note: Users with a parallel version will have the 7.2A chip replaced with one marked 7.2P. This goes in the same position as the A.</p>
 
 <p>The level seven BASIC is in 8x2708 EPROMS and needs to be fitted in an EPROM card on the motherboard. The card may be placed at any position on the motherboard, but the jumper (or switch) should be set at the topmost position (block 7) which is the position nearest to the plug on the card. The EPROMs are placed in the card starting BASIC 7.2 A in the position of IC7 (top right hand socket), BASIC B goes in IC8 next to it, BASIC C goes below A etc.</p>
 
-<p>Take care when inserting the roms as it is very easy to bend the pins when inserting. Check the roms again, then plug the rom card into the motherboard and switch on. The welcome message below should be displayed.</p>
+<p>Take care when inserting the ROMs as it is very easy to bend the pins when inserting. Check the ROMs again, then plug the ROM card into the motherboard and switch on. The welcome message below should be displayed.</p>
 
 <pre>
 TRITON V7.2
@@ -65,6 +65,41 @@ FUNCTION?  P Q J E R C G A D U H L F T S I O W M V X N Z K
 <h3>Q - Quick Program</h3>
 
 <p>This function has been included as a tool primarily for the entry of programs or strings of data and is not intended for changing single bytes. To enter the function from the main monitor loop type 'Q' - TRITON will respond with 'START:' You can then enter an address as detailed above. When the 'return' key is pressed the monitor will respond as in the program mode and you may step backwards or forwards as above. The difference comes in entering data - instead of having to press 'return' between bytes, the monitor will enter and step forward as soon as two digits have been entered - in addition invalid characters (not 0-9 or A-F) will be ignored. If a valid character is typed incorrectly you cannot use the 'Del' key - instead you must press 'return' followed by '^' to go back to that location again. To exit from the function type control C as above. You may step forward or back through memory after entering the first digit without altering the content of that location.</p>
+
+<p>BOOKS ON ASSEMBLY LANGUAGE PROGRAMMING AND BASIC AVAILABLE FROM TRANSAM</p>
+
+<table>
+<tr><td><u>REF. NO</u></td><td><u>TITLE</u></td><td><u>PRICE</u></td></tr>
+<tr><td>CB98</td><td>A QUICK LOOK AT BASIC</td><td>£10.95</td></tr>
+<tr><td>CB41</td><td>ADVANCED BASIC</td><td>£6.00</td></tr>
+<tr><td>CB97</td><td>ACCENT ON BASIC</td><td>£4.95</td></tr>
+<tr><td>CB163</td><td>BASIC PRIMER</td><td>£6.95</td></tr>
+<tr><td>CB65</td><td>BASIC COMPUTER GAMES</td><td>£5.50</td></tr>
+<tr><td>CB95</td><td>BASIC - A UNIT FOR SECONDARY SCHOOLS</td><td>£4.45</td></tr>
+<tr><td>CB40</td><td>BASIC BASIC</td><td>£6.50</td></tr>
+<tr><td>B18</td><td>BASIC A HANDS-ON METHOD</td><td>£7.78</td></tr>
+<tr><td>B22</td><td>BASIC FROM THE GROUND UP</td><td>£6.60</td></tr>
+<tr><td>B24</td><td>BASIC WITH BUSINESS APPLICATIONS</td><td>£9.74</td></tr>
+<tr><td>B25</td><td>BASIC WITH STYLE (PROGRAMMING PROVERBS)</td><td>£4.07</td></tr>
+<tr><td>B26</td><td>BASIC WORKBOOK</td><td>£4.39</td></tr>
+<tr><td>B206</td><td>BITS 8080 PROGRAMMER CODING PAD</td><td>£1.50</td></tr>
+<tr><td>CB37</td><td>BEGINNING BASIC</td><td>£6.50</td></tr>
+<tr><td>CB150</td><td>PROGRAMS THAT WORK (IN BASIC)</td><td>£3.15</td></tr>
+<tr><td>B79</td><td>GUIDED TOUR OF PROGRAMMING IN BASIC</td><td>£4.13</td></tr>
+<tr><td>CB70</td><td>GAME PLAYING WITH BASIC</td><td>£5.50</td></tr>
+<tr><td>CB36</td><td>INSTANT BASIC</td><td>£7.20</td></tr>
+<tr><td>CB161</td><td>MORE BASIC COMPUTER GAMES</td><td>£5.50</td></tr>
+<tr><td>CB168</td><td>MICROSOFT BASIC</td><td>£6.75</td></tr>
+<tr><td>CB126</td><td>PIMS (Personal Information Management Systsem) (BASIC)</td><td>£6.81</td></tr>
+<tr><td>CB28</td><td>STEP BY STEP INTRODUCTION TO 8080 SYSTEMS</td><td>£6.45</td></tr>
+<tr><td>CB39</td><td>SOME COMMON BASIC PROGRAMS</td><td>£6.45</td></tr>
+<tr><td>CB48</td><td>SCELBI 8080 GOURMET GUIDE &amp; COOKBOOK</td><td>£7.95</td></tr>
+<tr><td>CB96</td><td>TEACHERS' BASIC MANUAL</td><td>£6.45</td></tr>
+<tr><td>CB184</td><td>THE LITTLE BOOK OF BASIC STYLE</td><td>£5.25</td></tr>
+<tr><td>CB31</td><td>8080 BUGBOOK</td><td>£7.65</td></tr>
+<tr><td>CB50</td><td>8080 PROGRAMMING FOR LOGIC DESIGN</td><td>£6.30</td></tr>
+<tr><td>CB53</td><td>8080/8085 ASSEMBLY LANGUAGE PROGRAMMING</td><td>£6.95</td></tr>
+</table>
 
 <h3>J - Jump to BASIC L7.2</h3>
 
@@ -99,7 +134,7 @@ A  C  B  E  D  L  H  SP   PC
 00 10 FF 57 05 57 AO 1468 1647 SAP
 </pre>
 
-<p>You will note that the register pairs (HL,DE,BC) are displayed low order byte first - the letters refering to the register PC - Program counter, SP - Stack pointer are printed above. The letters following the program counter represent the flags - if the flag is set the letter is present. The 5 are listed below:</p>
+<p>You will note that the register pairs (HL,DE,BC) are displayed low order byte first - the letters referring to the register PC - Program counter, SP - Stack pointer are printed above. The letters following the program counter represent the flags - if the flag is set the letter is present. The 5 are listed below:</p>
 
 <p>S = Sign Flag, Z = Zero, A = Auxilary Carry, C = Carry, P = Parity</p>
 
@@ -127,7 +162,7 @@ A  C  B  E  D  L  H  SP   PC
 
 <h3>H - HEX Dump</h3>
 
-<p>This function produces a formatted hex-dump of memory between any two addresses. This allows for greater density than the 'L' function. The monitor will request a start address followed by an end address and will then produce a dump of memory (in hex) from the start address to the end address (inclusive). The dump is formatted so that the start of each line (with the exception of the first) will have the address XXX0; therefore all lines will contain 16 bytes (except the first and last). To exit from this function before it has finished type control C. To halt the printout temporarily enter control 'S' (X-OFF) to resume printout type control 'Q' (X-ON). These actions apply to all printout with the addition that when the printout has been halted with control 'S' a new line can be started by pressing the return key whereupon a CR/LF sequence will be printed. This is most useful when the output is diverted to a teletype or similar printer when a long line would otherwise be overtyped at the end stop. The printout can then be resumed with control 'Q'. When the dump has finished the oscillator will sound to inform you.</p>
+<p>This function produces a formatted hex-dump of memory between any two addresses. This allows for greater density than the 'L' function. The monitor will request a start address followed by an end address and will then produce a dump of memory (in hex) from the start address to the end address (inclusive). The dump is formatted so that the start of each line (with the exception of the first) will have the address XXX0; therefore all lines will contain 16 bytes (except the first and last). To exit from this function before it has finished type control C. To halt the printout temporarily enter control 'S' (X-OFF) to resume printout type control 'Q' (X-ON). These actions apply to all printout with the addition that when the printout has been halted with control 'S' a new line can be started by pressing the return key whereupon a CR/LF sequence will be printed. This is most useful when the output is diverted to a teletype or similar printer when a long line would otherwise be over-typed at the end stop. The printout can then be resumed with control 'Q'. When the dump has finished the oscillator will sound to inform you.</p>
 
 <h3>L - List Memory</h3>
 
@@ -139,7 +174,7 @@ A  C  B  E  D  L  H  SP   PC
 
 <h3>T - Trap</h3>
 
-<p>Trap is the Triton Resident Assembly Language Package - it resides on an 8k eprom card on the motherboard (see catalogue or documentation for details). This function will enter TRAP displaying the list of options available - no memory initialisation is performed by entry to TRAP and therefore program integrity is maintained.</p>
+<p>Trap is the Triton Resident Assembly Language Package - it resides on an 8k EPROM card on the motherboard (see catalogue or documentation for details). This function will enter TRAP displaying the list of options available - no memory initialisation is performed by entry to TRAP and therefore program integrity is maintained.</p>
 
 <h3>S - Shift Memory</h3>
 
@@ -147,7 +182,7 @@ A  C  B  E  D  L  H  SP   PC
 
 <h3>I - Input Tape (in standard TRITON format) to memory</h3>
 
-<p>This function will allow you to enter prerecorded tapes into TRITON's memory starting at 1602. When 'I' is typed from the main loop the tape control relay will be switched off and a tape header requested. When this has been entered correctly (use the DEL key where appropriate) press 'return'. The tape relay will be switched on and the message 'FILES FOUND' will be printed. Note the cursor drops onto the next line. The tape will now be searched for a header corresponding to that typed in. As each header is found it is printed out and if the two do not correspond a CR/LF is printed and the monitor waits for the next header. If the monitor recognises the header the cursor stays on the same line whilst the program is loaded. When the tape has finished loading, the message 'END' is printed out, the oscillator will sound and the monitor will re-enter the main loop waiting for another command. If during loading an error occurs (due to a noise spike or bad tape etc.,) a CR/LF and a question mark will be printed - note that only one question mark will be printed no matter how many errors are detected. This may also mean that the monitor may not recognise the end of the tape when it comes. If this happens you must use the Reset switch since the monitor does not read the keyboard - this also applies to the 'O' function and whilst the monitor is looking for a header or loading the tape.</p>
+<p>This function will allow you to enter pre-recorded tapes into TRITON's memory starting at 1602. When 'I' is typed from the main loop the tape control relay will be switched off and a tape header requested. When this has been entered correctly (use the DEL key where appropriate) press 'return'. The tape relay will be switched on and the message 'FILES FOUND' will be printed. Note the cursor drops onto the next line. The tape will now be searched for a header corresponding to that typed in. As each header is found it is printed out and if the two do not correspond a CR/LF is printed and the monitor waits for the next header. If the monitor recognises the header the cursor stays on the same line whilst the program is loaded. When the tape has finished loading, the message 'END' is printed out, the oscillator will sound and the monitor will re-enter the main loop waiting for another command. If during loading an error occurs (due to a noise spike or bad tape etc.,) a CR/LF and a question mark will be printed - note that only one question mark will be printed no matter how many errors are detected. This may also mean that the monitor may not recognise the end of the tape when it comes. If this happens you must use the Reset switch since the monitor does not read the keyboard - this also applies to the 'O' function and whilst the monitor is looking for a header or loading the tape.</p>
 
 <p>N.B: It is not advisable to try to load a tape when the output is directed to a printer since if the printer may not accept characters as fast as the tape is sending (30 characters per second) the header will not be printed correctly or recognised - therefore use the 'V' function first.</p>
 
@@ -177,11 +212,11 @@ A  C  B  E  D  L  H  SP   PC
 
 <h3>Z - Zap A Prom.</h3>
 
-<p>This function is to be used in conjunction with the Eprom programme card (available from Transam), it requests a start address and will then program the 2708 eprom with that and the next 1023 locations in memory. Two errors are possible; 'PROGRAM ERROR' - indicating that the device has a bit set to 'Zero' that should go to 'one' - this is not possible although a logic one may be changed to a zero - the device will have to be erased. The other is a 'READ ERROR' this occurs if the data programmed into the device does not correspond to that in memory after the device has been programmed. If all goes well the monitor will say 'END' and sound the tone - the tone will also be sounded in the event of an error.</p>
+<p>This function is to be used in conjunction with the EPROM programme card (available from Transam), it requests a start address and will then program the 2708 EPROM with that and the next 1023 locations in memory. Two errors are possible; 'PROGRAM ERROR' - indicating that the device has a bit set to 'Zero' that should go to 'one' - this is not possible although a logic one may be changed to a zero - the device will have to be erased. The other is a 'READ ERROR' this occurs if the data programmed into the device does not correspond to that in memory after the device has been programmed. If all goes well the monitor will say 'END' and sound the tone - the tone will also be sounded in the event of an error.</p>
 
 <h3>K - Keyboard Unshift</h3>
 
-<p>This function is mainly of use to those using Triton with a printer and/or the lower case graphics Rom as a letter writer or word processor. Typing 'K' will reverse the effect of the monitor's shift on the keyboard so it will act as a normal typewriter i.e. the lower case small - press shift to get upper case - this only affects the letters, numbers are as before. To get back to normal type Shift-K. At reset the shift is set to normal - upper case on unshift keys.</p>
+<p>This function is mainly of use to those using Triton with a printer and/or the lower case graphics ROM as a letter writer or word processor. Typing 'K' will reverse the effect of the monitor's shift on the keyboard so it will act as a normal typewriter i.e. the lower case small - press shift to get upper case - this only affects the letters, numbers are as before. To get back to normal type Shift-K. At reset the shift is set to normal - upper case on unshift keys.</p>
 
 <h2>HERE ENDETH THE LESSON..............</h2>
 
@@ -235,7 +270,7 @@ ADDRESS DATA LABEL MNEMONIC OPERAND COMMENT
 1642                   END 
 </pre>
 
-<p>First of all clear memory to 0 so we can see what we are doing so type E 1600, FFFF as the end (for good measure) and 00 as the Byte, after a couple of seconds the function message will be printed after a beep - now list from 1600 to check this; type 'Y' to the 'more?' prompt, then type 'Q' to enter the program. Type the digits checking the addresses against those listed. Once entered use control 'C', then check using the L function to list again. If any bytes are entered wrongly change those with the 'P' function. Once we have entered the program we must enter the 2 strings -the first one starts at 1622, type A 1622 (RET) ENTER A CHARACTER (CONTROL-D). The end address should be 1634 so put the 2nd string in by typing A 1634 (RET) AGAIN (Y/N)?(CNTRL-D) - OK we should now be ready to run. Type G-1602. If the program has been entered correctly the screen should clear and the message 'ENTER A CHARACTER' will be displayed on the second line - hit a key and the VDU will be mapped continuously, hit INT2 and the screen should settle down and the registers displayed - the PC will be somewhere between 160C and 1610 and the HL register at 1000 which is the first position on the VDU - this is where the problem is - we haven't incremented it so the program will never end - we must insert an INX H instruction at 160D; but first we must make room for it - type S 160D 1642 160E so we are moving the block from 160D -1642 up one byte - having done this we can insert (using the P function) 23 at 160D and run once again. The message will be printed with a graphic character preceeding it. This is because we moved the message by one byte, so we will have to change the address at 1604/5 - we can find where the strings have moved to by using the N function from 1610 to 164F. Put the correct addresses in 1604/5 and 1618/9 - having done this try again - the correct message is issued but we seem to have problems with the character - let's try a breakpoint - the best place to put one is at 160F. Using the P function put D7 at 160F and run again - we have now found the problem - the accumulator has been loaded with the H register so we have lost the original character. However, if we save the character in the B register and map the B register instead, this should solve the problem - we need to open out another gap at 1609, so using the S function move the program up and insert the byte 47 at 1609 and change the byte at 160D to 70 (MOV M,B).</p>
+<p>First of all clear memory to 0 so we can see what we are doing so type E 1600, FFFF as the end (for good measure) and 00 as the Byte, after a couple of seconds the function message will be printed after a beep - now list from 1600 to check this; type 'Y' to the 'more?' prompt, then type 'Q' to enter the program. Type the digits checking the addresses against those listed. Once entered use control 'C', then check using the L function to list again. If any bytes are entered wrongly change those with the 'P' function. Once we have entered the program we must enter the 2 strings -the first one starts at 1622, type A 1622 (RET) ENTER A CHARACTER (CONTROL-D). The end address should be 1634 so put the 2nd string in by typing A 1634 (RET) AGAIN (Y/N)?(CNTRL-D) - OK we should now be ready to run. Type G-1602. If the program has been entered correctly the screen should clear and the message 'ENTER A CHARACTER' will be displayed on the second line - hit a key and the VDU will be mapped continuously, hit INT2 and the screen should settle down and the registers displayed - the PC will be somewhere between 160C and 1610 and the HL register at 1000 which is the first position on the VDU - this is where the problem is - we haven't incremented it so the program will never end - we must insert an INX H instruction at 160D; but first we must make room for it - type S 160D 1642 160E so we are moving the block from 160D -1642 up one byte - having done this we can insert (using the P function) 23 at 160D and run once again. The message will be printed with a graphic character preceding it. This is because we moved the message by one byte, so we will have to change the address at 1604/5 - we can find where the strings have moved to by using the N function from 1610 to 164F. Put the correct addresses in 1604/5 and 1618/9 - having done this try again - the correct message is issued but we seem to have problems with the character - let's try a breakpoint - the best place to put one is at 160F. Using the P function put D7 at 160F and run again - we have now found the problem - the accumulator has been loaded with the H register so we have lost the original character. However, if we save the character in the B register and map the B register instead, this should solve the problem - we need to open out another gap at 1609, so using the S function move the program up and insert the byte 47 at 1609 and change the byte at 160D to 70 (MOV M,B).</p>
 
 <p>Having done this change 1610 to FE - now all that remains is to change the addresses of the strings (again) so use the F function to search from 1600 to 1650 for 45,4E and 41,47 which are the first 2 bytes of the 1st and 2nd string respectively. Change 1604/5 and 1619/A again and run - it should now do what we said it would - and correspond to listing 2.</p>
 
@@ -361,7 +396,7 @@ SPKR = 3-16 OHMS SPEAKER</p>
 
 <h2>SERIAL I/O</h2>
 
-<p>The level seven monitor provides a serial output to a printer. This can be turned on or off by using the V function, it can also be changed in programs as mentioned previously. The serial output appears as one bit on Bit 8 of Port 6 it is overidden in software and the speed of output can be easily changed by altering a value stored in RAM - see later.</p>
+<p>The level seven monitor provides a serial output to a printer. This can be turned on or off by using the V function, it can also be changed in programs as mentioned previously. The serial output appears as one bit on Bit 8 of Port 6 it is overridden in software and the speed of output can be easily changed by altering a value stored in RAM - see later.</p>
 
 <p>The data is inverted - i.e. logic Zero is +5 and one 0V. The format is as follows:-</p>
 
@@ -389,7 +424,7 @@ SPKR = 3-16 OHMS SPEAKER</p>
 
 <img src="lvl7_fig6.png">
 
-<p>The L7.1 monitor occipies locations 0000 to 03FF and 0C00 to 0FFF, the space from 0400 to 0BFF is left for user expansion (see previous section).</p>
+<p>The L7.1 monitor occupies locations 0000 to 03FF and 0C00 to 0FFF, the space from 0400 to 0BFF is left for user expansion (see previous section).</p>
 
 <p>Useful addresses are listed below:</p>
 
@@ -411,10 +446,10 @@ SPKR = 3-16 OHMS SPEAKER</p>
 
 <table>
 <tr><td>0</td><td>Keyboard - Input only - special routine needed.</td></tr>
-<tr><td>1</td><td>Tape I/O Uart status input</td></tr>
-<tr><td>2</td><td>Tape I/O Uart data strobe output</td></tr>
+<tr><td>1</td><td>Tape I/O UART status input</td></tr>
+<tr><td>2</td><td>Tape I/O UART data strobe output</td></tr>
 <tr><td>3</td><td>Led port output - On = Logic zero</td></tr>
-<tr><td>4</td><td>Tape I/O uart receive data enable input</td></tr>
+<tr><td>4</td><td>Tape I/O UART receive data enable input</td></tr>
 <tr><td>5</td><td>VDU output - Strobe routine needed</td></tr>
 <tr><td>6</td><td>Serial O/P on Bit 8 - Bit 7 spare</td></tr>
 <tr><td>7</td><td>Bit 8 = Relay - Bit 7 = Oscillator (speaker) (see circuit)</td></tr>
@@ -500,11 +535,11 @@ SPKR = 3-16 OHMS SPEAKER</p>
 
 <p>5. Alphabet using memory mapping. Change the instruction at 1626 as in 3.</p>
 
-<p>6. Modem echo test. Change the instruction at 1602 to call uartout by changing the bytes at 1603/4 to 3E and 00 - change the instructions at 1606 to call uartin by changing the bytes at 1607-8 to 62 and 0EH.</p>
+<p>6. Modem echo test. Change the instruction at 1602 to call UARTOUT by changing the bytes at 1603/4 to 3E and 00 - change the instructions at 1606 to call UARTIN by changing the bytes at 1607-8 to 62 and 0EH.</p>
 
 <p>7. Test tape playback program. Is now contained in the monitor at 03E6.</p>
 
-<p>8. Test tape record program. Change the instructions at 1602, 160D, 1612 to call uartout by changing the bytes following each of these addresses to 3E and 00.</p>
+<p>8. Test tape record program. Change the instructions at 1602, 160D, 1612 to call UARTOUT by changing the bytes following each of these addresses to 3E and 00.</p>
 
 <h2>IMPLEMENTATION</h2>
 
@@ -549,7 +584,7 @@ SPKR = 3-16 OHMS SPEAKER</p>
 
 <p>If any attempt is made to insert characters beyond the end of a line or backspace beyond the start of the line the commands are ignored.</p>
 
-<p>To enter a line press the RETURN key, this will enter all characters to the left of the cursor, alternatively cnt-] can be used to enter the whole line regardless of the cursor position.</p>
+<p>To enter a line press the RETURN key, this will enter all characters to the left of the cursor, alternatively CNT-] can be used to enter the whole line regardless of the cursor position.</p>
 
 <h2>ESCAPE CODES</h2>
 
@@ -612,7 +647,7 @@ W]      WIDTH      X]     XOR
 
 <p>BASIC level seven has a unique space-saving feature which permits faster execution and more compact storage together with a fixed format listing resulting in greater readability and freedom of formatting when entering lines. Each reserved word (those listed as words under ESC codes) is stored as one byte and spaces are not stored (except in quoted strings or in REM statements) and are automatically converted to full words on LIST and spaces are added according to certain rules - giving a listing which will correspond exactly to another, no matter whether the original was typed with or without spaces.</p>
 
-<p>Spaces are optional and may be placed anywhere in line with certain exceptions - these are that a reserved word may not contain spaces and if a combination of letters could be wrongly interpreted as another word: for example 6 IF F OR T THEN 43 should not be entered as: 6 IFFORTTHEN as this will be interpreted as IF FOR T THEN. This should therefore be entered as 6IFF ORTTHEN43 which will be interpreted correctly. Note that if a keyword is entered with an imbedded space it will not be interpreted and can cause weird syntax errors. Where the listing appears correct but yields a SYNTAX ERROR IN LINE 12 re-enter the line by using EDIT and exit from the line with CNT-]. If this does not work the error must exist in some other place.</p>
+<p>Spaces are optional and may be placed anywhere in line with certain exceptions - these are that a reserved word may not contain spaces and if a combination of letters could be wrongly interpreted as another word: for example 6 IF F OR T THEN 43 should not be entered as: 6 IFFORTTHEN as this will be interpreted as IF FOR T THEN. This should therefore be entered as 6IFF ORTTHEN43 which will be interpreted correctly. Note that if a keyword is entered with an embedded space it will not be interpreted and can cause weird syntax errors. Where the listing appears correct but yields a SYNTAX ERROR IN LINE 12 re-enter the line by using EDIT and exit from the line with CNT-]. If this does not work the error must exist in some other place.</p>
 
 <h2>BASIC BASIC<h2>
 
@@ -649,7 +684,7 @@ W]      WIDTH      X]     XOR
 
 <h3>HEX CONSTANTS</h3>
 
-<p>Level seven supports hex constants in a program and these are denoted by a preceeding dollar sign. These can be used as normal constants (H=$c9) as data ( 10 DATA $CD,$00,$13 ) or as an entry for an INPUT command.</p>
+<p>Level seven supports hex constants in a program and these are denoted by a preceding dollar sign. These can be used as normal constants (H=$c9) as data ( 10 DATA $CD,$00,$13 ) or as an entry for an INPUT command.</p>
 
 <h3>HEX STRINGS</h3>
 
@@ -722,15 +757,15 @@ W]      WIDTH      X]     XOR
 
 <h3>LPRINT</h3>
 
-<p>LPRINT follows the same rules as PRINT with the addition that the line will be sent to the printer as well as to the vdu. The printout always returns to the vdu only after an LPRINT. Wherever PRINT is used LPRINT may be substituted.</p>
+<p>LPRINT follows the same rules as PRINT with the addition that the line will be sent to the printer as well as to the VDU. The printout always returns to the vdu only after an LPRINT. Wherever PRINT is used LPRINT may be substituted.</p>
 
 <p>PRINT used alone (or followed by a colon) will result in a CR/LF being printed (Carriage Return &amp; Line Feed). PRINT may be abbreviated to ].</p>
 
-<p>Characters enclosed in quotes are printed as entered. As in all quoted strings if the last character on the line is a quote (") it may be ommited to save space - eg: PRINT "HELLO THERE" and PRINT "HELLO THERE will both produce the correct message but the second example uses one less byte.</p>
+<p>Characters enclosed in quotes are printed as entered. As in all quoted strings if the last character on the line is a quote (") it may be omitted to save space - eg: PRINT "HELLO THERE" and PRINT "HELLO THERE will both produce the correct message but the second example uses one less byte.</p>
 
 <p>Two separators are used to separate items in a PRINT statement. These are a comma (,) and a semi-colon (;). The comma will move the cursor to the next tab position (every 8 characters). A semi-colon will print a single space unless it is the last character in the print statement in which case it will not move the cursor. If no separator is used no spaces will be output, so for instance an answer to a sum can be put next to a quoted string as in PRINT "THE ANSWER = "A+B which would produce something like THE ANSWER = 32 which is much more readable and uses less storage than the usual semi-colon separator.</p>
 
-<p>Note for use with other BASIC's: Some other BASIC's use a semi-colon to separate items without printing a space. In this case the semi-colon may be ommitted so the string "HELLO ";A ;" HOW ARE YOU" may be entered as either "HELLO "A " HOW ARE YOU" or "HELLO":A :"HOW ARE YOU" both of which will produce the same printout and both of which save 2 bytes over the original.</p>
+<p>Note for use with other BASIC's: Some other BASIC's use a semi-colon to separate items without printing a space. In this case the semi-colon may be omitted so the string "HELLO ";A ;" HOW ARE YOU" may be entered as either "HELLO "A " HOW ARE YOU" or "HELLO":A :"HOW ARE YOU" both of which will produce the same printout and both of which save 2 bytes over the original.</p>
 
 <p>If it is wished to print 2 (or more) strings combined without a space either PRINT A B or PRINT A +B may be used; the first one is preferable since it does not use extra space (if there is not enough room a NO STRING SPACE ERROR will be printed, but this cannot happen with the first example. Also the second example uses one extra byte).</p>
 
@@ -738,7 +773,7 @@ W]      WIDTH      X]     XOR
 
 <p>Numbers are printed as detailed before with leading and trailing zeroes suppressed.</p>
 
-<p>Scientific notation consists of the sign, mantissa, sign, exponant. EG 12345000 would be printed as 1.2345E+7.</p>
+<p>Scientific notation consists of the sign, mantissa, sign, exponent. EG 12345000 would be printed as 1.2345E+7.</p>
 
 <h3>INPUT</h3>
 
@@ -756,11 +791,11 @@ W]      WIDTH      X]     XOR
 
 <h3>LINE INPUT</h3>
 
-<p>A special version of INPUT for strings may be supplied with a prompt in quotes and ONE STRING variable. It then prompts the user with the prompt supplied and will save all characters upto the RETURN in the string variable named. This includes leading spaces, quotes ("), colons (:) and commas (,) all of which are not used on a normal string INPUT. As before a single RETURN will produce a null string.</p>
+<p>A special version of INPUT for strings may be supplied with a prompt in quotes and ONE STRING variable. It then prompts the user with the prompt supplied and will save all characters up to the RETURN in the string variable named. This includes leading spaces, quotes ("), colons (:) and commas (,) all of which are not used on a normal string INPUT. As before a single RETURN will produce a null string.</p>
 
 <h3>GET</h3>
 
-<p>This is a special, real time feature for getting information without waiting for a RETURN. This feature opens up many possibilities in the fields of interactive games and simulations. The GET command produces no prompt and does not echo any characters typed. When used it returns immediately, whether a key has been pressed or not. If a numeric variable is specified the GET will return 1 to 9 if the keys 1 to 9 are pressed; otherwise it will return 0 (as with INPUT). If a string variable is specified any key pressed will be returned as a single character string. If no key is pressed a nul string ("") is returned. Only one argument is allowed.</p>
+<p>This is a special, real time feature for getting information without waiting for a RETURN. This feature opens up many possibilities in the fields of interactive games and simulations. The GET command produces no prompt and does not echo any characters typed. When used it returns immediately, whether a key has been pressed or not. If a numeric variable is specified the GET will return 1 to 9 if the keys 1 to 9 are pressed; otherwise it will return 0 (as with INPUT). If a string variable is specified any key pressed will be returned as a single character string. If no key is pressed a null string ("") is returned. Only one argument is allowed.</p>
 
 <p>EG 100 GET A$ :IF A$ ="Y" THEN PRINT "YES" ELSE GOTO 100</p>
 
@@ -832,7 +867,7 @@ W]      WIDTH      X]     XOR
 
 <h3>NEXT</h3>
 
-<p>Used to terminate a FOR loop. May be followed by the variable of the FOR statement, defaults to the innermost loop (the last FOR statement). If no preceeding FOR is present the error MISSING FOR ERROR will be printed.</p>
+<p>Used to terminate a FOR loop. May be followed by the variable of the FOR statement, defaults to the innermost loop (the last FOR statement). If no preceding FOR is present the error MISSING FOR ERROR will be printed.</p>
 
 <h3>NESTING</h3>
 
@@ -860,7 +895,7 @@ W]      WIDTH      X]     XOR
 
 <p>EG IF A=2 GOTO 34 ELSE IF A=12 GOTO 47 ELSE PRINT "ERROR":END</p>
 
-<p>If ELSE is not present execution will continue on the next line if the compairson is false. If ELSE is used it must appear on the same line as the IF. Execution will continue on the next line when an ELSE is encountered.</p>
+<p>If ELSE is not present execution will continue on the next line if the comparison is false. If ELSE is used it must appear on the same line as the IF. Execution will continue on the next line when an ELSE is encountered.</p>
 
 <h3>CLS</h3>
 
@@ -949,5 +984,393 @@ A=FNR(4)
 <h3>REM</h3>
 
 <p>Used for putting comments into programs, the rest of the line after a REM is ignored and stored as it is typed.</p>
+
+<h2>BASIC FILES</h2>
+
+<p>File handling in Level Seven BASIC is made easy by the use of SAVE and LOAD for arrays (see next section). These can be string or numeric and usually the average program can make do with one of each.</p>
+
+<p>Given below is a short example of how to go about implementing data files:</p>
+
+<pre>
+10 CLS:PRINT "DEMO PROGRAM
+20 INPUT "1=LOAD 2=SAVE 3=EDIT ";T:ON T GOTO 30,100,200
+30 INPUT "LOAD TAPE AND PRESS RETURN";A$:LOAD("FIL1")@DS,D
+40 GOTO 20
+100 INPUT "LOAD TAPE AND PRESS RETURN";A$:SAVE("FIL1")@DS,D
+110 GOTO 20
+200 INPUT "ITEM NO. ";T
+210 PRINT "ITEM";T;D$(T)TAB(20)"QTY="D(T);:INPUT"ENTER NEW QTY";D(T)
+220 INPUT "ANOTHER ?";A$:IF LEFT$(A$,1)="Y"THEN200 ELSE 20
+</pre>
+
+<p>This would be the basis of a very simple stock-keeping program but it should give you the idea of how to write a practical program (you would need to add DIMs to the program as well as some means of entering the item names to the program above.)</p>
+
+<h3>SAVE</h3>
+
+<p>Used for saving user programs or data, it has many unique features. The tape format used is special and not compatible with other formats. This means that programs written for levels 4, 5 or 6 will have to be typed into level seven; machine code programs may still be loaded from the monitor in the normal way. O may not be used for saving a BASIC program.</p>
+
+<p>SAVE may have a specified name or, if none is specified, the default header '$$$' is sent. The header is enclosed in round brackets and may be any string expression. If no extra parameters are specified the BASIC program in memory is saved.</p>
+
+<p>EG SAVE will save the program with the header '$$$'<br>
+SAVE ("PROG *1") will save the program with the header 'PROG*1'<br>
+SAVE (NAME$ ) will save the program with the header NAME$.</p>
+
+<p>If an attempt is made to specify a number a TYPE MISMATCH ERROR will be printed.</p>
+
+<p>To save a block of memory (such as a maching code program) the addresses are placed after SAVE (the header if used)</p>
+
+<p>EG SAVE 1600, 1800 will save the block from 1600 to 1800 (hex).</br>
+SAVE ("TEST")A,B will save the block from A to B with the header 'TEST'</p>
+
+<p>To save an array it must have been previously dimensioned and is saved in full. The array name is preceded by an '@' to specify an array.</p>
+
+<p>EG SAVE @A will save the numeric array A with the header '$$$'</br>
+SAVE (DAT$)@ST$ will save the string array ST$ with the header DAT$</br>
+SAVE ("ARY"+A$)@A will save the numeric array with the header 'ARY'+A$</p>
+
+<p>SAVE may be placed in a program or used as an immediate command. When it is executed it switches the motor on, waits 6 seconds and then sends the data. If the list of items to save is a comma, the SAVE will be executed on the next item, followed by with only 1 6 second gap.</p>
+
+<p>EG SAVE @$,("AR")@D$ will have a six second gap, the header $$$ followed by numeric array $ followed by a 6 second gap followed by the header 'AR' and string array D.</p>
+
+<p>SAVE, will save the program with the header '$$$' twice.</p>
+
+<p>The tape relay is switched off five seconds after the last item in the list has been sent.</p>
+
+<h3>LOAD</h3>
+
+<p>Used to recover files saved by use of the save command. Note that it will not load files from TRAP, L6 or tiny BASIC L5 or L4.</p>
+
+<p>The format for the load command is the same as for the save command with the exception that programs do not have an address following them, even if you are loading a machine code program. To load a program, only the header must match and the program will be loaded to the original address from which it was saved.</p>
+
+<p>If the file loaded was a BASIC program it will run automatically from the lowest line, if not, execution will continue at the next statement.</p>
+
+<p>LOAD used alone will search the tape for a program (BASIC or Machine code) and load the first program it encounters into memory. If a header is specified (as in SAVE) this header will be searched for, the message:</p>
+
+<pre>
+FILES FOUND:
+</pre>
+
+<p>will be printed and the computer will search the tape for a program. As each program is found the title will be printed out. If the computer is loading the file, the cursor will stay on the same line. If not, it will drop onto the next line and wait for another header.</p>
+
+<p>If an array is specified then the computer will search for an array on the tape and load it. The array must be large enough to take all the elements of the array being loaded from tape. If not, the message OVERFLOW ERROR will be printed. Also, the type (string or numeric) of the array must match, otherwise the message TYPE MISMATCH ERROR will be printed. The no. of dimensions in the array does not matter, so long as the total number of elements is greater than or equal to the number of elements in the array saved.</p>
+
+<p>When BASIC saves an array it saves the first dimension first, then the next element in the second dimension, etc. For example in an array set to DIM A(3,3) it saves in this order:</p>
+
+<p>A(0,0) , A(1,0) , A(2,0) , A(3,0) , A(0,1) , A(1,1) , A(2,1) , A(3,1) , A(0,2) , A(1,2) , A(2,2) , A(3,2) , A(0,3) , A(1,3) , A(2,3) , A(3,3).</p>
+
+<p>This could be saved from array A and reloaded into array X which had been set to DIM X(15) (although it could have been bigger) and A(0,0) =X(0) and so on. Any additional elements (not loaded from tape) are left unchanged, so for instance A could be loaded into an array with 30 elements and only the first 16 would be changed.</p>
+
+<p>EG LOAD will search for a program, if it is a BASIC program it will RUN.</br>
+LOAD @A will search for the first array and load it.</br>
+LOAD ("FI*") will search for the program 'FI*'.</p>
+
+<h3>ERRORS</h3>
+
+<p>BASIC will check for any errors occurring during the loading of a file from tape. If any are detected, a question mark (?) is printed on the line below the header of the file being loaded to inform the user of the fact. Only one query will be printed no matter how many errors are detected and BASIC will not abort from the load but wait until the data has been loaded and then print the message LOAD ERROR and return to the command level. It may be that the program has only missed one byte in which case it is only a question of using EDIT to correct the mistake. However, it may be that it has corrupted a pointer or line number, in which case it is best to exit to the monitor with CNT-C and re-enter BASIC with J and try again. (SCR may not work if the program pointers have been corrupted).</p>
+
+<h3>BREAKING</h3>
+
+<p>The SAVE command may be exited at any time by using the break key. Load may be exited whilst it is searching for a file or printing the header, but when a program is loading the RST-2 will have to be used (or RESET) since a break during a file load could corrupt memory.</p>
+
+<h3>BEEP BEEP</h3>
+
+<p>For users with the bleeper circuit fitted (details in documentation components from Transam) the bleeper will sound after a SAVE has finished and after each file has been loaded with LOAD.</p>
+
+<h3>DEBUGGING</h3>
+
+<p>Several commands are available on Level seven to aid in the fast development of programs and the efficient debugging thereof.</p>
+
+<h3>STOP</h3>
+
+<p>This will cause BASIC to print the message BREAK IN LINE x (where x is the line in which stop occurs) and to return to the command level. Execution may be continued from after the STOP by using CONT.</p>
+
+<h3>TRACE</h3>
+
+<p>This command causes BASIC to print all line numbers as they are executed. They are printed in square brackets (to distinguish them) as each line is encountered.</p>
+
+<h3>OFF</h3>
+
+<p>The command OFF will stop the action caused by TRACE. This is the condition at power-on and entry to BASIC by J.</p>
+
+<h3>DUMP</h3>
+
+<p>This is a very useful command. Used to find what's what in a program. It will print all variables used, together with their values (string or numeric). Also arrays are printed with their total size. Note that the dimensions appear in the opposite order to that used in a DIM statement (DIMA(2,3) will give A(3,2) )</p>
+
+<p>here is an example of a dump</p>
+
+<pre>
+A=3.14159
+A$=HELLO
+NA$=GEORGE P. INGLISH
+C(5,2)
+D$(50,50)
+</pre>
+
+<h2>OTHER USEFUL FEATURES</h2>
+
+<h3>SWAP</h3>
+
+<p>Used to swap two variables, strings, array elements etc. Both sides must be of the same type otherwise a TYPE MISMATCH ERROR is generated.</p>
+
+<p>EG SWAP COUNT,C1 SWAP NAME$,TMP$ SWAP A(4,3),A(X,Y) etc.</p>
+
+<h3>ERASE</h3>
+
+<p>Used for removing an array from memory, so that it may be re-dimensioned or may give additional space for other operations. Generally used after a SAVE to save the contents of the array. More than one item may be specified, arrays being separated by commas.</p>
+
+<p>EG ERASE R,Y$</p>
+
+<h3>RANDOMIZE</h3>
+
+<p>Used to set the random number generator at an unpredictable point. Note that the BASIC will always return the same number after entering, but from thereon the result is not predictable (see RND).</p>
+
+<h3>WIDTH</h3>
+
+<p>When BASIC sends its output to a printer the width of the page is assumed to be 64 characters (as on the VDU) but this can be altered by using the WIDTH command, the number following the command is used as the width (0-255)</p>
+
+<p>EG WIDTH 80 will set up for an 80 column printer.</p>
+
+<hr>
+
+<p>That concludes the description of the commands and functions available to the LEVEL SEVEN BASIC user. Other features of the language will now be dealt with, followed by a list of functions and finishing with some tips and hints.</p>
+
+<h3>MATHEMATICAL OPERATIONS</h3>
+
+<p>All arithmetic is carried out on floating point numbers and where possible they are represented in normal format. If they go out of the range of normal representation they are printed in normal scientific format (see previous section). Expressions may be as complex as necessary with the main limitation being the length of a single line. The number of parentheses is not limited, nor are other nested functions and recursive execution is permitted by the stack-orientated structure of the BASIC.</p>
+
+<h3>ARITHMETIC OPERATORS</h3>
+
+<p>The full range of mathematical operators are present (+,-,*,/) which may be used for numeric calculations (+ alone may be used for string concatenation). In addition exponentiation is supported (X to the Y is entered X^Y), in addition comparators and logical operators are allowed (see previous section for priority).</p>
+
+<h3>LOGICAL CAPTAIN</h3>
+
+<p>Logical operators are generally used on IF statements (IF A=B OR B+C=R THEN) but they operate in a logical fashion on signed 16 bit integers; comparators yield either -1 (TRUE) or 0 (FALSE); therefore NOT -1 gives 0. AND, OR, NOT, and XOR all operate on a bitwise principle. Here are some examples:</p>
+
+<p>63 AND 16 =16 63=111111, 16=10000 so giving 16<br>
+4 OR 2=6 4=100,2=10 ans =110 =6.<br>
+3 XOR 2=1 3=11 ,2=10 ans =001 =1.</p>
+
+<p>For a fuller explanation of logical operations see the book list in the monitor section.</p>
+
+<h3>EASY AS ...</h3>
+
+<p>PI is available as a predefined variable, and may not be redeclared. It has the value 3.1415927 and will yield correct results when used with the trigonometric functions.</p>
+
+<h3>FUNCTIONS</h3>
+
+<p>The functions available on the LEVEL SEVEN are listed below and standard trigonometric functions are handled in radians. The following routine can be used to convert from radians to degrees.</p>
+
+<p>X/PI*180 will give x in degrees X*PI/180 will convert to radians.</p>
+
+<h3>OTHER FUNCTIONS</h3>
+
+<p>The following functions can be calculated by using the formulas given below:</p>
+
+<table>
+<tr><td><u>FUNCTION</u></td><td><u>FUNCTION IN BASIC</u></td></tr>
+<tr><td>SECANT</td><td>SEC(X) = 1/COS(X)</td></tr>
+<tr><td>COSECANT</td><td>CSC(X) = 1/SIN(X)</td></tr>
+<tr><td>COTANGENT</td><td>COT(X) = 1/TAN(X)</td></tr>
+<tr><td>INVERSE SINE</td><td>ARCSIN(X) = ATN(X/SQR(-X*X+1))</td></tr>
+<tr><td>INVERSE COSINE</td><td>ARCCOS(X) = ATN(X/SQR(-X*X+1))+1.5708</td></tr>
+<tr><td>INVERSE SECANT</td><td>ARCSEC(X) = ATN(SQR(X*X-1))+(SGN(X)-1)*1.5708</td></tr>
+<tr><td>INVERSE COSECANT</td><td>ARCCSC(X) = ATN(1/SQR(X*X-1))+(SGN(X)-1*1.5708</td></tr>
+<tr><td>INVERSE COTANGENT</td><td>ARCCOT(X) = -ATN(X)+1.5708</td></tr>
+<tr><td>HYPERBOLIC SINE</td><td>SINH(X) = (EXP(X)-EXP(-X))/2</td></tr>
+<tr><td>HYPERBOLIC COSINE</td><td>COSH(X) = (EXP(X)+EXP(-X))/2</td></tr>
+<tr><td>HYPERBOLIC TANGENT</td><td>TANH(X) = -EXP(-X)/(EXP(X)+EXP(-X))*2+1</td></tr>
+<tr><td>HYPERBOLIC SECANT</td><td>SECH(X) = 2/(EXP(X)+EXP(-X))</td></tr>
+<tr><td>HYPERBOLIC COSECANT</td><td>CSCH(X) = 2/(EXP(X)-EXP(-X))</td></tr>
+<tr><td>HYPERBOLIC COTANGENT</td><td>COTH(X) = EXP(-X)/(EXP(X)-EXP(-X))*2+1</td></tr>
+<tr><td>INV. HYPERBOLIC SINE</td><td>ARGSINH(X) = LOG(X+SQR(X*X+1))</td></tr>
+<tr><td>INV. HYPERBOLIC COSINE</td><td>ARGCOSH(X) = LOG(X+SQR(X*X-1))</td></tr>
+<tr><td>INV. HYPERBOLIC TANGENT</td><td>ARGTANH(X) = LOG((1+X)/(1-X))/2</td></tr>
+<tr><td>INV. HYPERBOLIC SECANT</td><td>ARGSECH(X) = LOG((SQR(-X*X+1)+1)/X)</td></tr>
+<tr><td>INV. HYPERBOLIC COSEC.</td><td>ARGCSCH(X) = LOG((SGN(X)*SQR(X*X+1)+1)/X</td></tr>
+<tr><td>INT. HYPERBOLIC COTAN.</td><td>ARGCOTH(X) = LOG((X+1)/(X-1))/2</td></tr>
+</table>
+
+<h3>INTRINSIC BASIC FUNCTIONS</h3>
+
+<table>
+<tr valign="top"><td>ABS(X)</td><td>Gives the absolute value of X. (X may be a constant, variable or expression). Will return X if X =0, -X otherwise.</td></tr>
+<tr valign="top"><td>INT(X)</td><td>Returns the largest integer less than or equal to X.<br>EG INT(.85)=0 1.9 = 1 -3.1 = -4 etc..<br>To round a number add .5<br>EG to round a number X to D decimal places use:<br><pre>PRINT INT(X*1^D+.5)/10^D</pre></td></tr>
+<tr valign="top"><td>RND(X)</td><td>Will return a random number between 0 and 1 (sometimes 0 never 1), if X'0 the last number is returned, otherwise a new number is returned.<br>(B-A)*RND(1)+A will generate a number from A to B.</td></tr>
+<tr valign="top"><td>SGN(X)</td><td>Gives +1 if X&gt;0, 0 if X=0, -1 if X&lt;0.</td></tr>
+<tr valign="top"><td>SIN(X)</td><td>Gives the sine of X in radians.</td></tr>
+<tr valign="top"><td>COS(X)</td><td>Gives the cosine of X.</td></tr>
+<tr valign="top"><td>TAN(X)</td><td>Gives the tangent of X.</td></tr>
+<tr valign="top"><td>ATN(X)</td><td>Gives the arctangent of X.</td></tr>
+<tr valign="top"><td>EXP(X)</td><td>Gives the constant E (2.71828) raised to the power X. The largest value X may take is 87.3365.</td></tr>
+<tr valign="top"><td>LOG(X)</td><td>Gives the natural (base E) logarithm of X.<br>LOG(X)/LOG(Y) gives the base Y logarithm of X.<br>EG common (base 10) log of 5 is LOG(5)/LOG(10)</td></tr>
+<tr valign="top"><td>FRE(X)</td><td>Gives the number of free (unused bytes) left for the program if the expression X is numeric or the number of free bytes for strings if the expression is string.<br>EG FRE(0) or FRE(A$)</td></tr>
+<tr valign="top"><td>PEEK(X)</td><td>Returns the value held in the location X in memory.</td></tr>
+<tr valign="top"><td>INP(X)</td><td>Returns the value currently at port X (X must be 0-255)</td></tr>
+</table>
+
+<h3>STRING FUNCTIONS</h3>
+
+<table>
+<tr valign="top"><td>ASC(X$)</td><td>Returns a single ASCII character as its numeric value EG if X$="?" then ASC($) would give 63. If the string is longer than one character the first character is used if the string is null ("") an error will occur.</td></tr>
+<tr valign="top"><td>CHR$(X)</td><td>Returns a single character whose ASCII value is X (for ASCII codes see the TRITON manual).</td></tr>
+<tr valign="top"><td>STRING$(X,Y)</td><td>Returns a string X characters long of character Y.</td></tr> 
+<tr valign="top"><td>STR$(X)</td><td>Gives a string equal to the value X as it would be printed by a PRINT statement<br>EG STR$ (2+3.5) would give "5.5"</td></tr>
+<tr valign="top"><td>VAL</td><td>Used to convert a numeric string to a number.<br>EG VAL("5.5") gives 5.5<br>If the first character is not +,-,$ or a number the value 0 is returned.</td></tr>
+<tr valign="top"><td>LEN(X$)</td><td>Returns the length of string X$. If X$ is null 0 is returned.</td></tr>
+<tr valign="top"><td>LEFT$(X$,Y)</td><td>Returns the Y leftmost characters in X$. If Y is greater than the number of characters in X$ (LEN(X$)) X$ is returned.</td></tr>
+<tr valign="top"><td>RIGHT$(X$,Y)</td><td>Returns the Y rightmost characters in X$. If Y&gt;=LEN(XS) X$ is returned.</td></tr>
+<tr valign="top"><td>MID$(X$,Y)</td><td>MID$ with 2 arguments returns a string from character Y to the end of X$. If Y>LEN(X$) a null string is returned.</td></tr>
+<tr valign="top"><td>MID$(X$,Y,Z)</td><td>Returns a string from character Y in X$ for Z characters. If Y>LEN(X$) a null string is returned.</td></tr>
+<tr valign="top"><td>INSTR(X$,Y$,Z)</td><td>Returns the position of the first occurance of Y$ within X$ starting at position Z in X$ (Z is optional) If Y$ is not in X$ or either of the strings are null a value of 0 is returned.<br>EG IF INSTR(ANS$,"YES")THEN PRINT "I AGREE"</td></tr>
+</table>
+
+<hr>
+
+<h3>ERROR MESSAGES</h3>
+
+<p>The following is a list of error messages with possible causes and fixes.</p>
+
+<p>Error messages are in two forms, the first which occurs during an immediate command takes the form</p>
+
+<pre>XXXX ERROR</pre>
+
+<p>Where XXXX is the error message, the second form occurs during execution and takes the form</p>
+
+<pre>XXXX ERROR IN LINE YYY</pre>
+
+<p>Where YYY is the line number of the line in which the error occured.</p>
+
+<h3>SYNTAX ERROR</h3>
+
+<p>This is the most common error and indicates a mistake such as missing braket or an incorrect character; once found is easy to fix.</p>
+
+<h3>BAD SUBSCRIPT ERROR</h3>
+
+<p>Occurs when referencing an element not in that particular array; may also be due to too many or too few dimensions being specified.</p>
+
+<p>EG an attempt to reference A(1,1,1) when A was dimensioned as A(2,2).</p>
+
+<h3>REDIMENSION ERROR</h3>
+
+<p>An attempt was made to DIMension an array that had already been dimensioned. Can also occur if an array was not dimensioned before it is referenced (see section of DIM statement).</p>
+
+<p>EG A(3)=2 is encountered before DIM A(100).</p>
+
+<h3>BAD ARGUMENT ERROR</h3>
+
+<p>Another common error, due to the argument for a function or statement being out of range. Some common causes are:</p>
+
+<ol><li>a negative argument for a subscript E,G, LET C(-1)=3</li>
+<li>an unreasonably large subscript (>32767)</li>
+<li>LOG negative or zero argument.</li>
+<li>SQR negative argument</li>
+<li>a reference to CALL,INSTR,MID$,LEFT$,RIGHT$,STRING$,INP,OUT,PEEK,POKE,TAB,SPC,VDU,ON..GOTO or ON..GOSUB,with an improper argument.</li>
+</ol>
+
+<h3>DIRECT ERROR</h3>
+
+<p>Occurs if you try to use DEF or INPUT or LINE INPUT as a direct command. Whilst these cannot be used, other commands are pointless when used as direct statements (REM,DATA,etc..).</p>
+
+<h3>MISSING FOR ERROR</h3>
+
+<p>A NEXT statement was encountered without a corresponding FOR.</p>
+
+<h3>MISSING GOSUB ERROR </h3>
+
+<p>A RETURN statement was encountered before a GOSUB.</p>
+
+<h3>MISSING LINE ERROR</h3>
+
+<p>An attempt was made to reference a line which does not exist in memory. Can occur on the following statements.</p>
+
+<p>GOTO,GOSUB,RUN,RESTORE,THEN,ELSE or EDIT.</p>
+
+<h3>OVERFLOW ERROR</h3>
+
+<p>The overflow error has a general meaning and two specific meanings. The specifics will be dealt with first.</p>
+
+<ol><li>The line specified in EDIT was too long to fit in the buffer.</li>
+<li>The line number being calculated by AUTO got too large.</li>
+<li>The result of a calculation was too large to be stored or printed. If a number underflows the result 0 is given with no error.</li>
+</ol>
+
+<h3>NO SPACE ERROR</h3>
+
+<p>Program too large, too many GOSUBs, too many F0Rs too many levels of parentheses or too complex an expression or any combination of the above, the amount of space can be increased by decreasing the size of the CLEAR command (if used).</p>
+
+<h3>NO STRING SPACE ERROR</h3>
+
+<p>The space left for strings was less than the length of the string being stored; more space can be reserved by using a CLEAR statement or one with a larger argument (may conflict with above).</p>
+
+<h3>MISSING DATA ERROR</h3>
+
+<p>A read was encountered without any corresponding DATA statements or all the data had been used. A RESTORE statement can be used to re-read the data or extra DATA statements added.</p>
+
+<h3>MISSING FUNCTION ERROR </h3>
+
+<p>An attempt was made to use a user function which had not been defined.</p>
+
+<h3>DIVIDE ERROR</h3>
+
+<p>An attempt was made to divide by 0 (can occur if the TAN(PI/2) is attempted.)</p>
+
+<h3>CONT ERROR</h3>
+
+<p>An attempt was made to execute a CONT command after an error had occurred or the program was modified.</p>
+
+<h3>STRING OVERFLOW ERROR</h3>
+
+<p>The length of a string exceeded 255 characters.</p>
+
+<h3>STRING ARGUMENT ERROR</h3>
+
+<p>A string argument was too complex, split the expression into two or more shorter parts.</p>
+
+<h3>TYPE MISMATCH ERROR</h3>
+
+<p>The right and left hand parts of an expression must be of the same type (string or numeric) or an attempt was made to supply a function with the wrong type of data.</p>
+
+<h3>LOAD ERROR</h3>
+
+<p>The tape load program detected a read error, the program was still loaded and may be corrected, or an attempt made to re-load.</p>
+
+<h3>SAVING SPACE</h3>
+
+<ol>
+<li>Use multiple statement lines, each line has a fixed overhead of 5 bytes, therefore each line combined is 5 bytes saved.</li>
+<li>Delete all REM statements, each character in a rem statement uses one byte (including spaces).<br>EG 130 REM THIS IS A COMMENT uses 23 bytes.<br>210 PRINT RES :REM PRINT SUM uses 11 bytes including the colon.</li>
+<li>Use variables instead of constants C uses one byte 5.3246 uses 6. This also improves the speed of a program.</li>
+<li>The END statement is optional and can be omitted to save space.</li>
+<li>Reuse variables. A variable once declared uses space and if a temporary variable is used in one part of a program use it again in another. Also use one temporary variable for user replies.</li>
+<li>Use GOSUBs to execute common portions of code.</li>
+<li>Use User FUNCTIONS for common expressions.</li>
+<li>USE the zero elements in arrays. EG A(0) B(0,0) etc..</li>
+</ol>
+
+<h3>STORAGE ALOCATION</h3>
+
+<p>Simple (non array) variables use 6 bytes; a string variable uses 6 bytes of main store plus one byte per character in the actual string in the string store.</p>
+
+<p>Matrices use a minimum of 12 bytes with elements using 4 bytes each plus 2 bytes for every dimension.</p>
+
+<p>A user function uses 6 bytes.</p>
+
+<p>Each keyword (PRINT,SAVE,LIST,TAN etc) uses one byte; other characters use 1 byte each (spaces are not stored except in REMs).</p>
+
+<p>Each active FOR..NEXT loop uses 22 bytes.</p>
+
+<p>Each active GOSUB (one that hasn't returned) uses 6 bytes.</p>
+
+<p>Each parentheses encountered uses 4 bytes and each temporary result calculated uses 12 bytes.</p>
+
+<h3>SPEED HINTS</h3>
+
+<p>The hints given below will increase the execution speed and in many cases reduce storage requirements as well.</p>
+
+<ol><li>Delete all REM statements; these slow BASIC down by having to ignore them.</li>
+<li>USE VARIABLES INSTEAD OF CONSTANTS - THIS WILL INCREASE SPEED BY A LARGE AMOUNT. It is much faster to recall the value of a variable then work out the value of a stored number in ASCII.</li>
+<li>Variables used often should be declared at the start of the program. The first variable declared will be the quickest to find.</li>
+<li>Use NEXT without an index variable, BASIC does not need to check for the correct index.</li>
+</ol>
 
 </body></html>
