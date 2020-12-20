@@ -51,7 +51,6 @@ Things which currently work:
 * Emulation of 8080
 * Output to screen using port 5 and correct fonts
 * Output to LEDs using port 3
-* Monitor options P J E R G A D H L I O W M V N X
 * Push buttons PB1-PB4 mapped to F1-F4
 * Tape I/O to static file "TAPE"
 * Writing/Running/Saving/Loading BASIC programs
@@ -72,13 +71,14 @@ MANUAL_MC_TAPE - All of the machine code program samples from the manual
 MANUAL_BASIC_TAPE - All of the BASIC program samples from the manual
 
 TRAIN_TAPE - Train graphics demonstration program
+
     "Although it is quite easy to use the VDU function
     within TRITON'S BASIC to produce moving graphics
     on the display screen you are limited to the speed with
     which movements can be made. This is due to the
     inefficiency of an interpreter program. Much better
     use of TRITON'S memory mapped VDU can be made
-    with programs written in machine code.
+    with programs written in machine code."
     
     "This one gives a picture of a simple railway engine
     followed by a couple of trucks which move across the
@@ -87,11 +87,11 @@ TRAIN_TAPE - Train graphics demonstration program
     up the screen. The process continues until the train
     reaches the left-hand side of the fifth line from the top
     of the screen and then the program repeats itself." 
-
+    
     Hughes, M. (1979) From 'Softspot', Computing Today, Vol 1 No 4 (February 1979) pp. 38-41
 
-
 CROSSHATCH_TAPE - Crosshatch Generator
+
     "This produces four of the most common crosshatch patterns
     on a TV set and allows easy selection of each type. The
     actual adjustment of a TV is fairly easy once the concergence
@@ -100,6 +100,7 @@ CROSSHATCH_TAPE - Crosshatch Generator
     in 1K on TRITON."
     
 ETCH_A_SKETCH - Etch-A-Sketch
+
     "This program emulates the children's toy of the same name.
     The first character or graphic key pressed will cause the selected
     symbol to appear near the centre of the VDU screen.
@@ -110,13 +111,14 @@ ETCH_A_SKETCH - Etch-A-Sketch
     for TRITON and runs in 1K."
     
 CONFUSE_A_CAT - Confuse-A-Cat
+
     "This program is a modified version of the one in the TRITON
     manual. It alternates between filling and emptying the screen
     with characters. It is written in tiny BASIC and will run in
     the standard kit memory."
     
     Davidson, I. (1979) From 'Softspot Special', Computing Today, Vol 1 No (May 1979) pp. 33-35
-
+    
 Program versions on these "tapes" have been adapted to operate with L7.2
 
 Any feedback welcome - just email me:
