@@ -59,21 +59,63 @@ Things which currently work:
 
 Things which kind of work:
 * Keyboard emulation has only been tested with UK keyboard
-* Not all VDU control codes work
 * Accuracy is based on documentation rather than physical machine
 * Fixed memory map based on L7.1 ROM documentation
 
 Things which don't work (or haven't been tested) yet:
-* Monitor options C U F T Z K untested
 * Printer emulation
-* No Transam documentation included
 * Requires a Makefile
 
 Also included are the following tapes:
 
 MANUAL_MC_TAPE - All of the machine code program samples from the manual
 MANUAL_BASIC_TAPE - All of the BASIC program samples from the manual
-TRAIN_TAPE - Train program from Computing Today, Feb 1979 (pages 38-41)
+
+TRAIN_TAPE - Train graphics demonstration program
+    "Although it is quite easy to use the VDU function
+    within TRITON'S BASIC to produce moving graphics
+    on the display screen you are limited to the speed with
+    which movements can be made. This is due to the
+    inefficiency of an interpreter program. Much better
+    use of TRITON'S memory mapped VDU can be made
+    with programs written in machine code.
+    
+    "This one gives a picture of a simple railway engine
+    followed by a couple of trucks which move across the
+    screen from right to left. As they leave the screen on
+    the left they re-enter again from the right but one line
+    up the screen. The process continues until the train
+    reaches the left-hand side of the fifth line from the top
+    of the screen and then the program repeats itself." 
+
+    Hughes, M. (1979) From 'Softspot', Computing Today, Vol 1 No 4 (February 1979) pp. 38-41
+
+
+CROSSHATCH_TAPE - Crosshatch Generator
+    "This produces four of the most common crosshatch patterns
+    on a TV set and allows easy selection of each type. The
+    actual adjustment of a TV is fairly easy once the concergence
+    controls have been found and a full explanation of the methods
+    was given in ETI September 1978. The program runs
+    in 1K on TRITON."
+    
+ETCH_A_SKETCH - Etch-A-Sketch
+    "This program emulates the children's toy of the same name.
+    The first character or graphic key pressed will cause the selected
+    symbol to appear near the centre of the VDU screen.
+    On pressing one of the keys U,D,L or R the symbol will
+    move in the selected direction leaving a trail behind it. It
+    should be noted that if the drawing moves off the screen
+    you run the risk of corrupting the monitor. This program is
+    for TRITON and runs in 1K."
+    
+CONFUSE_A_CAT - Confuse-A-Cat
+    "This program is a modified version of the one in the TRITON
+    manual. It alternates between filling and emptying the screen
+    with characters. It is written in tiny BASIC and will run in
+    the standard kit memory."
+    
+    Davidson, I. (1979) From 'Softspot Special', Computing Today, Vol 1 No (May 1979) pp. 33-35
 
 Program versions on these "tapes" have been adapted to operate with L7.2
 
