@@ -59,7 +59,7 @@ public:
     int  vdu_startrow;
     
     void vdu_strobe(State8080* state);
-    void key_press(int key, bool shifted, bool ctrl);
+  void key_press(sf::Event::EventType event, int key, bool shifted, bool ctrl);
 };
 
 void IOState::vdu_strobe(State8080* state) {
@@ -168,93 +168,94 @@ void IOState::vdu_strobe(State8080* state) {
     }
 }
 
-void IOState::key_press(int key, bool shifted, bool ctrl) {
+void IOState::key_press(sf::Event::EventType event, int key, bool shifted, bool ctrl) {
     // Handles keyboard input, placing data in port 0 (IC 49)
     // Assumes PC has UK keyboard - because that's all I have to test it with!
-    
+
+  int temp = 0xFF;
+
     if (ctrl == false) {
         
         switch(key) {
-            case sf::Keyboard::Escape: key_buffer = 155; break; // escape
-            case sf::Keyboard::Space: key_buffer = 160; break; // space
-            case sf::Keyboard::Enter: key_buffer = 141; break; // carriage return
-            case sf::Keyboard::Backspace: key_buffer = 136; break; // backspace
-            case sf::Keyboard::Left: key_buffer = 136; break; // Ctrl+H
-            case sf::Keyboard::Right: key_buffer = 137; break; // Ctrl+I
-            case sf::Keyboard::Down: key_buffer = 138; break; // Ctrl+J
-            case sf::Keyboard::Up: key_buffer = 139; break; // Ctrl+K
+            case sf::Keyboard::Escape: temp = 0x1B; break; // escape
+            case sf::Keyboard::Space: temp = 0x20; break; // space
+            case sf::Keyboard::Enter: temp = 0x0D; break; // carriage return
+            case sf::Keyboard::Backspace: temp = 0x08; break; // backspace
+            case sf::Keyboard::Left: temp = 0x08; break; // Ctrl+H
+            case sf::Keyboard::Right: temp = 0x09; break; // Ctrl+I
+            case sf::Keyboard::Down: temp = 0x0A; break; // Ctrl+J
+            case sf::Keyboard::Up: temp = 0x0B; break; // Ctrl+K
         }
         
-        if (shifted == false) {
-            // No shift
+        if (shifted == false) { // No shift
             
             if ((key >= sf::Keyboard::A) && (key <= sf::Keyboard::Z)) {
-                // Letters A - Z
-                key_buffer = key + 225;
+                temp = key + 0x61; // Letters A - Z
             }
         
             if ((key >= sf::Keyboard::Num0) && (key <= sf::Keyboard::Num9)) {
-                // Numbers 0 to 9
-                key_buffer = key + 150;
+                temp = key + 0x16; // Numbers 0 to 9
             }
             
             switch (key) {
-                case sf::Keyboard::LBracket: key_buffer = 219; break; // left bracket
-                case sf::Keyboard::RBracket: key_buffer = 221; break; // right bracket
-                case sf::Keyboard::Semicolon: key_buffer = 187; break; // semicolon
-                case sf::Keyboard::Comma: key_buffer = 172; break; // comma
-                case sf::Keyboard::Period: key_buffer = 174; break; // stop
-                case sf::Keyboard::Quote: key_buffer = 167; break; // quote
-                case sf::Keyboard::Slash: key_buffer = 175; break; // slash
-                case sf::Keyboard::Backslash: key_buffer = 220; break; // backslash
-                case sf::Keyboard::Equal: key_buffer = 189; break; // equal
-                case sf::Keyboard::Hyphen: key_buffer = 173; break; // hyphen
+                case sf::Keyboard::LBracket: temp = 0x5B; break; // left bracket
+                case sf::Keyboard::RBracket: temp = 0x5D; break; // right bracket
+                case sf::Keyboard::Semicolon: temp = 0x3B; break; // semicolon
+                case sf::Keyboard::Comma: temp = 0x2C; break; // comma
+                case sf::Keyboard::Period: temp = 0x2E; break; // stop
+                case sf::Keyboard::Quote: temp = 0x27; break; // quote
+                case sf::Keyboard::Slash: temp = 0x2F; break; // slash
+                case sf::Keyboard::Backslash: temp = 0x5C; break; // backslash
+                case sf::Keyboard::Equal: temp = 0x3D; break; // equal
+                case sf::Keyboard::Hyphen: temp = 0x2D; break; // hyphen
             }
-        } else {
-            // Shift key pressed
+        } else { // Shift key pressed
             
             if ((key >= sf::Keyboard::A) && (key <= sf::Keyboard::Z)) {
-                // Graphic 34-59
-                key_buffer = key + 193;
+                temp = key + 0x41; // Graphic 34-59
             }
             
             switch (key) {
-                case sf::Keyboard::Num0: key_buffer = 169; break; // close brace
-                case sf::Keyboard::Num1: key_buffer = 161; break; // exclamation
-                case sf::Keyboard::Num2: key_buffer = 162; break; // double quote
-                case sf::Keyboard::Num3: key_buffer = 163; break; // hash
-                case sf::Keyboard::Num4: key_buffer = 164; break; // dollar
-                case sf::Keyboard::Num5: key_buffer = 165; break; // percent
-                case sf::Keyboard::Num6: key_buffer = 222; break; // carrat
-                case sf::Keyboard::Num7: key_buffer = 166; break; // ampusand
-                case sf::Keyboard::Num8: key_buffer = 170; break; // asterisk
-                case sf::Keyboard::Num9: key_buffer = 168; break; // open brace
-                case sf::Keyboard::LBracket: key_buffer = 251; break; // graphic 60 - arrow up
-                case sf::Keyboard::RBracket: key_buffer = 253; break; // graphic 62 - arrow left
-                case sf::Keyboard::Semicolon: key_buffer = 186; break; // colon
-                case sf::Keyboard::Comma: key_buffer = 188; break; // less than
-                case sf::Keyboard::Period: key_buffer = 190; break; // greater than
-                case sf::Keyboard::Quote: key_buffer = 192; break; // at
-                case sf::Keyboard::Slash: key_buffer = 191; break; // question
-                case sf::Keyboard::Backslash: key_buffer = 252; break; // graphic 61 - arrow down
-                case sf::Keyboard::Equal: key_buffer = 171; break; // plus
-                case sf::Keyboard::Hyphen: key_buffer = 223; break; // underscore
+                case sf::Keyboard::Num0: temp = 0x29; break; // close brace
+                case sf::Keyboard::Num1: temp = 0x21; break; // exclamation
+                case sf::Keyboard::Num2: temp = 0x22; break; // double quote
+                case sf::Keyboard::Num3: temp = 0x23; break; // hash
+                case sf::Keyboard::Num4: temp = 0x24; break; // dollar
+                case sf::Keyboard::Num5: temp = 0x25; break; // percent
+                case sf::Keyboard::Num6: temp = 0x5E; break; // carrat
+                case sf::Keyboard::Num7: temp = 0x26; break; // ampusand
+                case sf::Keyboard::Num8: temp = 0x2A; break; // asterisk
+                case sf::Keyboard::Num9: temp = 0x28; break; // open brace
+                case sf::Keyboard::LBracket: temp = 0x7B; break; // graphic 60 - arrow up
+                case sf::Keyboard::RBracket: temp = 0x7D; break; // graphic 62 - arrow left
+                case sf::Keyboard::Semicolon: temp = 0x3A; break; // colon
+                case sf::Keyboard::Comma: temp = 0x3C; break; // less than
+                case sf::Keyboard::Period: temp = 0x3E; break; // greater than
+                case sf::Keyboard::Quote: temp = 0x40; break; // at
+                case sf::Keyboard::Slash: temp = 0x3F; break; // question
+                case sf::Keyboard::Backslash: temp = 0x7C; break; // graphic 61 - arrow down
+                case sf::Keyboard::Equal: temp = 0x2B; break; // plus
+                case sf::Keyboard::Hyphen: temp = 0x5F; break; // underscore
             }
         }
         
-    } else {
-        // Control characters
+    } else { // Control characters
+      
         if ((key >= sf::Keyboard::A) && (key <= sf::Keyboard::Z)) {
-            // CONT A - Z
-            key_buffer = key + 129;
+            temp = key + 0x01; // CONT A - Z
         }
         
         switch (key) {
-            case sf::Keyboard::Quote: key_buffer = 128; break; // control + at
-            case sf::Keyboard::Backslash: key_buffer = 156; break; // control + backslash
-            case sf::Keyboard::LBracket: key_buffer = 155; break; // control + left bracket
-            case sf::Keyboard::RBracket: key_buffer = 157; break; // control + right bracket
+            case sf::Keyboard::Quote: temp = 0x00; break; // control + at
+            case sf::Keyboard::Backslash: temp = 0x1C; break; // control + backslash
+            case sf::Keyboard::LBracket: temp = 0x1B; break; // control + left bracket
+            case sf::Keyboard::RBracket: temp = 0x1D; break; // control + right bracket
         }
+    }
+
+    if (temp != 0xFF) { // check if the key press was recognised
+      key_buffer = temp; // set the key buffer
+      if (event == sf::Event::KeyPressed) key_buffer |= 0x80; // set the strobe bit
     }
 }
 
@@ -264,7 +265,7 @@ void MachineIN(State8080* state, int port, IOState* io, fstream &tape) {
         case 0:
             // Keyboard buffer (IC 49)
             state->a = io->key_buffer;
-            io->key_buffer = 0;
+	    // printf("%02X\n", io->key_buffer); // for debugging
             break;
         case 1:
             // Get UART status
@@ -356,7 +357,6 @@ int main() {
     int port;
     int framerate = 25;
     int operations_per_frame;
-    int opcount;
     int glyph;
     int vdu_rolloffset;
     
@@ -501,8 +501,7 @@ int main() {
                 
             if (inFocus) {
                 // Respond to key presses
-                if (event.type == sf::Event::KeyPressed)
-                {
+	      if (event.type == sf::Event::KeyPressed || event.type == sf::Event::KeyReleased) {
                     switch(event.key.code) {
                         case sf::Keyboard::F1:
                             // Reset button (PB 1)
@@ -541,7 +540,7 @@ int main() {
                             window.close();
                             break;
                         default:
-                            io.key_press(event.key.code, shifted, ctrl);
+  		  	    io.key_press(event.type, event.key.code, shifted, ctrl);
                             break;
                     }
                 }
