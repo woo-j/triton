@@ -43,6 +43,7 @@
 #include <iostream>
 #include <fstream>
 #include <cmath>
+#include <cstring>
 using namespace std;
 
 class IOState {
@@ -343,7 +344,41 @@ void MachineOUT(State8080* state, int port, IOState* io, fstream &tape) {
     }
 }
 
-int main() {
+bool load_rom(const char filename[24], int start_address, const char size[5], unsigned char main_memory[]) {
+    ifstream rom;
+    int rom_length = 0;
+    
+    if (strcmp(size, "1k") == 0) {
+        rom_length = 0x400;
+    }
+    if (strcmp(size, "2k") == 0) {
+        rom_length = 0x800;
+    }
+    if (strcmp(size, "4k") == 0) {
+        rom_length = 0x1000;
+    }
+    if (strcmp(size, "8k") == 0) {
+        rom_length = 0x2000;
+    }
+    
+    if (rom_length == 0) {
+        return false;
+    }
+    
+    rom.open(filename, ios::in | ios::binary);
+    if (rom.is_open()) {
+        rom.read ((char *) &main_memory[start_address], rom_length);
+        rom.close();
+    } else {
+        std::cout << "Unable to load ROM\n";
+        rom.close();
+        return false;
+    }
+    
+    return true;
+}
+
+int main(int argc, char **argv) {
     unsigned char main_memory[0xffff];
 
     int time;
@@ -371,7 +406,6 @@ int main() {
     
     State8080 state;
     fstream tape;
-    ifstream rom;
     
     sf::Int16 wave[11025]; // Quarter of a second at 44.1kHz
     const double increment = 1000./44100;
@@ -393,33 +427,116 @@ int main() {
     io.tape_status = ' ';
     io.vdu_startrow = 0;
     
-    // Load Monitor 'A'
-    rom.open("MONA72.ROM", ios::in | ios::binary);
-    if (rom.is_open()) {
-        rom.read ((char *) &main_memory[0], 0x400);
-        rom.close();
+    if (argc == 1) {
+        if (load_rom("MONA72.ROM", 0x00, "1k", main_memory) == false) {
+            exit(1);
+        }
+        if (load_rom("MONB72.ROM", 0xc00, "1k", main_memory) == false) {
+            exit(1);
+        }
+        if (load_rom("BASIC72.ROM", 0xe000, "8k", main_memory) == false) {
+            exit(1);
+        }
+    } else if (strcmp(argv[1], "4.1") == 0) {
+        if (load_rom("roms/L4.1 MONITOR.BIN", 0x00, "1k", main_memory) == false) {
+            exit(1);
+        }
+        if (load_rom("roms/L4.1A BASIC.BIN", 0x400, "1k", main_memory) == false) {
+            exit(1);
+        }
+        if (load_rom("roms/L4.1B BASIC.BIN", 0x800, "1k", main_memory) == false) {
+            exit(1);
+        }
+    } else if (strcmp(argv[1], "5.1") == 0) {
+        if (load_rom("roms/ROM_5.1A.BIN", 0x00, "1k", main_memory) == false) {
+            exit(1);
+        }
+        if (load_rom("roms/ROM_5.1A BASIC.BIN", 0x400, "1k", main_memory) == false) {
+            exit(1);
+        }
+        if (load_rom("roms/ROM_5.1B BASIC.BIN", 0x800, "1k", main_memory) == false) {
+            exit(1);
+        }
+        if (load_rom("roms/ROM_5.1B.BIN", 0xc00, "1k", main_memory) == false) {
+            exit(1);
+        }
+    } else if (strcmp(argv[1], "5.2") == 0) {
+        if (load_rom("roms/ROM_5.2A.BIN", 0x00, "1k", main_memory) == false) {
+            exit(1);
+        }
+        if (load_rom("roms/ROM_5.1A BASIC.BIN", 0x400, "1k", main_memory) == false) {
+            exit(1);
+        }
+        if (load_rom("roms/ROM_5.1B BASIC.BIN", 0x800, "1k", main_memory) == false) {
+            exit(1);
+        }
+        if (load_rom("roms/ROM_5.2B.BIN", 0xc00, "1k", main_memory) == false) {
+            exit(1);
+        }
+    } else if (strcmp(argv[1], "7.2") == 0) {
+        if (load_rom("roms/ROM_7.2A.BIN", 0x00, "1k", main_memory) == false) {
+            exit(1);
+        }
+        if (load_rom("roms/ROM_7.2B.BIN", 0xc00, "1k", main_memory) == false) {
+            exit(1);
+        }
+        if (load_rom("roms/L7.2A BASIC.BIN", 0xe000, "1k", main_memory) == false) {
+            exit(1);
+        }
+        if (load_rom("roms/L7.2B BASIC.BIN", 0xe400, "1k", main_memory) == false) {
+            exit(1);
+        }
+        if (load_rom("roms/L7.2C BASIC.BIN", 0xe800, "1k", main_memory) == false) {
+            exit(1);
+        }
+        if (load_rom("roms/L7.2D BASIC.BIN", 0xec00, "1k", main_memory) == false) {
+            exit(1);
+        }
+        if (load_rom("roms/L7.2E BASIC.BIN", 0xf000, "1k", main_memory) == false) {
+            exit(1);
+        }
+        if (load_rom("roms/L7.2F BASIC.BIN", 0xf400, "1k", main_memory) == false) {
+            exit(1);
+        }
+        if (load_rom("roms/L7.2G BASIC.BIN", 0xf800, "1k", main_memory) == false) {
+            exit(1);
+        }
+        if (load_rom("roms/L7.2H BASIC.BIN", 0xfc00, "1k", main_memory) == false) {
+            exit(1);
+        }
+    } else if (strcmp(argv[1], "7.2DEC") == 0) {
+        if (load_rom("roms/ROM_7.2A.BIN", 0x00, "1k", main_memory) == false) {
+            exit(1);
+        }
+        if (load_rom("roms/ROM_7.2B.BIN", 0xc00, "1k", main_memory) == false) {
+            exit(1);
+        }
+        if (load_rom("roms/L7.2A BASIC 31DECEMBER2020.BIN", 0xe000, "1k", main_memory) == false) {
+            exit(1);
+        }
+        if (load_rom("roms/L7.2B BASIC 31DECEMBER2020.BIN", 0xe400, "1k", main_memory) == false) {
+            exit(1);
+        }
+        if (load_rom("roms/L7.2C BASIC 31DECEMBER2020.BIN", 0xe800, "1k", main_memory) == false) {
+            exit(1);
+        }
+        if (load_rom("roms/L7.2D BASIC 31DECEMBER2020.BIN", 0xec00, "1k", main_memory) == false) {
+            exit(1);
+        }
+        if (load_rom("roms/L7.2E BASIC 31DECEMBER2020.BIN", 0xf000, "1k", main_memory) == false) {
+            exit(1);
+        }
+        if (load_rom("roms/L7.2F BASIC 31DECEMBER2020.BIN", 0xf400, "1k", main_memory) == false) {
+            exit(1);
+        }
+        if (load_rom("roms/L7.2G BASIC 31DECEMBER2020.BIN", 0xf800, "1k", main_memory) == false) {
+            exit(1);
+        }
+        if (load_rom("roms/L7.2H BASIC 31DECEMBER2020.BIN", 0xfc00, "1k", main_memory) == false) {
+            exit(1);
+        }
     } else {
-        std::cout << "Unable to load Monitor A\n";
-        exit(1);
-    }
-    
-    // Load Monitor 'B'
-    rom.open("MONB72.ROM", ios::in | ios::binary);
-    if (rom.is_open()) {
-        rom.read ((char *) &main_memory[0xc00], 0x400);
-        rom.close();
-    } else {
-        std::cout << "Unable to load Monitor B\n";
-        exit(1);
-    }
-    
-    // Load BASIC 7.2
-    rom.open("BASIC72.ROM", ios::in | ios::binary);
-    if (rom.is_open()) {
-        rom.read ((char *) &main_memory[0xe000], 0x2000);
-        rom.close();
-    } else {
-        std::cout << "Unable to load BASIC ROM\n";
+        std::cout << "Invalid CLI argument\n";
         exit(1);
     }
     
