@@ -172,7 +172,7 @@ void IOState::key_press(sf::Event::EventType event, int key, bool shifted, bool 
     // Handles keyboard input, placing data in port 0 (IC 49)
     // Assumes PC has UK keyboard - because that's all I have to test it with!
 
-  int temp = 0xFF;
+    int temp = 0xFF;
 
     if (ctrl == false) {
         
@@ -254,8 +254,8 @@ void IOState::key_press(sf::Event::EventType event, int key, bool shifted, bool 
     }
 
     if (temp != 0xFF) { // check if the key press was recognised
-      key_buffer = temp; // set the key buffer
-      if (event == sf::Event::KeyPressed) key_buffer |= 0x80; // set the strobe bit
+        key_buffer = temp; // set the key buffer
+        if (event == sf::Event::KeyPressed) key_buffer |= 0x80; // set the strobe bit
     }
 }
 
@@ -265,7 +265,7 @@ void MachineIN(State8080* state, int port, IOState* io, fstream &tape) {
         case 0:
             // Keyboard buffer (IC 49)
             state->a = io->key_buffer;
-	    // printf("%02X\n", io->key_buffer); // for debugging
+            // printf("%02X\n", io->key_buffer); // for debugging
             break;
         case 1:
             // Get UART status
@@ -501,7 +501,7 @@ int main() {
                 
             if (inFocus) {
                 // Respond to key presses
-	      if (event.type == sf::Event::KeyPressed || event.type == sf::Event::KeyReleased) {
+                if (event.type == sf::Event::KeyPressed) {
                     switch(event.key.code) {
                         case sf::Keyboard::F1:
                             // Reset button (PB 1)
@@ -540,9 +540,13 @@ int main() {
                             window.close();
                             break;
                         default:
-  		  	    io.key_press(event.type, event.key.code, shifted, ctrl);
+                            io.key_press(event.type, event.key.code, shifted, ctrl);
                             break;
                     }
+                }
+                
+                if (event.type == sf::Event::KeyReleased) {
+                    io.key_press(event.type, event.key.code, shifted, ctrl);
                 }
             }
         }
