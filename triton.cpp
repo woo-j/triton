@@ -31,10 +31,10 @@
 /* Emulator for the Transam Triton
  * Created using only information available online - so expect bugs!
  * Central processor is Intel 8080A
- * VDU is based on Thomson-CSD chip (SFC96364) for which I can find no documentation
+ * VDU is based on Thomson-CSD chip (SFC96364)
  * Most of the rest of the machine is 74 logic ICs
  * 
- * Only available ROMS (version 7.2) are currently hard-wired
+ * Only version 7.2 ROM (default) is currently tested, but experimental mechanism is in place for using alternative ROMs
  */
 
 #include <SFML/Graphics.hpp>
@@ -66,9 +66,11 @@ public:
 void IOState::vdu_strobe(State8080* state) {
     // Takes input from port 5 buffer (IC 51) and attempts to duplicate
     // Thomson-CSF VDU controller (IC 61) interface with video RAM
+    // Updated with information from the manufacturer's datasheet thanks to Gerald Sommariva
 
     int i;
     int input = vdu_buffer & 0x7f;
+    int vdu_page = 0x1000;
     
     switch(input) {
         case 0x00:
@@ -78,21 +80,21 @@ void IOState::vdu_strobe(State8080* state) {
             // EOT (End of Text)
             break;
         case 0x08:
-            // Backspace
+            // Cursor left / Retour d'une position à gauche
             cursor_position--;
             if (cursor_position < 0) {
                 cursor_position += 1024;
             }
             break;
         case 0x09:
-            // Step cursor RIGHT
+            // Cursor right / Retour d'une position à droite
             cursor_position++;
             if (cursor_position >= 1024) {
                 cursor_position -= 1024;
             }
             break;
         case 0x0a:
-            // Line feed
+            // Cursor down (erased next line) / Descente d'une position (Ligne suivante du texte effacée)
             cursor_position += 64;
             if (cursor_position >= 1024) {
                 cursor_position -= 64;
@@ -102,37 +104,49 @@ void IOState::vdu_strobe(State8080* state) {
                 }
                 
                 for (i = 0; i < 64; i++) {
-                    state->memory[0x1000 + (((64 * vdu_startrow) + cursor_position + i) % 1024)] = 32;
+                    state->memory[vdu_page + (((64 * vdu_startrow) + cursor_position + i) % 1024)] = 32;
                 }
             }
             break;
         case 0x0b:
-            // Step cursor UP
+            // Cursor up / Montée d'une position
             cursor_position -=64;
             if (cursor_position < 0) {
                 cursor_position += 1024;
             }
             break;
         case 0x0c:
-            // Clear screen/reset cursor
+            // Page clear and home position / Effacement de la page et retour en haut à gauche
             for (i = 0; i < 1024; i++) {
-                state->memory[0x1000 + i] = 32;
+                state->memory[vdu_page + i] = 32;
             }
             cursor_position = 0;
             vdu_startrow = 0;
             break;
         case 0x0d:
-            // Carriage return / clear line
+            // Carriage return and end of line erasure / Effacement de la fin de ligne et retour en début de linge
             if (cursor_position % 64 != 0) {
                 while(cursor_position % 64 != 0) {
-                    state->memory[0x1000 + (((64 * vdu_startrow) + cursor_position) % 1024)] = 32;
+                    state->memory[vdu_page + (((64 * vdu_startrow) + cursor_position) % 1024)] = 32;
                     cursor_position++;
                 }
                 cursor_position -= 64;
             }
             break;
+        case 0x18:
+            // +1 page (next page) / +1 page (page suivante du texte)
+        case 0x19:
+            // -1 page (former page) / -1 page (page précédente du texte)
+            // Only one page of RAM is used, so these commands have no effect
+            break;
+        case 0x1a:
+            // Erasure of current line / Effacement de la linge courante du curseur
+            for (i = 0; i < 64; i++) {
+                state->memory[vdu_page + (((64 * vdu_startrow) + (cursor_position - (cursor_position % 64)) + i) % 1024)] = 32;
+            }
+            break;
         case 0x1b:
-            // Screen roll (changes which memory location represents top of screen)
+            // Line feed (Displayed next line) / Descente d'une position (Ligne suivante du texte visualisée)
             vdu_startrow++;
             if (vdu_startrow > 15) {
                 vdu_startrow = 0;
@@ -143,15 +157,15 @@ void IOState::vdu_strobe(State8080* state) {
             }
             break;
         case 0x1c:
-            // Reset cursor
+            // Home cursor / Retour du curseur en haut à gauche
             cursor_position = 0;
             break;
         case 0x1d:
-            // Carriage return (no clear)
+            // Carriage return / Retour du curseur au début de la ligne
             cursor_position -= (cursor_position % 64);
             break;
         default:
-            state->memory[0x1000 + (((64 * vdu_startrow) + cursor_position) % 1024)] = input;
+            state->memory[vdu_page + (((64 * vdu_startrow) + cursor_position) % 1024)] = input;
             cursor_position++;
             
             if (cursor_position >= 1024) {
@@ -162,7 +176,7 @@ void IOState::vdu_strobe(State8080* state) {
                 }
                 
                 for (i = 0; i < 64; i++) {
-                    state->memory[0x1000 + (((64 * vdu_startrow) + cursor_position + i) % 1024)] = 32;
+                    state->memory[vdu_page + (((64 * vdu_startrow) + cursor_position + i) % 1024)] = 32;
                 }
             }
             break;
@@ -731,7 +745,8 @@ int main(int argc, char **argv) {
             }
             window.draw(tape_indicator);
             
-            if (cursor_count > (framerate / 2)) {
+            if (cursor_count > (framerate / 4)) {
+                // Cursor has 2Hz "winking" frequency
                 if (cursor_on) {
                     cursor.setFillColor(sf::Color(0, 0, 0));
                     cursor_on = false;

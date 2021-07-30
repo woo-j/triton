@@ -45,9 +45,12 @@ Diodes at:
 
 https://www.youtube.com/watch?v=0cSRgJ68_tM
 
-This emulator is very much a work in progress...
+This emulator is sufficient to run Triton programs on a PC with reasonable accuracy
+but there is much which could be improved. The project is not in active development, 
+although I am happy to discuss improvements or additions if desired or merge code 
+from a fork - contact me by email (see below).
 
-Things which currently work:
+Things which work:
 * Emulation of 8080
 * Output to screen using port 5 and correct fonts
 * Output to LEDs using port 3
@@ -61,9 +64,10 @@ Things which kind of work:
 * Accuracy is based on documentation rather than physical machine
 * Fixed memory map based on L7.1 ROM documentation
 
-Things which don't work (or haven't been tested) yet:
-* Printer emulation
-* Requires a Makefile
+Things which don't work:
+* No printer emulation
+* There is no Makefile or support for other OS
+* No option to change tapes from within emulator
 
 Also included are the following tapes:
 
@@ -117,7 +121,7 @@ CONFUSE_A_CAT - Confuse-A-Cat
     with characters. It is written in tiny BASIC and will run in
     the standard kit memory."
     
-    Davidson, I. (1979) From 'Softspot Special', Computing Today, Vol 1 No (May 1979) pp. 33-35
+    Davidson, I. (1979) From 'Softspot Special', Computing Today, Vol 1 No 3 (May 1979) pp. 33-35
     
 Program versions on these "tapes" have been adapted to operate with L7.2
 
