@@ -1490,7 +1490,7 @@ int Emulate8080Op(State8080* state)
             set_memory(state, state->sp - 2, state->pc & 0xff);
             set_memory(state, state->sp - 1, state->pc >> 8);
             state->sp -= 2;
-            state->pc = (int) opcode[0] & 0x28;
+            state->pc = (int) opcode[0] & 0x38;
             state->pc--;
             cycles = 11;
             break;
