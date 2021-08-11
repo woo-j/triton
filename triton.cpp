@@ -719,7 +719,7 @@ int main(int argc, char **argv) {
                 window.draw(sprite[i]);
             }
             for (i = 0; i < 8; i++) {
-                if ((io.led_buffer & (0xf0 >> i)) == 0) {
+                if ((io.led_buffer & (0x80 >> i)) == 0) {
                     // note LEDs are on for "0"
                     led[i].setFillColor(ledon);
                 } else {
